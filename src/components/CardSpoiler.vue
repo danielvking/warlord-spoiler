@@ -32,6 +32,7 @@
           </ul>
         </div>
         <div class="card-region">
+          <img :src="selectedImage" :key="selectedImage" height="400"/>
           <pre>{{ JSON.stringify(selectedCard, null, 2) }}</pre>
         </div>
       </template>
@@ -59,7 +60,7 @@ export default {
     setList() {
       let sets = {};
       this.cards.forEach(x => {
-        x.setInfos.forEach(y => {
+        x.printInfos.forEach(y => {
           sets[y.set] = true;
         });
       });
@@ -68,13 +69,20 @@ export default {
     cardsFiltered() {
       let filter = this.filter.toLowerCase()
       return this.cards.filter(x => {
-        if (this.selectedSet && !x.setInfos.filter(y => y.set === this.selectedSet)[0]) return false;
+        if (this.selectedSet && !x.printInfos.filter(y => y.set === this.selectedSet)[0]) return false;
         return x.name.toLowerCase().includes(filter)
       }).sort((a, b) => {
         if (a.name < b.name) return -1
         else if (a.name > b.name) return 1
         else return 0
       })
+    },
+    selectedImage() {
+      if (this.selectedCard == null) return null
+      let printInfos = this.selectedCard.printInfos.filter(x => x.imageUrl)
+      let latestPrint = printInfos.slice(-1)[0]
+      if (latestPrint == null) return null
+      return latestPrint.imageUrl
     }
   },
   mounted() {
