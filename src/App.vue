@@ -22,7 +22,20 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  width: 100vw;
-  height: 100vh;
+
+  background: url(/images/AccordlandsMap.jpg);
+  background-size: cover;
+  background-position: bottom;
+  background-attachment: fixed;
+}
+
+@font-face {
+  font-family: "Vhatis Warlord Text";
+  src: url(/fonts/vhatis%20warlord%20text.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Vhatis Warlord Title";
+  src: url(/fonts/vhatis%20warlord%20title.ttf) format("truetype");
 }
 </style>

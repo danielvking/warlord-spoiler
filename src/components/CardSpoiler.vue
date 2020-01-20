@@ -1,7 +1,7 @@
 <template>
-  <div class="spoiler-page">
+  <b-container class="spoiler-page">
     <div class="spoiler-header">
-      <h1>Prepare to have cards spoiled!</h1>
+      <h1>The Spoiler</h1>
       <p>
         There is not much here yet, and it certainly doesn't do much, but you are loading a web page with locally stored card data.
       </p>
@@ -40,7 +40,7 @@
         <span>Loading...</span>
       </template>
     </div>
-  </div>
+  </b-container>
 </template>
 
 <script>
@@ -101,10 +101,15 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .spoiler-page {
-  width: 100%;
-  height: 100%;
+  min-height: 100%;
   display: flex;
   flex-flow: column;
+  background-color: rgba(255, 255, 255, 0.8);
+  font-family: "Vhatis Warlord Text";
+}
+
+.spoiler-page h1 {
+  font-family: "Vhatis Warlord Title";
 }
 
 .spoiler-container {
