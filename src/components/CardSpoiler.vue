@@ -2,59 +2,65 @@
   <b-container class="spoiler-page">
     <div class="spoiler-header">
       <h1>The Spoiler</h1>
-      <p>
-        There is not much here yet, and it certainly doesn't do much, but you are loading a web page with locally stored card data.
-      </p>
-      <b-form-input v-model="filter" placeholder="Filter text" style="margin:5px 20%;width:60%;text-align:center"/>
+      <p>There is not much here yet, and it certainly doesn't do much, but you are loading a web page with locally stored card data.</p>
+      <b-form-input
+        v-model="filter"
+        placeholder="Filter text"
+        style="margin:5px 20%;width:60%;text-align:center"
+      />
     </div>
-    <div class="spoiler-container">
-      <template v-if="cards">
+    <template v-if="cards">
+      <div class="spoiler-container">
         <div class="set-sidebar">
           <ul>
-            <li :style="{ fontWeight: selectedSet == null ? 'bold' : 'normal' }"
-                @click="selectedSet = null">All</li>
-            <li v-for="set in setList"
-                :key="set"
-                :style="{ fontWeight: set === selectedSet ? 'bold' : 'normal' }"
-                @click="selectedSet = set">
-              {{ set }}
-            </li>
+            <li
+              :style="{ fontWeight: selectedSet == null ? 'bold' : 'normal' }"
+              @click="selectedSet = null"
+            >All</li>
+            <li
+              v-for="set in setList"
+              :key="set"
+              :style="{ fontWeight: set === selectedSet ? 'bold' : 'normal' }"
+              @click="selectedSet = set"
+            >{{ set }}</li>
           </ul>
         </div>
         <div class="card-sidebar">
           <ul>
-            <li v-for="card in cardsFiltered"
-                :key="card.name"
-                :style="{ fontWeight: card === selectedCard ? 'bold' : 'normal' }"
-                @click="selectedCard = card">
-              {{ card.name }}
-            </li>
+            <li
+              v-for="card in cardsFiltered"
+              :key="card.name"
+              :style="{ fontWeight: card === selectedCard ? 'bold' : 'normal' }"
+              @click="selectedCard = card"
+            >{{ card.name }}</li>
           </ul>
         </div>
         <div class="card-region">
-          <img :src="selectedImage" :key="selectedImage" height="400"/>
+          <img :src="selectedImage" :key="selectedImage" height="400" />
           <pre>{{ JSON.stringify(selectedCard, null, 2) }}</pre>
         </div>
-      </template>
-      <template v-else>
-        <span>Loading...</span>
-      </template>
-    </div>
+      </div>
+    </template>
+    <template v-else>
+      <div class="text-center m-5">
+        <b-spinner />
+      </div>
+    </template>
   </b-container>
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 
 export default {
-  name: 'CardSpoiler',
+  name: "CardSpoiler",
   data() {
     return {
       cards: null,
       filter: "",
       selectedSet: null,
       selectedCard: null
-    }
+    };
   },
   computed: {
     setList() {
@@ -64,38 +70,46 @@ export default {
           sets[y.set] = true;
         });
       });
-      return Object.keys(sets).sort()
+      return Object.keys(sets).sort();
     },
     cardsFiltered() {
-      let filter = this.filter.toLowerCase()
-      return this.cards.filter(x => {
-        if (this.selectedSet && !x.printInfos.filter(y => y.set === this.selectedSet)[0]) return false;
-        return x.name.toLowerCase().includes(filter)
-      }).sort((a, b) => {
-        if (a.name < b.name) return -1
-        else if (a.name > b.name) return 1
-        else return 0
-      })
+      let filter = this.filter.toLowerCase();
+      return this.cards
+        .filter(x => {
+          if (
+            this.selectedSet &&
+            !x.printInfos.filter(y => y.set === this.selectedSet)[0]
+          )
+            return false;
+          return x.name.toLowerCase().includes(filter);
+        })
+        .sort((a, b) => {
+          if (a.name < b.name) return -1;
+          else if (a.name > b.name) return 1;
+          else return 0;
+        });
     },
     selectedImage() {
-      if (this.selectedCard == null) return null
-      let printInfos = this.selectedCard.printInfos.filter(x => x.imageUrl)
-      let latestPrint = printInfos.slice(-1)[0]
-      if (latestPrint == null) return null
-      return latestPrint.imageUrl
+      if (this.selectedCard == null) return null;
+      let printInfos = this.selectedCard.printInfos.filter(x => x.imageUrl);
+      let latestPrint = printInfos.slice(-1)[0];
+      if (latestPrint == null) return null;
+      return latestPrint.imageUrl;
     }
   },
   mounted() {
     axios({
-      method: 'get',
-      url: '/cards.json'
-    }).then(response => {
-      this.cards = response.data
-    }).catch(error => {
-      alert("An error occurred fetching the card data:\n" + error)
+      method: "get",
+      url: "/cards.json"
     })
+      .then(response => {
+        this.cards = response.data;
+      })
+      .catch(error => {
+        alert("An error occurred fetching the card data:\n" + error);
+      });
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -123,33 +137,33 @@ export default {
   margin-left: 5px;
   overflow-y: scroll;
 }
-  .set-sidebar ul {
-    list-style-type: none;
-    padding: 0;
-    text-align: left;
-  }
-  .set-sidebar li {
-    cursor: pointer;
-  }
+.set-sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  text-align: left;
+}
+.set-sidebar li {
+  cursor: pointer;
+}
 
 .card-sidebar {
   flex-basis: 250px;
   margin-left: 5px;
   overflow-y: scroll;
 }
-  .card-sidebar ul {
-    list-style-type: none;
-    padding: 0;
-    text-align: left;
-  }
-  .card-sidebar li {
-    cursor: pointer;
-  }
+.card-sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  text-align: left;
+}
+.card-sidebar li {
+  cursor: pointer;
+}
 
 .card-region {
   flex: 1;
   text-align: left;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
   overflow: auto;
   height: 100%;
 }

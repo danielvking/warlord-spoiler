@@ -1,6 +1,0 @@
-{
-    "routes": [
-        { "src": "/images/.*", "headers": {"cache-control": "maxage=31536000"}},
-        { "src": "/fonts/.*", "headers": {"cache-control": "maxage=31536000"}}
-    ]
-}

@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <CardSpoiler/>
+    <div class="scroll-region">
+      <CardSpoiler/>
+    </div>
   </div>
 </template>
 
@@ -22,12 +24,18 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  height: 100vh;
 
   background: url(/images/AccordlandsMap.jpg);
   background-repeat: no-repeat;
   background-position: bottom center;
   background-size: cover;
   background-attachment: fixed;
+}
+
+.scroll-region {
+  overflow-y: scroll;
+  height: 100%;
 }
 
 @font-face {
