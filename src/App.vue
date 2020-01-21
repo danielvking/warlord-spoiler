@@ -24,18 +24,19 @@ export default {
   color: #2c3e50;
 
   background: url(/images/AccordlandsMap.jpg);
+  background-repeat: no-repeat;
+  background-position: bottom center;
   background-size: cover;
-  background-position: bottom;
   background-attachment: fixed;
 }
 
 @font-face {
   font-family: "Vhatis Warlord Text";
-  src: url(/fonts/vhatis%20warlord%20text.ttf) format("truetype");
+  src: url(/fonts/vhatis_warlord_text.ttf) format("truetype");
 }
 
 @font-face {
   font-family: "Vhatis Warlord Title";
-  src: url(/fonts/vhatis%20warlord%20title.ttf) format("truetype");
+  src: url(/fonts/vhatis_warlord_title.ttf) format("truetype");
 }
 </style>
