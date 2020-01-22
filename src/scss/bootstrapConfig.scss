@@ -1,5 +1,14 @@
 // Variable overrides
+$primary: rgb(61, 105, 153);
+
 $font-size-base: 1.2rem;
+
+$input-btn-padding-y: 0.05rem;
+
+$container-max-widths: (
+    lg: 768px,
+    xl: 768px
+);
 
 // Bootstrap defaults
 @import "node_modules/bootstrap/scss/bootstrap";

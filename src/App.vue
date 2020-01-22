@@ -19,13 +19,9 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
   height: 100vh;
 
+  background-color: rgb(96, 87, 82);
   background: url(/images/AccordlandsMap.jpg);
   background-repeat: no-repeat;
   background-position: bottom center;

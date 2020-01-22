@@ -1,45 +1,33 @@
 <template>
   <b-container class="spoiler-page">
-    <div class="spoiler-header">
+    <b-row>
       <h1>The Spoiler</h1>
-      <p>There is not much here yet, and it certainly doesn't do much, but you are loading a web page with locally stored card data.</p>
-      <b-form-input
-        v-model="filter"
-        placeholder="Filter text"
-        style="margin:5px 20%;width:60%;text-align:center"
-      />
-    </div>
+    </b-row>
+    <div class="text-center">Need to find some information on Warlord cards? You've come to the right place:</div>
+    <b-form-row>
+      <b-col cols=12 md="10" class="my-1">
+        <b-form-input v-model="search.text"
+                      placeholder="Search text..."
+                      class="text-center"
+                      @keypress.enter="onSearch"/>
+      </b-col>
+      <b-col cols="12" md=2 class="my-1">
+        <b-button variant="primary"
+                  class="w-100 m-t-10"
+                  :disabled="!canSearch"
+                  @click.prevent="onSearch">Search</b-button>
+      </b-col>
+    </b-form-row>
+    <b-form-row>
+      <b-col>
+        <b-form-group class="text-center" label="Search by:">
+          <b-form-checkbox v-model="search.byName" inline>Name</b-form-checkbox>
+          <b-form-checkbox v-model="search.byText" inline>Text</b-form-checkbox>
+        </b-form-group>
+      </b-col>
+    </b-form-row>
     <template v-if="cards">
-      <div class="spoiler-container">
-        <div class="set-sidebar">
-          <ul>
-            <li
-              :style="{ fontWeight: selectedSet == null ? 'bold' : 'normal' }"
-              @click="selectedSet = null"
-            >All</li>
-            <li
-              v-for="set in setList"
-              :key="set"
-              :style="{ fontWeight: set === selectedSet ? 'bold' : 'normal' }"
-              @click="selectedSet = set"
-            >{{ set }}</li>
-          </ul>
-        </div>
-        <div class="card-sidebar">
-          <ul>
-            <li
-              v-for="card in cardsFiltered"
-              :key="card.name"
-              :style="{ fontWeight: card === selectedCard ? 'bold' : 'normal' }"
-              @click="selectedCard = card"
-            >{{ card.name }}</li>
-          </ul>
-        </div>
-        <div class="card-region">
-          <img :src="selectedImage" :key="selectedImage" height="400" />
-          <pre>{{ JSON.stringify(selectedCard, null, 2) }}</pre>
-        </div>
-      </div>
+      <card-compact v-for="(card, i) in searchResults" :key="i" :card="card"/>
     </template>
     <template v-else>
       <div class="text-center m-5">
@@ -50,69 +38,58 @@
 </template>
 
 <script>
+import CardCompact from './CardCompact.vue'
 import axios from "axios";
 
 export default {
   name: "CardSpoiler",
+  components: {
+    CardCompact
+  },
   data() {
     return {
       cards: null,
-      filter: "",
-      selectedSet: null,
-      selectedCard: null
+      searchResults: [],
+      search: {
+        text: "",
+        byName: true,
+        byText: false,
+      }
     };
   },
   computed: {
-    setList() {
-      let sets = {};
-      this.cards.forEach(x => {
-        x.printInfos.forEach(y => {
-          sets[y.set] = true;
-        });
-      });
-      return Object.keys(sets).sort();
-    },
-    cardsFiltered() {
-      let filter = this.filter.toLowerCase();
-      return this.cards
-        .filter(x => {
-          if (
-            this.selectedSet &&
-            !x.printInfos.filter(y => y.set === this.selectedSet)[0]
-          )
-            return false;
-          return x.name.toLowerCase().includes(filter);
-        })
-        .sort((a, b) => {
-          if (a.name < b.name) return -1;
-          else if (a.name > b.name) return 1;
-          else return 0;
-        });
-    },
-    selectedImage() {
-      if (this.selectedCard == null) return null;
-      let printInfos = this.selectedCard.printInfos.filter(x => x.imageUrl);
-      let latestPrint = printInfos.slice(-1)[0];
-      if (latestPrint == null) return null;
-      return latestPrint.imageUrl;
+    canSearch() {
+      return this.cards && (this.search.byName || this.search.byText)
+    }
+  },
+  methods: {
+    onSearch() {
+      if (!this.canSearch) return
+      this.searchResults = this.cards.filter(x => {
+        let searchText = this.search.text.toLowerCase()
+        if (this.search.byName && x.name.toLowerCase().includes(searchText)) return true
+        if (this.search.byText && x.text && x.text.toLowerCase().includes(searchText)) return true
+        return false
+      }).sort((a, b) => {
+        if (a.name < b.name) return -1
+        else if (a.name > b.name) return 1
+        else return 0
+      })
     }
   },
   mounted() {
     axios({
       method: "get",
-      url: "/cards.json"
-    })
-      .then(response => {
-        this.cards = response.data;
-      })
-      .catch(error => {
-        alert("An error occurred fetching the card data:\n" + error);
-      });
+      url: "/resources/cards.json"
+    }).then(response => {
+      this.cards = response.data
+    }).catch(error => {
+      alert("An error occurred fetching the card data:\n" + error)
+    });
   }
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .spoiler-page {
   min-height: 100%;
@@ -123,48 +100,15 @@ export default {
 }
 
 .spoiler-page h1 {
+  width: 100%;
+  padding: 5px;
+  text-align: center;
+  background-color: #191919;
+  color: white;
   font-family: "Vhatis Warlord Title";
 }
 
-.spoiler-container {
-  display: flex;
-  flex: 1;
-  overflow-y: hidden;
-}
-
-.set-sidebar {
-  flex-basis: 100px;
-  margin-left: 5px;
-  overflow-y: scroll;
-}
-.set-sidebar ul {
-  list-style-type: none;
-  padding: 0;
-  text-align: left;
-}
-.set-sidebar li {
-  cursor: pointer;
-}
-
-.card-sidebar {
-  flex-basis: 250px;
-  margin-left: 5px;
-  overflow-y: scroll;
-}
-.card-sidebar ul {
-  list-style-type: none;
-  padding: 0;
-  text-align: left;
-}
-.card-sidebar li {
-  cursor: pointer;
-}
-
-.card-region {
-  flex: 1;
-  text-align: left;
-  font-family: "Courier New", Courier, monospace;
-  overflow: auto;
-  height: 100%;
+.spoiler-page h3 {
+  font-family: "Vhatis Warlord Title";
 }
 </style>
