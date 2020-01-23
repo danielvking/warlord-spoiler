@@ -64,7 +64,8 @@
                  borderless
                  striped
                  hover
-                 per-page="100"/>
+                 per-page="100"
+                 :current-page="currentPage"/>
         <b-pagination v-model="currentPage"
                       class="boring-font"
                       :total-rows="searchResults.length"
@@ -147,7 +148,7 @@ export default {
   background-color: rgba(255, 255, 255, 0.8);
 }
 
-.spoiler-page :not(.boring-font) {
+.spoiler-page *:not(.boring-font):not(h1) {
   font-family: "Vhatis Warlord Text";
 }
 
