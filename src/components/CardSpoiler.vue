@@ -57,7 +57,8 @@
                       class="boring-font"
                       :total-rows="searchResults.length"
                       :per-page="perPage"
-                      size="sm"/>
+                      size="sm"
+                      align="right"/>
         <b-table :items="searchResults"
                  :fields="resultFields"
                  small
@@ -70,7 +71,8 @@
                       class="boring-font"
                       :total-rows="searchResults.length"
                       :per-page="perPage"
-                      size="sm"/>
+                      size="sm"
+                      align="right"/>
       </template>
       <template v-else>
         <div class="text-center m-5">No results</div>
