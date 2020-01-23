@@ -1,7 +1,7 @@
 {
     "routes": [
-        { "src": "/images/(.*)", "headers": {"cache-control": "maxage=31536000"}},
-        { "src": "/fonts/(.*)", "headers": {"cache-control": "maxage=31536000"}},
-        { "src": "/resources/(.*)", "headers": {"cache-control": "maxage=604800"}}
+        { "src": "/images/(.*)", "headers": {"cache-control": "max-age=31536000,s-maxage=31536000" }},
+        { "src": "/fonts/(.*)", "headers": {"cache-control": "max-age=31536000,s-maxage=31536000"}},
+        { "src": "/resources/(.*)", "headers": {"cache-control": "max-age=604800,s-maxage=31536000"}}
     ]
 }
