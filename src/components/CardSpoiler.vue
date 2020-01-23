@@ -1,7 +1,7 @@
 <template>
   <b-container class="spoiler-page">
     <b-row>
-      <h1>The Spoiler</h1>
+      <h1>The Accordlands</h1>
     </b-row>
     <div class="text-center">Need to find some information on Warlord cards? You've come to the right place:</div>
     <b-form-row>
@@ -26,8 +26,54 @@
         </b-form-group>
       </b-col>
     </b-form-row>
+    <!--<b-form-group label-cols="6"
+                  label="Ruling text:">
+      <b-form-input/>
+    </b-form-group>
+    <b-form-group label-cols="6"
+                  label="Name:">
+      <b-form-input/>
+    </b-form-group>
+    <b-form-group label-cols="6"
+                  label="Artist:">
+      <b-form-input/>
+    </b-form-group>
+    <b-form-group label-cols="6"
+                  label="ATK:">
+      <b-form-input/>
+    </b-form-group>
+    <b-form-group label-cols="6"
+                  label="AC:">
+      <b-form-input/>
+    </b-form-group>
+    <b-form-group label-cols="6"
+                  label="SK:">
+      <b-form-input/>
+    </b-form-group>-->
     <template v-if="cards">
-      <card-compact v-for="(card, i) in searchResults" :key="i" :card="card"/>
+      <!--<card-compact v-for="(card, i) in searchResults" :key="i" :card="card"/>-->
+      <template v-if="searchResults[0]">
+        <b-pagination v-model="currentPage"
+                      class="boring-font"
+                      :total-rows="searchResults.length"
+                      :per-page="perPage"
+                      size="sm"/>
+        <b-table :items="searchResults"
+                 :fields="resultFields"
+                 small
+                 borderless
+                 striped
+                 hover
+                 per-page="100"/>
+        <b-pagination v-model="currentPage"
+                      class="boring-font"
+                      :total-rows="searchResults.length"
+                      :per-page="perPage"
+                      size="sm"/>
+      </template>
+      <template v-else>
+        <div class="text-center m-5">No results</div>
+      </template>
     </template>
     <template v-else>
       <div class="text-center m-5">
@@ -39,10 +85,10 @@
 
 <script>
 import CardCompact from './CardCompact.vue'
-import axios from "axios";
+import axios from 'axios';
 
 export default {
-  name: "CardSpoiler",
+  name: 'CardSpoiler',
   components: {
     CardCompact
   },
@@ -51,10 +97,13 @@ export default {
       cards: null,
       searchResults: [],
       search: {
-        text: "",
+        text: '',
         byName: true,
         byText: false,
-      }
+      },
+      perPage: 100,
+      currentPage: 1,
+      resultFields: [ 'name', 'type', 'class' , 'level' ]
     };
   },
   computed: {
@@ -79,12 +128,12 @@ export default {
   },
   mounted() {
     axios({
-      method: "get",
-      url: "/resources/cards.json"
+      method: 'get',
+      url: '/resources/cards.json'
     }).then(response => {
       this.cards = response.data
     }).catch(error => {
-      alert("An error occurred fetching the card data:\n" + error)
+      alert('An error occurred fetching the card data:\n' + error)
     });
   }
 };
@@ -96,6 +145,9 @@ export default {
   display: flex;
   flex-flow: column;
   background-color: rgba(255, 255, 255, 0.8);
+}
+
+.spoiler-page :not(.boring-font) {
   font-family: "Vhatis Warlord Text";
 }
 
@@ -105,10 +157,6 @@ export default {
   text-align: center;
   background-color: #191919;
   color: white;
-  font-family: "Vhatis Warlord Title";
-}
-
-.spoiler-page h3 {
   font-family: "Vhatis Warlord Title";
 }
 </style>
