@@ -25,67 +25,60 @@
           </b-form-group>
         </b-col>
       </b-form-row>
-      <!--<b-form-group label-cols="6"
-                    label="Ruling text:">
-        <b-form-input/>
-      </b-form-group>
-      <b-form-group label-cols="6"
-                    label="Name:">
-        <b-form-input/>
-      </b-form-group>
-      <b-form-group label-cols="6"
-                    label="Artist:">
-        <b-form-input/>
-      </b-form-group>
-      <b-form-group label-cols="6"
-                    label="ATK:">
-        <b-form-input/>
-      </b-form-group>
-      <b-form-group label-cols="6"
-                    label="AC:">
-        <b-form-input/>
-      </b-form-group>
-      <b-form-group label-cols="6"
-                    label="SK:">
-        <b-form-input/>
-      </b-form-group>-->
       <template v-if="cards">
-        <!--<card-compact v-for="(card, i) in searchResults" :key="i" :card="card"/>-->
         <template v-if="searchResults[0]">
-          <div class="my-2">
-            <b-form-select v-model="resultStyle">
-              <b-form-select-option value="table">Table</b-form-select-option>
-              <b-form-select-option value="detailed">Detailed</b-form-select-option>
-            </b-form-select>
-          </div>
-          <template v-if="resultStyle === 'table'">
-            <b-pagination v-model="currentPage"
-                          class="font-default"
-                          :total-rows="searchResults.length"
-                          :per-page="perPage"
-                          size="sm"
-                          align="right"/>
+          <b-row>
+            <b-col cols="12" md="6">
+              <b-form-select v-model="resultStyle" class="my-2">
+                <b-form-select-option value="table">Table</b-form-select-option>
+                <b-form-select-option value="detailed">Detailed</b-form-select-option>
+              </b-form-select>
+            </b-col>
+            <b-col>
+              <b-pagination v-model="currentPage"
+                            class="font-default"
+                            :total-rows="searchResults.length"
+                            :per-page="perPage"
+                            size="sm"
+                            align="right"/>
+            </b-col>
+          </b-row>
+
+          <div v-if="resultStyle === 'table'" class="overflow-x-auto">
             <b-table :items="searchResults"
-                    :fields="resultFields"
-                    small
-                    borderless
-                    striped
-                    hover
-                    per-page="100"
-                    :current-page="currentPage"
-                    @row-clicked="card => $router.push({ path: 'card-detail', query: { card: card.index } })"/>
-            <b-pagination v-model="currentPage"
-                          class="font-default"
-                          :total-rows="searchResults.length"
-                          :per-page="perPage"
-                          size="sm"
-                          align="right"/>
-          </template>
+                     :fields="resultFields"
+                     small
+                     borderless
+                     striped
+                     hover
+                     :per-page="perPage"
+                     :current-page="currentPage"
+                     @row-clicked="card => viewDetail(card)"/>
+          </div>
+
           <template v-else-if="resultStyle === 'detailed'">
-            <card-compact v-for="(card, i) in searchResults" :key="i"
-                          :card="card"
-                          @click="$router.push({ path: 'card-detail', query: { card: card.index } })"/>
+            <b-table :items="searchResults"
+                     :fields="['details']"
+                     small
+                     borderless
+                     striped
+                     hover
+                     :per-page="perPage"
+                     :current-page="currentPage"
+                     @row-clicked="card => viewDetail(card)">
+              <template v-slot:cell(details)="data">
+                <card-compact :card="data.item"/>
+              </template>
+            </b-table>
           </template>
+
+          <b-pagination v-model="currentPage"
+                        class="font-default"
+                        :total-rows="searchResults.length"
+                        :per-page="perPage"
+                        size="sm"
+                        align="right"/>
+
         </template>
         <template v-else>
           <div class="text-center m-5">No results</div>
@@ -164,6 +157,9 @@ export default {
         else if (a.name > b.name) return 1
         else return 0
       })
+    },
+    viewDetail(card) {
+      this.$router.push({ path: 'card-detail', query: { card: card.index } })
     }
   },
   mounted() {
@@ -191,5 +187,7 @@ export default {
 </script>
 
 <style scoped>
-
+.overflow-x-auto {
+  overflow-x: auto;
+}
 </style>

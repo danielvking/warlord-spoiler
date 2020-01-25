@@ -9,7 +9,7 @@
       </div>
     </b-row>
     <b-row class="site-footer">
-      <a class="my-1 mx-3 text-muted" href="https://github.com/danielvking/warlord-spoiler">View on GitHub</a>
+      <a class="my-1 mx-3 text-muted" href="https://github.com/danielvking/warlord-spoiler" target="_blank">View on GitHub</a>
     </b-row>
   </b-container>
 </template>

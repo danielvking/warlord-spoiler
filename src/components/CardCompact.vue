@@ -1,7 +1,7 @@
 <template>
-  <div class="card-body d-flex" @click="$router.push({ path: 'card-detail', query: card.name})">
+  <div class="card-body d-flex">
     <div class="text-center" style="min-width:100px">
-      <img :src="defaultImage"/>
+      <img :src="defaultImage" :key="defaultImage"/>
     </div>
     <div class="flex-grow-1">
       <span class="font-weight-bold">{{ card.name }}</span>
