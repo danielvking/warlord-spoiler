@@ -1,5 +1,5 @@
 <template>
-  <div class="card-body d-flex">
+  <div class="card-body d-flex" @click="$router.push({ path: 'card-detail', query: card.name})">
     <div class="text-center" style="min-width:100px">
       <img :src="defaultImage"/>
     </div>
@@ -31,7 +31,6 @@ export default {
 .card-body {
   width: 100%;
   padding: 5px;
-  font-size: 1rem;
 }
 .card-body img {
   max-height: 100px;

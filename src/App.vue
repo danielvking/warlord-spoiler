@@ -1,21 +1,10 @@
 <template>
   <div id="app">
-    <div class="scroll-region">
-      <CardSpoiler/>
+    <div>
+      <router-view />
     </div>
   </div>
 </template>
-
-<script>
-import CardSpoiler from './components/CardSpoiler.vue'
-
-export default {
-  name: 'app',
-  components: {
-    CardSpoiler
-  }
-}
-</script>
 
 <style>
 #app {
@@ -29,7 +18,7 @@ export default {
   background-attachment: fixed;
 }
 
-.scroll-region {
+#app > div {
   overflow-y: scroll;
   height: 100%;
 }
@@ -42,5 +31,13 @@ export default {
 @font-face {
   font-family: "Vhatis Warlord Title";
   src: url(/fonts/vhatis_warlord_title.ttf) format("truetype");
+}
+
+#app {
+  font-family: "Vhatis Warlord Text";
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Vhatis Warlord Title";
 }
 </style>

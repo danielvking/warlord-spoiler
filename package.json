@@ -12,7 +12,8 @@
     "axios": "^0.19.1",
     "bootstrap-vue": "^2.1.0",
     "core-js": "^2.6.5",
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "vue-router": "^3.0.3"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.7.0",

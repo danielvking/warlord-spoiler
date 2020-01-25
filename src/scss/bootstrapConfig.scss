@@ -15,3 +15,7 @@ $container-max-widths: (
 
 // Bootstrap defaults
 @import "node_modules/bootstrap/scss/bootstrap";
+
+.font-default {
+    font-family: $font-family-sans-serif;
+}
