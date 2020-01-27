@@ -5,7 +5,7 @@
       <h3 class="my-2">{{ cardData.name }}</h3>
       <b-row>
         <b-col cols="12" md="6" class="d-flex justify-content-center mb-2">
-          <img v-if="imageUrl" :src="imageUrl" class="card-image"/>
+          <img v-if="imageUrl" :src="imageUrlOverride || imageUrl" class="card-image"/>
         </b-col>
 
         <b-col cols="12" md="6">
@@ -14,7 +14,7 @@
               <div class="card-stat-label">Card Name:</div>
               <div class="card-stat-value">{{ cardData.name }}</div>
             </div>
-            <div class="clearfix">
+            <div v-if="cardData.level" class="clearfix">
               <div class="card-stat-label">Level:</div>
               <div class="card-stat-value">{{ cardData.level }}</div>
             </div>
@@ -58,11 +58,41 @@
               <div class="card-stat-label">Feats:</div>
               <div class="card-stat-value">{{ cardData.feats | slashToLineBreak }}</div>
             </div>
+            <div class="clearfix my-2">
+              <div class="card-stat-label">Editions:</div>
+              <div v-if="cardData.editions && cardData.editions[0]" class="card-stat-value" >
+                <span v-for="edition in cardData.editions" :key="edition">{{ edition }}</span>
+              </div>
+              <div v-else class="card-stat-value">Open</div>
+            </div>
             <div class="my-3" v-html="$options.filters.formatCardText(cardData.text)"></div>
+            <div v-for="(printInfo, i) in cardData.printInfos" :key="i">
+              <div class="card-print-link" @click="setImage(printInfo.imageUrl)">{{ printInfo.set }}</div>
+              <div class="mx-2">
+                <div v-if="printInfo.rarity" class="clearfix">
+                  <div class="card-stat-label">Rarity:</div>
+                  <div class="card-stat-value">{{ printInfo.rarity }}</div>
+                </div>
+                <div v-if="printInfo.flavorTraits" class="clearfix">
+                  <div class="card-stat-label">Flavor Traits:</div>
+                  <div class="card-stat-value">{{ printInfo.flavorTraits }}</div>
+                </div>
+                <div v-if="printInfo.artist" class="clearfix">
+                  <div class="card-stat-label">Artist:</div>
+                  <div class="card-stat-value">{{ printInfo.artist }}</div>
+                </div>
+                <div class="my-2">
+                  <i>{{ printInfo.flavorText }}</i>
+                </div>
+              </div>
+            </div>
           </div>
         </b-col>
       </b-row>
-      <pre style="overflow-y:hidden">{{ cardData }}</pre>
+      <div v-if="cardData.errata" class="my-3">
+        <div class="font-weight-bold">Rulings:</div>
+        <div class="card-errata">{{ cardData.errata }}</div>
+      </div>
     </template>>
   </b-container>
 </template>
@@ -75,7 +105,8 @@ export default {
   },
   data() {
     return {
-      cardIndex: null
+      cardIndex: null,
+      imageUrlOverride: null
     }
   },
   computed: {
@@ -94,6 +125,8 @@ export default {
       if (!value) return value;
       let hashReg = /(Spend Order:|Order:|Spend React:|React:)/gm;
       value = value.replace(hashReg, "<b>$&</b>");
+      hashReg = /\r\n/gm
+      value = value.replace(hashReg, '<br>')
       return value;
     },
     slashToLineBreak(value) {
@@ -110,6 +143,12 @@ export default {
         this.cardIndex = result.cardIndex
       })
     })
+  },
+  methods: {
+    setImage(imageUrl) {
+      if (!imageUrl) return
+      this.imageUrlOverride = imageUrl
+    }
   }
 };
 </script>
@@ -123,12 +162,24 @@ export default {
   float: left;
   font-weight: bold;
   text-align: left;
-  width: 32%;
+  width: 35%;
 }
 
 .card-stat-value {
   float: right;
   white-space: pre-wrap;
-  width: 67%;
+  width: 64%;
+}
+
+.card-print-link {
+  text-decoration: underline;
+  cursor: pointer;
+}
+  .card-print-link:hover {
+    text-decoration: none;
+  }
+
+.card-errata {
+  white-space: pre-wrap;
 }
 </style>
