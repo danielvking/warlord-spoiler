@@ -23,7 +23,7 @@ export default {
                     resolve();
                 }
             }    
-            doChunk();
+            setTimeout(doChunk, 1);
         });
     }
 }

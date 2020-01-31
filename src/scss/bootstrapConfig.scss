@@ -19,3 +19,8 @@ $container-max-widths: (
 .font-default {
     font-family: $font-family-sans-serif;
 }
+
+.v-select {
+    background-color: $input-bg;
+    border-radius: $input-border-radius;
+}

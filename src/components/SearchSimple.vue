@@ -6,6 +6,7 @@
           v-model="searchText"
           placeholder="Search text..."
           class="text-center"
+          autofocus
           @keypress.enter="onSearch"
         />
       </b-col>
@@ -18,11 +19,19 @@
         >Search</b-button>
       </b-col>
     </b-form-row>
-    <b-form-row>
-      <b-col>
-        <b-form-group class="text-center" label="Search by:">
+    <b-form-row class="mb-4">
+      <!-- Name/Text -->
+      <b-col cols="12" md="6">
+        <b-form-group class="text-center my-2" label="Search by:">
           <b-form-checkbox v-model="byName" inline>Name</b-form-checkbox>
           <b-form-checkbox v-model="byText" inline>Text</b-form-checkbox>
+        </b-form-group>
+      </b-col>
+
+      <!-- Extended -->
+      <b-col cols="12" md="6">
+        <b-form-group class="text-center my-2" label="Extended:">
+          <b-form-checkbox v-model="include4ex" inline>Include 4Ex</b-form-checkbox>
         </b-form-group>
       </b-col>
     </b-form-row>
@@ -42,6 +51,7 @@ export default {
       searchText: null,
       byName: true,
       byText: false,
+      include4ex: false,
       isBusy: false
     };
   },
@@ -59,6 +69,13 @@ export default {
       let searchText = (this.searchText && this.searchText.toLowerCase()) || "";
       let searchResults = [];
       let filter = x => {
+        // Include 4Ex
+        if (!this.include4ex) {
+          let sets = x.printInfos.map(y => y.set).filter(y => y);
+          let _4exSets = ["4EX", "AMH", "RttA"];
+          if (sets[0] && !sets.filter(s => !_4exSets.includes(s))[0])
+            return false;
+        }
         if (
           this.byName &&
           x.name &&

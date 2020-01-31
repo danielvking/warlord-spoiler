@@ -13,7 +13,8 @@
     "bootstrap-vue": "^2.1.0",
     "core-js": "^2.6.5",
     "vue": "^2.6.10",
-    "vue-router": "^3.0.3"
+    "vue-router": "^3.0.3",
+    "vue-select": "^3.4.0"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.7.0",
@@ -22,6 +23,7 @@
     "@vue/cli-service": "^3.9.0",
     "babel-eslint": "^10.0.1",
     "bootstrap": "^4.3.1",
+    "copy-webpack-plugin": "^5.1.1",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "mutationobserver-shim": "^0.3.3",
