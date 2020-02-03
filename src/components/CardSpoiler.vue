@@ -16,6 +16,7 @@
       <search-simple
         v-show="searchType === 'Simple'"
         :cards="cards"
+        :page-settings="pageSettings"
         @search-started="searchStarted"
         @search-completed="searchCompleted"
       />
@@ -23,6 +24,7 @@
       <search-advanced
         v-show="searchType === 'Advanced'"
         :cards="cards"
+        :page-settings="pageSettings"
         :referenceLists="referenceLists"
         @search-started="searchStarted"
         @search-completed="searchCompleted"
@@ -125,11 +127,15 @@ export default {
       isBusy: true,
       searchType: "Simple",
       cardPromise: null,
+      pageSettings: {
+        include4Ex: false,
+        includeChallengeLords: false
+      },
       showSearch: false,
       cards: null,
       cardIndex: {},
       referenceLists: null,
-      resultStyle: "table",
+      resultStyle: "detailed",
       searchResults: [],
       perPage: 100,
       currentPage: 1,

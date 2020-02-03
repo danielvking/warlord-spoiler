@@ -28,10 +28,11 @@
         </b-form-group>
       </b-col>
 
-      <!-- Extended -->
+      <!-- Include Extended -->
       <b-col cols="12" md="6">
-        <b-form-group class="text-center my-2" label="Extended:">
-          <b-form-checkbox v-model="include4ex" inline>Include 4Ex</b-form-checkbox>
+        <b-form-group class="text-center my-2" label="Include Extended:">
+          <b-form-checkbox v-model="pageSettings.include4ex" inline>4Ex</b-form-checkbox>
+          <b-form-checkbox v-model="pageSettings.includeChallengeLords" inline>Challenge Lords</b-form-checkbox>
         </b-form-group>
       </b-col>
     </b-form-row>
@@ -44,14 +45,14 @@ import utility from "@/utility.js";
 export default {
   name: "SearchSimple",
   props: {
-    cards: Array
+    cards: Array,
+    pageSettings: Object
   },
   data() {
     return {
       searchText: null,
       byName: true,
       byText: false,
-      include4ex: false,
       isBusy: false
     };
   },
@@ -70,11 +71,15 @@ export default {
       let searchResults = [];
       let filter = x => {
         // Include 4Ex
-        if (!this.include4ex) {
+        if (!this.pageSettings.include4ex) {
           let sets = x.printInfos.map(y => y.set).filter(y => y);
           let _4exSets = ["4EX", "AMH", "RttA"];
           if (sets[0] && !sets.filter(s => !_4exSets.includes(s))[0])
             return false;
+        }
+        // Include Challenge Lords
+        if (!this.pageSettings.includeChallengeLords) {
+          if (x.challengeLord) return false;
         }
         if (
           this.byName &&
