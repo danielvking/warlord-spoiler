@@ -67,7 +67,7 @@
             </div>
             <div class="my-3" v-html="$options.filters.formatCardText(cardData.text)"></div>
             <div v-for="(printInfo, i) in cardData.printInfos" :key="i">
-              <div class="card-print-link" @click="setImage(printInfo.imageUrl)">{{ printInfo.set }}</div>
+              <div class="card-print-link" @click="setImage(printInfo.imageUrl)">{{ printInfo | formatSetName }}</div>
               <div class="mx-2">
                 <div v-if="printInfo.rarity" class="clearfix">
                   <div class="card-stat-label">Rarity:</div>
@@ -93,7 +93,7 @@
         <div class="font-weight-bold">Rulings:</div>
         <div class="card-errata">{{ cardData.errata }}</div>
       </div>
-    </template>>
+    </template>
   </b-container>
 </template>
 
@@ -134,6 +134,11 @@ export default {
       let hashReg = /\//gm;
       value = value.replace(hashReg, "\r\n");
       return value;
+    },
+    formatSetName(value) {
+      let display = value.set;
+      if (value.setNumber != null) display += ` (${value.setNumber})`;
+      return display;
     }
   },
   mounted() {

@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div>
+      <b-link @click.prevent="clear"><span class="font-default">✘</span> Clear Fields</b-link>
+    </div>
+
     <b-row>
       <!-- Basic Fields -->
       <b-col class="my-1" cols="12" md="6">
@@ -177,7 +181,7 @@
             </template>
           </b-form-select>
         </b-form-group>
-        <b-form-group label-cols="6" label="Edition:">
+        <b-form-group label-cols="6" label="Format:">
           <b-form-select v-model="edition" :options="editionList">
             <template v-slot:first>
               <b-form-select-option :value="null">Open</b-form-select-option>
@@ -205,6 +209,37 @@
 <script>
 import utility from "@/utility.js";
 
+function initialState() {
+  return {
+    name: null,
+    text: null,
+    traits: [],
+    artist: null,
+    type: null,
+    alignment: null,
+    classes: [],
+    factions: [],
+    levelOp: "=",
+    level: null,
+    numAttacksOp: "=",
+    numAttacks: null,
+    attackOp: "=",
+    attack: null,
+    armorClassOp: "=",
+    armorClass: null,
+    skillOp: "=",
+    skill: null,
+    hitPointsOp: "=",
+    hitPoints: null,
+    set: null,
+    rarity: null,
+    edition: null,
+    flavorText: null,
+    flavorTraits: [],
+    isBusy: false
+  };
+}
+
 export default {
   name: "SearchAdvanced",
   props: {
@@ -213,34 +248,7 @@ export default {
     pageSettings: Object
   },
   data() {
-    return {
-      name: null,
-      text: null,
-      traits: [],
-      artist: null,
-      type: null,
-      alignment: null,
-      classes: [],
-      factions: [],
-      levelOp: "≥",
-      level: null,
-      numAttacksOp: "≥",
-      numAttacks: null,
-      attackOp: "≥",
-      attack: null,
-      armorClassOp: "≥",
-      armorClass: null,
-      skillOp: "≥",
-      skill: null,
-      hitPointsOp: "≥",
-      hitPoints: null,
-      set: null,
-      rarity: null,
-      edition: null,
-      flavorText: null,
-      flavorTraits: [],
-      isBusy: false
-    };
+    return initialState();
   },
   computed: {
     canSearch() {
@@ -274,13 +282,17 @@ export default {
       return (this.referenceLists && this.referenceLists.rarityList) || [];
     },
     flavorTraitList() {
-      if (!this.referenceLists || !this.referenceLists.flavorTraitList) return [];
+      if (!this.referenceLists || !this.referenceLists.flavorTraitList)
+        return [];
       return this.referenceLists.flavorTraitList.filter(
         t => !this.flavorTraits.includes(t)
       );
     }
   },
   methods: {
+    clear() {
+      Object.assign(this.$data, initialState());
+    },
     onSearch() {
       if (this.isBusy) return;
       this.isBusy = true;
