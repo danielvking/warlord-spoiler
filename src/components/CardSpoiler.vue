@@ -140,18 +140,18 @@ export default {
       searchResults: [],
       perPage: 100,
       currentPage: 1,
-      resultFields: ["name", "type", "class", "level"]
+      resultFields: ["name", "type", "class", "level"],
+      lastScrollPostion: 0
     };
   },
   methods: {
     computeShowSearch(route) {
       this.showSearch = route.name === "searchPage";
 
-      if (this.searchResults[0]) {
+      if (this.showSearch) {
         this.$nextTick(() => {
           let scrollRegion = document.getElementById('scrollRegion');
-          let searchResults = document.getElementById('searchResults');
-          scrollRegion.scrollTop = searchResults.offsetTop;
+          scrollRegion.scrollTop = this.lastScrollPostion;
         });
       }
     },
@@ -170,6 +170,8 @@ export default {
       });
     },
     viewDetail(card) {
+      let scrollRegion = document.getElementById('scrollRegion');
+      this.lastScrollPostion = scrollRegion.scrollTop;
       this.$router.push({ path: "card-detail", query: { card: card.index } });
     },
     searchStarted() {
