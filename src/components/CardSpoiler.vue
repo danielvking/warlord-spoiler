@@ -98,7 +98,7 @@
           </template>
         </template>
         <template v-else>
-          <div class="text-center m-5">
+          <div class="text-center m-5 vh-100">
             <b-spinner />
           </div>
         </template>
@@ -113,6 +113,7 @@ import SearchSimple from "@/components/SearchSimple.vue";
 import SearchAdvanced from "@/components/SearchAdvanced.vue";
 import CardCompact from "@/components/CardCompact.vue";
 import axios from "axios";
+import utility from "@/utility.js";
 
 export default {
   name: "CardSpoiler",
@@ -145,6 +146,14 @@ export default {
   methods: {
     computeShowSearch(route) {
       this.showSearch = route.name === "searchPage";
+
+      if (this.searchResults[0]) {
+        this.$nextTick(() => {
+          let scrollRegion = document.getElementById('scrollRegion');
+          let searchResults = document.getElementById('searchResults');
+          scrollRegion.scrollTop = searchResults.offsetTop;
+        });
+      }
     },
     buildCardIndex() {
       this.cards.forEach(x => {
@@ -170,6 +179,13 @@ export default {
       this.searchResults = results;
       this.currentPage = 1;
       this.isBusy = false;
+      
+      this.$nextTick(() => {
+        let scrollRegion = document.getElementById('scrollRegion');
+        let searchResults = document.getElementById('searchResults');
+
+        utility.smoothScrollTo(scrollRegion, searchResults.offsetTop, 300);
+      })
     }
   },
   mounted() {

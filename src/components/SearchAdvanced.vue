@@ -195,6 +195,46 @@
           <v-select multiple v-model="flavorTraits" :options="flavorTraitList" />
         </b-form-group>
       </b-col>
+
+      <!-- Feats -->
+      <!--<b-col class="my-1" cols="12" md="6">
+        <div v-for="i in (selectedFeats.length + Math.min(1, featList.length))" :key="i">
+          <b-form-row v-if="!selectedFeats[i - 1]">
+            <b-col cols="6">
+              <b-select v-model="selectedFeats[i - 1]" :options="featList">
+                <template v-slot:first>
+                  <b-form-select-option :value="undefined">- Select Feat -</b-form-select-option>
+                </template>
+              </b-select>
+            </b-col>
+          </b-form-row>
+          <template v-else>
+            <b-form-row class="form-group">
+              <label class="col-5 col-form-label">{{ selectedFeats[i - 1] }}:</label>
+              <b-col cols="1">
+                <b-link>✘</b-link>
+              </b-col>
+              <b-col cols="6">
+                <b-input-group>
+                  <b-input-group-prepend>
+                    <b-form-select
+                      class="font-default radius-right-0"
+                      v-model="hitPointsOp"
+                      :options="[ '≥', '=', '≤' ]"
+                    />
+                  </b-input-group-prepend>
+                  <b-form-input
+                    :id="'txtFeat' + i"
+                    type="number"
+                    v-model.number="featValues[selectedFeats[i - 1]]"
+                    @keypress.enter="onSearch"
+                  />
+                </b-input-group>
+              </b-col>
+            </b-form-row>
+          </template>
+        </div>
+      </b-col>-->
     </b-row>
 
     <b-button
@@ -236,6 +276,8 @@ function initialState() {
     edition: null,
     flavorText: null,
     flavorTraits: [],
+    selectedFeats: [],
+    featValues: {},
     isBusy: false
   };
 }
@@ -270,6 +312,12 @@ export default {
       if (!this.referenceLists || !this.referenceLists.traitList) return [];
       return this.referenceLists.traitList.filter(
         t => !this.traits.includes(t)
+      );
+    },
+    featList() {
+      if (!this.referenceLists || !this.referenceLists.featList) return [];
+      return this.referenceLists.featList.filter(
+        f => !this.selectedFeats.includes(f)
       );
     },
     editionList() {

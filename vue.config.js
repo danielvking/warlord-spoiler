@@ -8,6 +8,7 @@ let createStaticLists = function (content) {
     let classSet = {};
     let factionSet = {};
     let traitSet = {};
+    let featSet = {};
     let editionSet = {};
     let setSet = {};
     let raritySet = {};
@@ -28,6 +29,14 @@ let createStaticLists = function (content) {
         if (card.traits) {
             let traits = card.traits.split("/");
             traits.forEach(t => traitSet[t] = true);
+        }
+        if (card.feats) {
+            let feats = card.feats.split("/");
+            feats.forEach(f => {
+                if (!f.includes('Charge') && !f.includes('Challenge Rating') && !f.includes('gp')) {
+                    featSet[f.split(" +")[0]] = true;
+                }
+            })
         }
         if (card.editions) {
             card.editions.forEach(e => editionSet[e] = true);
@@ -50,6 +59,7 @@ let createStaticLists = function (content) {
         classList: Object.keys(classSet).sort(),
         factionList: Object.keys(factionSet).sort(),
         traitList: Object.keys(traitSet).sort(),
+        featList: Object.keys(featSet).sort(),
         editionList: Object.keys(editionSet).sort(),
         setList: Object.keys(setSet).sort(),
         rarityList: Object.keys(raritySet).sort(),

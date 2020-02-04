@@ -25,5 +25,23 @@ export default {
             }    
             setTimeout(doChunk, 1);
         });
+    },
+    smoothScrollTo(element, to, duration) {
+        let start = element.scrollTop;
+        let difference = to - element.scrollTop;
+    
+        let soFar = 0;
+        function scrollABit() {
+            if (soFar >= duration) {
+                element.scrollTop = to;
+            } else {
+                let percent = soFar / duration;
+                let curve = (1 - Math.cos(Math.PI * percent)) / 2;
+                element.scrollTop = difference * curve + start;
+                soFar += 10;
+                setTimeout(scrollABit, 10);
+            }
+        }
+        scrollABit();
     }
 }

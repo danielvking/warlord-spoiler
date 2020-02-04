@@ -142,11 +142,15 @@ export default {
     }
   },
   mounted() {
-    // Get cards from main page
     this.$nextTick(() => {
+      // Get cards from main page
       this.$parent.$parent.cardPromise.then(result => {
         this.cardIndex = result.cardIndex
       })
+
+      // Adjust scroll
+      let scrollRegion = document.getElementById('scrollRegion');
+      scrollRegion.scrollTop = 0;
     })
   },
   methods: {

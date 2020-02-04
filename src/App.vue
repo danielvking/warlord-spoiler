@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div>
+    <div id="scrollRegion">
       <router-view />
     </div>
   </div>
