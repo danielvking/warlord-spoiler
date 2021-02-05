@@ -58,6 +58,10 @@
               <div class="card-stat-label">Feats:</div>
               <div class="card-stat-value">{{ cardData.feats | slashToLineBreak }}</div>
             </div>
+            <div v-if="cardData.misc" class="clearfix">
+              <div class="card-stat-label">Misc:</div>
+              <div class="card-stat-value">{{ cardData.misc | slashToLineBreak }}</div>
+            </div>
             <div class="clearfix my-2">
               <div class="card-stat-label">Formats:</div>
               <div v-if="cardData.editions && cardData.editions[0]" class="card-stat-value" >

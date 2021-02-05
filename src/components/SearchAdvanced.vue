@@ -218,9 +218,8 @@
         </b-form-group>
       </b-col>
 
-      <!-- Feats -->
       <b-col class="my-1" cols="12" md="6">
-        <!-- Actual Feats -->
+        <!-- Feats -->
         <b-form-row
           class="form-group"
           v-for="i in selectedFeats.length + Math.min(1, featList.length)"
@@ -270,6 +269,7 @@
             </b-col>
           </template>
         </b-form-row>
+        
         <!-- Misc -->
         <b-form-row
           class="form-group"
@@ -622,26 +622,14 @@ export default {
             return false;
         }
         // Feats
-        if (this.selectedFeats.length > 0 || this.selectedMisc.length > 0) {
+        if (this.selectedFeats.length > 0) {
           if (!x.feats) return false;
           let featsMap = {};
-          let miscMap = {};
           x.feats.split("/").forEach(f => {
-            if (f.includes("Challenge Rating")) {
-              let miscValue = f.split(" ");
-              miscMap["Challenge Rating"] = miscValue[2];
-            } else if (f.includes("Charge")) {
-              let miscValue = f.split(" ");
-              miscMap["Charges"] = miscValue[0];
-            } else if (f.includes("gp")) {
-              let miscValue = f.split(" ");
-              miscMap["GP"] = miscValue[0];
-            } else {
-              let featValue = f.split(" +");
-              let feat = featValue[0];
-              let value = featValue[1];
-              featsMap[feat] = value;
-            }
+            let featValue = f.split(" +");
+            let feat = featValue[0];
+            let value = featValue[1];
+            featsMap[feat] = value;
           });
           for (let i = 0; i < this.selectedFeats.length; i++) {
             let feat = this.selectedFeats[i];
@@ -659,6 +647,23 @@ export default {
               }
             }
           }
+        }
+        // Misc
+        if (this.selectedMisc.length > 0) {
+          if (!x.misc) return false;
+          let miscMap = {};
+          x.misc.split("/").forEach(f => {
+            if (f.includes("Challenge Rating")) {
+              let miscValue = f.split(" ");
+              miscMap["Challenge Rating"] = miscValue[2];
+            } else if (f.includes("Charge")) {
+              let miscValue = f.split(" ");
+              miscMap["Charges"] = miscValue[0];
+            } else if (f.includes("gp")) {
+              let miscValue = f.split(" ");
+              miscMap["GP"] = miscValue[0];
+            }
+          });
           for (let i = 0; i < this.selectedMisc.length; i++) {
             let misc = this.selectedMisc[i];
             let value = miscMap[misc];

@@ -32,9 +32,7 @@ let createStaticLists = function (content) {
         if (card.feats) {
             let feats = card.feats.split("/");
             feats.forEach(f => {
-                if (!f.includes('Charge') && !f.includes('Challenge Rating') && !f.includes('gp')) {
-                    featSet[f.split(" +")[0]] = true;
-                }
+                featSet[f.split(" +")[0]] = true;
             })
         }
         if (card.editions) {
