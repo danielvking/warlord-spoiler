@@ -269,7 +269,7 @@
             </b-col>
           </template>
         </b-form-row>
-        
+
         <!-- Misc -->
         <b-form-row
           class="form-group"
@@ -310,7 +310,7 @@
                   />
                 </b-input-group-prepend>
                 <b-form-input
-                  :id="'txtFeat' + i"
+                  :id="'txtMisc' + i"
                   placeholder="Any"
                   type="number"
                   v-model.number="miscValues[selectedMisc[i - 1]]"
