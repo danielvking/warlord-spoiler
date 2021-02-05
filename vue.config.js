@@ -14,7 +14,6 @@ let createStaticLists = function (content) {
     let raritySet = {};
     let flavorTraitSet = {};
 
-    cards.derp1
     cards.forEach(card => {
         if (card.type) typeSet[card.type] = true;
         if (card.alignment) alignmentSet[card.alignment] = true;
@@ -78,6 +77,11 @@ module.exports = {
                         return createStaticLists(content);
                     }
                 }])
-        ]
+        ],
+        resolve: {
+            alias: {
+                'bootstrap-vue$': 'bootstrap-vue/src/index.js'
+            }
+        }
     }
 }

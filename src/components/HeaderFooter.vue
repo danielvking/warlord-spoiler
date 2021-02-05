@@ -1,5 +1,5 @@
 <template>
-  <b-container class="min-vh-100 d-flex flex-column">
+  <b-container class="site-container">
     <b-row class="site-header">
       <h1>The Accordlands</h1>
     </b-row>
@@ -15,6 +15,13 @@
 </template>
 
 <style scoped>
+.site-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 768px;
+  min-height: 100vh;
+}
+
 .site-header, .site-footer {
   background-color: #191919;
 }
