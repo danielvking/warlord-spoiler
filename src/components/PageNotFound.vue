@@ -10,19 +10,11 @@
 <script>
 export default {
   name: 'PageNotFound',
-  data() {
-    return {
-      imageUrl: null
+  computed: {
+    imageUrl() {
+      let card = this.$store.state.cardIndex['Wrong Target'];
+      return card && card.printInfos[0] && card.printInfos[0].imageUrl;
     }
-  },
-  mounted() {
-    // Get cards from main page
-    this.$nextTick(() => {
-      this.$parent.$parent.cardPromise.then(result => {
-        let card = result.cardIndex['Wrong Target']
-        this.imageUrl = card && card.printInfos[0] && card.printInfos[0].imageUrl
-      })
-    })
   }
 }
 </script>

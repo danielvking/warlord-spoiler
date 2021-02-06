@@ -45,7 +45,6 @@ import utility from "@/utility.js";
 export default {
   name: "SearchSimple",
   props: {
-    cards: Array,
     pageSettings: Object
   },
   data() {
@@ -57,6 +56,7 @@ export default {
     };
   },
   computed: {
+    cards() { return this.$store.state.cards; },
     canSearch() {
       return this.cards && !this.isBusy;
     }

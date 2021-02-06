@@ -223,7 +223,7 @@
         <b-form-row
           class="form-group"
           v-for="i in selectedFeats.length + Math.min(1, featList.length)"
-          :key="i"
+          :key="'Feat' + i"
         >
           <template v-if="!selectedFeats[i - 1]">
             <b-col cols="6">
@@ -274,7 +274,7 @@
         <b-form-row
           class="form-group"
           v-for="i in selectedMisc.length + Math.min(1, miscList.length)"
-          :key="i"
+          :key="'Misc' + i"
         >
           <template v-if="!selectedMisc[i - 1]">
             <b-col cols="6">
@@ -376,14 +376,14 @@ function initialState() {
 export default {
   name: "SearchAdvanced",
   props: {
-    cards: Array,
-    referenceLists: Object,
     pageSettings: Object,
   },
   data() {
     return initialState();
   },
   computed: {
+    cards() { return this.$store.state.cards; },
+    referenceLists() { return this.$store.state.referenceLists; },
     canSearch() {
       return this.cards && !this.isBusy;
     },

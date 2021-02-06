@@ -6,10 +6,12 @@ import './plugins/vue-select'
 import App from './App.vue'
 import './scss/bootstrapConfig.scss'
 import router from './router'
+import store from './store'
 
 Vue.config.productionTip = false
 
 new Vue({
   router,
-  render: h => h(App)
+  render: h => h(App),
+  store: store
 }).$mount('#app')
