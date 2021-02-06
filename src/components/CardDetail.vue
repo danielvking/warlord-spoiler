@@ -1,11 +1,17 @@
 <template>
   <b-container fluid>
-    <router-link :to="{ name: 'searchPage' }"><span class="font-default">&larr;</span> Return to search</router-link>
+    <router-link :to="{ name: 'searchPage' }"
+      ><span class="font-default">&larr;</span> Return to search</router-link
+    >
     <template v-if="cardIndex">
       <h3 class="my-2">{{ cardData.name }}</h3>
       <b-row>
         <b-col cols="12" md="6" class="d-flex justify-content-center mb-2">
-          <img v-if="imageUrl" :src="imageUrlOverride || imageUrl" class="card-image"/>
+          <img
+            v-if="imageUrl"
+            :src="imageUrlOverride || imageUrl"
+            class="card-image"
+          />
         </b-col>
 
         <b-col cols="12" md="6">
@@ -48,30 +54,51 @@
             </div>
             <div v-if="cardData.faction" class="clearfix">
               <div class="card-stat-label">Faction:</div>
-              <div class="card-stat-value">{{ cardData.faction | slashToLineBreak }}</div>
+              <div class="card-stat-value">
+                {{ cardData.faction | slashToLineBreak }}
+              </div>
             </div>
             <div v-if="cardData.traits" class="clearfix">
               <div class="card-stat-label">Traits:</div>
-              <div class="card-stat-value">{{ cardData.traits | slashToLineBreak }}</div>
+              <div class="card-stat-value">
+                {{ cardData.traits | slashToLineBreak }}
+              </div>
             </div>
             <div v-if="cardData.feats" class="clearfix">
               <div class="card-stat-label">Feats:</div>
-              <div class="card-stat-value">{{ cardData.feats | slashToLineBreak }}</div>
+              <div class="card-stat-value">
+                {{ cardData.feats | slashToLineBreak }}
+              </div>
             </div>
             <div v-if="cardData.misc" class="clearfix">
               <div class="card-stat-label">Misc:</div>
-              <div class="card-stat-value">{{ cardData.misc | slashToLineBreak }}</div>
+              <div class="card-stat-value">
+                {{ cardData.misc | slashToLineBreak }}
+              </div>
             </div>
             <div class="clearfix my-2">
               <div class="card-stat-label">Formats:</div>
-              <div v-if="cardData.editions && cardData.editions[0]" class="card-stat-value" >
-                <span v-for="edition in cardData.editions" :key="edition">{{ edition }} </span>
+              <div
+                v-if="cardData.editions && cardData.editions[0]"
+                class="card-stat-value"
+              >
+                <span v-for="edition in cardData.editions" :key="edition"
+                  >{{ edition }}
+                </span>
               </div>
               <div v-else class="card-stat-value">Open</div>
             </div>
-            <div class="my-3" v-html="$options.filters.formatCardText(cardData.text)"></div>
+            <div
+              class="my-3"
+              v-html="$options.filters.formatCardText(cardData.text)"
+            ></div>
             <div v-for="(printInfo, i) in cardData.printInfos" :key="i">
-              <div class="card-print-link" @click="setImage(printInfo.imageUrl)">{{ printInfo | formatSetName }}</div>
+              <div
+                class="card-print-link"
+                @click="setImage(printInfo.imageUrl)"
+              >
+                {{ printInfo | formatSetName }}
+              </div>
               <div class="mx-2">
                 <div v-if="printInfo.rarity" class="clearfix">
                   <div class="card-stat-label">Rarity:</div>
@@ -79,7 +106,9 @@
                 </div>
                 <div v-if="printInfo.flavorTraits" class="clearfix">
                   <div class="card-stat-label">Flavor Traits:</div>
-                  <div class="card-stat-value">{{ printInfo.flavorTraits }}</div>
+                  <div class="card-stat-value">
+                    {{ printInfo.flavorTraits }}
+                  </div>
                 </div>
                 <div v-if="printInfo.artist" class="clearfix">
                   <div class="card-stat-label">Artist:</div>
@@ -103,34 +132,37 @@
 
 <script>
 export default {
-  name: 'CardDetail',
+  name: "CardDetail",
   props: {
-    card: String
+    card: String,
   },
   data() {
     return {
-      cardIndex: null,
-      imageUrlOverride: null
-    }
+      imageUrlOverride: null,
+    };
   },
   computed: {
+    cardIndex() {
+      return this.$store.state.cardIndex;
+    },
     cardData() {
-      return this.cardIndex[this.card]
+      return this.cardIndex[this.card] || {};
     },
     imageUrl() {
-      if (!this.cardData) return null
-      let printInfos = this.cardData.printInfos.filter(x => x.imageUrl)
-      if (!printInfos[0]) return null
-      return printInfos[0].imageUrl
-    }
+      if (!this.cardData) return null;
+      if (!this.cardData.printInfos) return null;
+      let printInfos = this.cardData.printInfos.filter((x) => x.imageUrl);
+      if (!printInfos[0]) return null;
+      return printInfos[0].imageUrl;
+    },
   },
   filters: {
     formatCardText(value) {
       if (!value) return value;
       let hashReg = /(Spend Order:|Order:|Spend React:|React:)/gm;
       value = value.replace(hashReg, "<b>$&</b>");
-      hashReg = /\r\n/gm
-      value = value.replace(hashReg, '<br>')
+      hashReg = /\r\n/gm;
+      value = value.replace(hashReg, "<br>");
       return value;
     },
     slashToLineBreak(value) {
@@ -143,26 +175,22 @@ export default {
       let display = value.set;
       if (value.setNumber != null) display += ` (${value.setNumber})`;
       return display;
-    }
+    },
   },
   mounted() {
     this.$nextTick(() => {
-      // Get cards from main page
-      this.$parent.$parent.cardPromise.then(result => {
-        this.cardIndex = result.cardIndex
-      })
-
+      
       // Adjust scroll
-      let scrollRegion = document.getElementById('scrollRegion');
+      let scrollRegion = document.getElementById("scrollRegion");
       scrollRegion.scrollTop = 0;
-    })
+    });
   },
   methods: {
     setImage(imageUrl) {
-      if (!imageUrl) return
-      this.imageUrlOverride = imageUrl
-    }
-  }
+      if (!imageUrl) return;
+      this.imageUrlOverride = imageUrl;
+    },
+  },
 };
 </script>
 
@@ -188,9 +216,9 @@ export default {
   text-decoration: underline;
   cursor: pointer;
 }
-  .card-print-link:hover {
-    text-decoration: none;
-  }
+.card-print-link:hover {
+  text-decoration: none;
+}
 
 .card-errata {
   white-space: pre-wrap;

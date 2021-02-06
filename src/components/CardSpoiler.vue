@@ -15,7 +15,6 @@
 
       <search-simple
         v-show="searchType === 'Simple'"
-        :cards="cards"
         :page-settings="pageSettings"
         @search-started="searchStarted"
         @search-completed="searchCompleted"
@@ -23,9 +22,7 @@
 
       <search-advanced
         v-show="searchType === 'Advanced'"
-        :cards="cards"
         :page-settings="pageSettings"
-        :referenceLists="referenceLists"
         @search-started="searchStarted"
         @search-completed="searchCompleted"
       />
@@ -112,7 +109,6 @@ import HeaderFooter from "@/components/HeaderFooter.vue";
 import SearchSimple from "@/components/SearchSimple.vue";
 import SearchAdvanced from "@/components/SearchAdvanced.vue";
 import CardCompact from "@/components/CardCompact.vue";
-import axios from "axios";
 import utility from "@/utility.js";
 
 export default {
@@ -127,15 +123,11 @@ export default {
     return {
       isBusy: true,
       searchType: "Simple",
-      cardPromise: null,
       pageSettings: {
         include4Ex: false,
         includeChallengeLords: false
       },
       showSearch: false,
-      cards: null,
-      cardIndex: {},
-      referenceLists: null,
       resultStyle: "detailed",
       searchResults: [],
       perPage: 100,
@@ -143,6 +135,11 @@ export default {
       resultFields: ["name", "type", "class", "level"],
       lastScrollPostion: 0
     };
+  },
+  computed: {
+    cards() { return this.$store.state.cards; },
+    cardIndex() { return this.$store.state.cardIndex; },
+    referenceLists() { return this.$store.state.referenceLists; }
   },
   methods: {
     computeShowSearch(route) {
@@ -154,20 +151,6 @@ export default {
           scrollRegion.scrollTop = this.lastScrollPostion;
         });
       }
-    },
-    buildCardIndex() {
-      this.cards.forEach(x => {
-        let key = x.name;
-        if (this.cardIndex[key]) {
-          let count = 1;
-          do {
-            count++;
-            key = x.name + "_" + count;
-          } while (this.cardIndex[key]);
-        }
-        this.cardIndex[key] = x;
-        x.index = key;
-      });
     },
     viewDetail(card) {
       let scrollRegion = document.getElementById('scrollRegion');
@@ -193,33 +176,10 @@ export default {
   mounted() {
     this.computeShowSearch(this.$route);
 
-    let cardsJson = axios({
-      method: "get",
-      url: "/resources/cards.json"
-    }).then(response => {
-      this.cards = response.data;
-      this.buildCardIndex();
-    });
-
-    let referenceListsJson = axios({
-      method: "get",
-      url: "/resources/referenceLists.json"
-    }).then(response => {
-      this.referenceLists = response.data;
-    });
-
-    this.cardPromise = Promise.all([cardsJson, referenceListsJson])
+    this.$store.dispatch("loadCardData")
       .then(() => {
         this.isBusy = false;
-        return {
-          cards: this.cards,
-          cardIndex: this.cardIndex,
-          referenceLists: this.referenceLists
-        };
       })
-      .catch(error => {
-        alert("An error occurred fetching the card data:\n" + error);
-      });
   },
   watch: {
     $route: function(newVal) {
