@@ -2,13 +2,16 @@
   <header-footer>
     <router-view />
     <b-container v-show="showSearch" class="mt-2" fluid>
-      <div
-        class="text-center"
-      >Need to find some information on Warlord cards? You've come to the right place:</div>
+      <div class="text-center">
+        <span
+          >Need to find some information on Warlord cards? You've come to the
+          right place:</span
+        >
+      </div>
 
       <b-radio-group
         v-model="searchType"
-        :options="[ 'Simple', 'Advanced' ]"
+        :options="['Simple', 'Advanced']"
         class="my-2 w-100"
         buttons
       />
@@ -33,8 +36,12 @@
             <b-row>
               <b-col cols="12" md="6">
                 <b-form-select v-model="resultStyle" class="my-2">
-                  <b-form-select-option value="table">Table</b-form-select-option>
-                  <b-form-select-option value="detailed">Detailed</b-form-select-option>
+                  <b-form-select-option value="table"
+                    >Table</b-form-select-option
+                  >
+                  <b-form-select-option value="detailed"
+                    >Detailed</b-form-select-option
+                  >
                 </b-form-select>
               </b-col>
               <b-col>
@@ -59,7 +66,7 @@
                 hover
                 :per-page="perPage"
                 :current-page="currentPage"
-                @row-clicked="card => viewDetail(card)"
+                @row-clicked="(card) => viewDetail(card)"
               />
             </div>
 
@@ -73,7 +80,7 @@
                 hover
                 :per-page="perPage"
                 :current-page="currentPage"
-                @row-clicked="card => viewDetail(card)"
+                @row-clicked="(card) => viewDetail(card)"
               >
                 <template v-slot:cell(details)="data">
                   <card-compact :card="data.item" />
@@ -117,7 +124,7 @@ export default {
     HeaderFooter,
     CardCompact,
     SearchSimple,
-    SearchAdvanced
+    SearchAdvanced,
   },
   data() {
     return {
@@ -125,7 +132,7 @@ export default {
       searchType: "Simple",
       pageSettings: {
         include4Ex: false,
-        includeChallengeLords: false
+        includeChallengeLords: false,
       },
       showSearch: false,
       resultStyle: "detailed",
@@ -133,13 +140,19 @@ export default {
       perPage: 100,
       currentPage: 1,
       resultFields: ["name", "type", "class", "level"],
-      lastScrollPostion: 0
+      lastScrollPostion: 0,
     };
   },
   computed: {
-    cards() { return this.$store.state.cards; },
-    cardIndex() { return this.$store.state.cardIndex; },
-    referenceLists() { return this.$store.state.referenceLists; }
+    cards() {
+      return this.$store.state.cards;
+    },
+    cardIndex() {
+      return this.$store.state.cardIndex;
+    },
+    referenceLists() {
+      return this.$store.state.referenceLists;
+    },
   },
   methods: {
     computeShowSearch(route) {
@@ -147,13 +160,13 @@ export default {
 
       if (this.showSearch) {
         this.$nextTick(() => {
-          let scrollRegion = document.getElementById('scrollRegion');
+          let scrollRegion = document.getElementById("scrollRegion");
           scrollRegion.scrollTop = this.lastScrollPostion;
         });
       }
     },
     viewDetail(card) {
-      let scrollRegion = document.getElementById('scrollRegion');
+      let scrollRegion = document.getElementById("scrollRegion");
       this.lastScrollPostion = scrollRegion.scrollTop;
       this.$router.push({ path: "card-detail", query: { card: card.index } });
     },
@@ -164,28 +177,27 @@ export default {
       this.searchResults = results;
       this.currentPage = 1;
       this.isBusy = false;
-      
+
       this.$nextTick(() => {
-        let scrollRegion = document.getElementById('scrollRegion');
-        let searchResults = document.getElementById('searchResults');
+        let scrollRegion = document.getElementById("scrollRegion");
+        let searchResults = document.getElementById("searchResults");
 
         utility.smoothScrollTo(scrollRegion, searchResults.offsetTop, 300);
-      })
-    }
+      });
+    },
   },
   mounted() {
     this.computeShowSearch(this.$route);
 
-    this.$store.dispatch("loadCardData")
-      .then(() => {
-        this.isBusy = false;
-      })
+    this.$store.dispatch("loadCardData").then(() => {
+      this.isBusy = false;
+    });
   },
   watch: {
-    $route: function(newVal) {
+    $route: function (newVal) {
       this.computeShowSearch(newVal);
-    }
-  }
+    },
+  },
 };
 </script>
 

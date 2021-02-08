@@ -17,76 +17,96 @@
         <b-col cols="12" md="6">
           <div class="p-1">
             <div class="clearfix">
-              <div class="card-stat-label">Card Name:</div>
-              <div class="card-stat-value">{{ cardData.name }}</div>
+              <div class="card-stat-label"><span>Card Name:</span></div>
+              <div class="card-stat-value">
+                <span>{{ cardData.name }}</span>
+              </div>
             </div>
             <div v-if="cardData.level" class="clearfix">
-              <div class="card-stat-label">Level:</div>
-              <div class="card-stat-value">{{ cardData.level }}</div>
+              <div class="card-stat-label"><span>Level:</span></div>
+              <div class="card-stat-value">
+                <span>{{ cardData.level }}</span>
+              </div>
             </div>
             <div v-if="cardData.alignment" class="clearfix">
-              <div class="card-stat-label">Alignment:</div>
-              <div class="card-stat-value">{{ cardData.alignment }}</div>
+              <div class="card-stat-label"><span>Alignment:</span></div>
+              <div class="card-stat-value">
+                <span>{{ cardData.alignment }}</span>
+              </div>
             </div>
             <div v-if="cardData.type" class="clearfix">
-              <div class="card-stat-label">Type:</div>
-              <div class="card-stat-value">{{ cardData.type }}</div>
+              <div class="card-stat-label"><span>Type:</span></div>
+              <div class="card-stat-value">
+                <span>{{ cardData.type }}</span>
+              </div>
             </div>
             <div v-if="cardData.class" class="clearfix">
-              <div class="card-stat-label">Class:</div>
-              <div class="card-stat-value">{{ cardData.class }}</div>
+              <div class="card-stat-label"><span>Class:</span></div>
+              <div class="card-stat-value">
+                <span>{{ cardData.class }}</span>
+              </div>
             </div>
             <div v-if="cardData.attack" class="clearfix">
-              <div class="card-stat-label">Attack:</div>
-              <div class="card-stat-value">{{ cardData.attack }}</div>
+              <div class="card-stat-label"><span>Attack:</span></div>
+              <div class="card-stat-value">
+                <span>{{ cardData.attack }}</span>
+              </div>
             </div>
             <div v-if="cardData.armorClass" class="clearfix">
-              <div class="card-stat-label">Armor Class:</div>
-              <div class="card-stat-value">{{ cardData.armorClass }}</div>
+              <div class="card-stat-label"><span>Armor Class:</span></div>
+              <div class="card-stat-value">
+                <span>{{ cardData.armorClass }}</span>
+              </div>
             </div>
             <div v-if="cardData.skill" class="clearfix">
-              <div class="card-stat-label">Skill:</div>
-              <div class="card-stat-value">{{ cardData.skill }}</div>
+              <div class="card-stat-label"><span>Skill:</span></div>
+              <div class="card-stat-value">
+                <span>{{ cardData.skill }}</span>
+              </div>
             </div>
             <div v-if="cardData.hitPoints" class="clearfix">
-              <div class="card-stat-label">Hit Points:</div>
-              <div class="card-stat-value">{{ cardData.hitPoints }}</div>
+              <div class="card-stat-label">
+                <span>Hit Points:</span>
+              </div>
+              <div class="card-stat-value">
+                <span>{{ cardData.hitPoints }}</span>
+              </div>
             </div>
             <div v-if="cardData.faction" class="clearfix">
-              <div class="card-stat-label">Faction:</div>
+              <div class="card-stat-label"><span>Faction:</span></div>
               <div class="card-stat-value">
-                {{ cardData.faction | slashToLineBreak }}
+                <span>{{ cardData.faction | slashToLineBreak }}</span>
               </div>
             </div>
             <div v-if="cardData.traits" class="clearfix">
-              <div class="card-stat-label">Traits:</div>
+              <div class="card-stat-label"><span>Traits:</span></div>
               <div class="card-stat-value">
-                {{ cardData.traits | slashToLineBreak }}
+                <span>{{ cardData.traits | slashToLineBreak }}</span>
               </div>
             </div>
             <div v-if="cardData.feats" class="clearfix">
-              <div class="card-stat-label">Feats:</div>
+              <div class="card-stat-label"><span>Feats:</span></div>
               <div class="card-stat-value">
-                {{ cardData.feats | slashToLineBreak }}
+                <span>{{ cardData.feats | slashToLineBreak }}</span>
               </div>
             </div>
             <div v-if="cardData.misc" class="clearfix">
-              <div class="card-stat-label">Misc:</div>
+              <div class="card-stat-label"><span>Misc:</span></div>
               <div class="card-stat-value">
-                {{ cardData.misc | slashToLineBreak }}
+                <span>{{ cardData.misc | slashToLineBreak }}</span>
               </div>
             </div>
             <div class="clearfix my-2">
-              <div class="card-stat-label">Formats:</div>
+              <div class="card-stat-label"><span>Formats:</span></div>
               <div
                 v-if="cardData.editions && cardData.editions[0]"
                 class="card-stat-value"
               >
                 <span v-for="edition in cardData.editions" :key="edition">{{
-                  edition + ' '
+                  edition + " "
                 }}</span>
               </div>
-              <div v-else class="card-stat-value">Open</div>
+              <div v-else class="card-stat-value"><span>Open</span></div>
             </div>
             <div
               class="my-3"
@@ -97,22 +117,26 @@
                 class="card-print-link"
                 @click="setImage(printInfo.imageUrl)"
               >
-                {{ printInfo | formatSetName }}
+                <span>{{ printInfo | formatSetName }}</span>
               </div>
               <div class="mx-2">
                 <div v-if="printInfo.rarity" class="clearfix">
-                  <div class="card-stat-label">Rarity:</div>
-                  <div class="card-stat-value">{{ printInfo.rarity }}</div>
+                  <div class="card-stat-label"><span>Rarity:</span></div>
+                  <div class="card-stat-value">
+                    <span>{{ printInfo.rarity }}</span>
+                  </div>
                 </div>
                 <div v-if="printInfo.flavorTraits" class="clearfix">
-                  <div class="card-stat-label">Flavor Traits:</div>
+                  <div class="card-stat-label"><span>Flavor Traits:</span></div>
                   <div class="card-stat-value">
-                    {{ printInfo.flavorTraits }}
+                    <span>{{ printInfo.flavorTraits }}</span>
                   </div>
                 </div>
                 <div v-if="printInfo.artist" class="clearfix">
-                  <div class="card-stat-label">Artist:</div>
-                  <div class="card-stat-value">{{ printInfo.artist }}</div>
+                  <div class="card-stat-label"><span>Artist:</span></div>
+                  <div class="card-stat-value">
+                    <span>{{ printInfo.artist }}</span>
+                  </div>
                 </div>
                 <div class="my-2">
                   <i>{{ printInfo.flavorText }}</i>
@@ -123,8 +147,10 @@
         </b-col>
       </b-row>
       <div v-if="cardData.errata" class="my-3">
-        <div class="font-weight-bold">Rulings:</div>
-        <div class="card-errata">{{ cardData.errata }}</div>
+        <div class="font-weight-bold"><span>Rulings:</span></div>
+        <div class="card-errata">
+          <span>{{ cardData.errata }}</span>
+        </div>
       </div>
     </template>
   </b-container>
@@ -179,7 +205,6 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      
       // Adjust scroll
       let scrollRegion = document.getElementById("scrollRegion");
       scrollRegion.scrollTop = 0;
