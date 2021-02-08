@@ -82,9 +82,9 @@
                 v-if="cardData.editions && cardData.editions[0]"
                 class="card-stat-value"
               >
-                <span v-for="edition in cardData.editions" :key="edition"
-                  >{{ edition }}
-                </span>
+                <span v-for="edition in cardData.editions" :key="edition">{{
+                  edition + ' '
+                }}</span>
               </div>
               <div v-else class="card-stat-value">Open</div>
             </div>
