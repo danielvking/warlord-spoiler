@@ -1,6 +1,6 @@
 <template>
   <div class="card-body d-flex">
-    <div class="text-center" style="min-width: 100px">
+    <div style="min-width: 80px">
       <img :src="defaultImage" :key="defaultImage" />
     </div>
     <div class="flex-grow-1">
@@ -30,9 +30,10 @@ export default {
 <style scoped>
 .card-body {
   width: 100%;
-  padding: 5px;
+  padding: 0;
 }
 .card-body img {
   max-height: 100px;
+  max-width: 75px;
 }
 </style>

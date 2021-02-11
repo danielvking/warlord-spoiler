@@ -4,11 +4,11 @@ export default {
             context = context || window;
             maxTimePerChunk = maxTimePerChunk || 100;
             var index = 0;
-        
+
             function now() {
                 return new Date().getTime();
             }
-        
+
             function doChunk() {
                 var startTime = now();
                 while (index < array.length && (now() - startTime) <= maxTimePerChunk) {
@@ -22,14 +22,14 @@ export default {
                 } else {
                     resolve();
                 }
-            }    
+            }
             setTimeout(doChunk, 1);
         });
     },
     smoothScrollTo(element, to, duration) {
         let start = element.scrollTop;
         let difference = to - element.scrollTop;
-    
+
         let soFar = 0;
         function scrollABit() {
             if (soFar >= duration) {
@@ -43,5 +43,33 @@ export default {
             }
         }
         scrollABit();
+    },
+    debounce(func, time = 100) {
+        let timestamp = 0;
+        let isTimeout = false;
+
+        return function () {
+            if (!isTimeout) {
+                let currTimestamp = new Date().getTime();
+                let timeDiff = currTimestamp - timestamp;
+                if (timeDiff >= time) {
+                    timestamp = currTimestamp;
+                    func.apply(this, arguments);
+                } else {
+                    isTimeout = true;
+                    setTimeout(() => {
+                        timestamp = new Date().getTime();
+                        func.apply(this, arguments);
+                        isTimeout = false;
+                    }, time - timeDiff);
+                }
+            }
+        }
+    },
+    saveText(text, filename) {
+        let a = document.createElement('a');
+        a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        a.setAttribute('download', filename);
+        a.click()
     }
 }

@@ -9,6 +9,10 @@
     "dev": "vue-cli-service serve --port 50005"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.2",
+    "@fortawesome/fontawesome-svg-core": "^1.2.34",
+    "@fortawesome/free-solid-svg-icons": "^5.15.2",
+    "@fortawesome/vue-fontawesome": "^2.0.2",
     "axios": "^0.21.1",
     "bootstrap-vue": "^2.1.0",
     "core-js": "^2.6.5",

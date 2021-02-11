@@ -5,16 +5,21 @@
     </b-row>
     <b-row class="flex-grow-1 content-region">
       <div class="w-100">
-        <slot/>
+        <slot />
       </div>
     </b-row>
     <b-row class="site-footer">
-      <a class="my-1 mx-3 text-muted" href="https://github.com/danielvking/warlord-spoiler" target="_blank">View on GitHub</a>
+      <a
+        class="my-1 mx-3 text-muted"
+        href="https://github.com/danielvking/warlord-spoiler"
+        target="_blank"
+        >View on GitHub</a
+      >
     </b-row>
   </b-container>
 </template>
 
-<style scoped>
+<style>
 .site-container {
   display: flex;
   flex-direction: column;
@@ -22,17 +27,26 @@
   min-height: 100vh;
 }
 
-.site-header, .site-footer {
+.site-header,
+.site-footer,
+.site-subheader {
   background-color: #191919;
 }
 
-.site-header {
+.site-header,
+.site-subheader {
   color: white;
 }
 
 .site-header h1 {
   width: 100%;
   margin: 5px;
+  text-align: center;
+}
+
+.site-subheader h6 {
+  width: 100%;
+  margin: 3px;
   text-align: center;
 }
 
