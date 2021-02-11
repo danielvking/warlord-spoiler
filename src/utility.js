@@ -66,10 +66,25 @@ export default {
             }
         }
     },
+    readText() {
+        let input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('style', 'display:none');
+        document.body.append(input);
+        return new Promise(resolve => {
+            let fr = new FileReader();
+            input.onchange = () => {
+                fr.onload = x => resolve(x.target.result);
+                fr.readAsText(input.files[0]);
+            }
+            input.click();
+            input.remove();
+        });
+    },
     saveText(text, filename) {
         let a = document.createElement('a');
         a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
         a.setAttribute('download', filename);
-        a.click()
+        a.click();
     }
 }
