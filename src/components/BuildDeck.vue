@@ -15,7 +15,7 @@
             <router-link :to="{ name: 'printDeck' }" target="_blank" aria-label="print" class="mr-1">
               <font-awesome-icon icon="print" />
             </router-link>
-            <a href="#" aria-label="file export">
+            <a href="#" @click.prevent="exportCards" aria-label="file export">
               <font-awesome-icon icon="file-export" />
             </a>
           </div>
@@ -113,7 +113,10 @@ export default {
       this.$store.commit("clearDeck");
     },
     exportCards() {
-
+      if (this.$store.state.cardsLoaded) {
+        let cardTxt = this.cards.map(x => `${x.count} ${x.card.name}`).join("\n");
+        utility.saveText(cardTxt, "deck.txt");
+      }
     },
     viewDetail(card) {
       this.$router.push({ path: "card-detail", query: { card: card.index } });
