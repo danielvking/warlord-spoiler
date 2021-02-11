@@ -9,12 +9,17 @@
     "dev": "vue-cli-service serve --port 50005"
   },
   "dependencies": {
-    "axios": "^0.19.1",
+    "@fortawesome/fontawesome-free": "^5.15.2",
+    "@fortawesome/fontawesome-svg-core": "^1.2.34",
+    "@fortawesome/free-solid-svg-icons": "^5.15.2",
+    "@fortawesome/vue-fontawesome": "^2.0.2",
+    "axios": "^0.21.1",
     "bootstrap-vue": "^2.1.0",
     "core-js": "^2.6.5",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",
-    "vue-select": "^3.4.0"
+    "vue-select": "^3.4.0",
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.7.0",

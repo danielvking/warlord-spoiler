@@ -14,7 +14,6 @@ let createStaticLists = function (content) {
     let raritySet = {};
     let flavorTraitSet = {};
 
-    cards.derp1
     cards.forEach(card => {
         if (card.type) typeSet[card.type] = true;
         if (card.alignment) alignmentSet[card.alignment] = true;
@@ -33,9 +32,7 @@ let createStaticLists = function (content) {
         if (card.feats) {
             let feats = card.feats.split("/");
             feats.forEach(f => {
-                if (!f.includes('Charge') && !f.includes('Challenge Rating') && !f.includes('gp')) {
-                    featSet[f.split(" +")[0]] = true;
-                }
+                featSet[f.split(" +")[0]] = true;
             })
         }
         if (card.editions) {
@@ -78,6 +75,11 @@ module.exports = {
                         return createStaticLists(content);
                     }
                 }])
-        ]
+        ],
+        resolve: {
+            alias: {
+                'bootstrap-vue$': 'bootstrap-vue/src/index.js'
+            }
+        }
     }
 }

@@ -1,12 +1,12 @@
 <template>
   <div class="card-body d-flex">
-    <div class="text-center" style="min-width:100px">
-      <img :src="defaultImage" :key="defaultImage"/>
+    <div style="min-width: 80px">
+      <img :src="defaultImage" :key="defaultImage" />
     </div>
     <div class="flex-grow-1">
       <span class="font-weight-bold">{{ card.name }}</span>
-      <br>
-      {{ card.text }}
+      <br />
+      <span>{{ card.text }}</span>
     </div>
   </div>
 </template>
@@ -15,24 +15,25 @@
 export default {
   name: "CardCompact",
   props: {
-      card: Object
+    card: Object,
   },
   computed: {
     defaultImage() {
-      let printInfos = this.card.printInfos.filter(x => x.imageUrl)
-      if (!printInfos[0]) return null
-      return printInfos[0].imageUrl
-    }
-  }
-}
+      let printInfos = this.card.printInfos.filter((x) => x.imageUrl);
+      if (!printInfos[0]) return null;
+      return printInfos[0].imageUrl;
+    },
+  },
+};
 </script>
 
 <style scoped>
 .card-body {
   width: 100%;
-  padding: 5px;
+  padding: 0;
 }
 .card-body img {
   max-height: 100px;
+  max-width: 75px;
 }
 </style>

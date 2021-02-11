@@ -1,7 +1,9 @@
 <template>
   <div>
     <div>
-      <b-link @click.prevent="clear"><span class="font-default">✘</span> Clear Fields</b-link>
+      <a href="#" @click.prevent="clear"
+        ><span class="font-default">✘</span> Clear Fields</a
+      >
     </div>
 
     <b-row>
@@ -38,13 +40,21 @@
       <b-col cols="12" md="6">
         <!-- Include Extended -->
         <b-form-group label-cols="6" label="Include Extended:" class="my-1">
-          <b-form-checkbox v-model="pageSettings.include4ex" stacked>4Ex</b-form-checkbox>
-          <b-form-checkbox v-model="pageSettings.includeChallengeLords" stacked>Challenge Lords</b-form-checkbox>
+          <b-form-checkbox v-model="pageSettings.include4ex" stacked
+            >4Ex</b-form-checkbox
+          >
+          <b-form-checkbox v-model="pageSettings.includeChallengeLords" stacked
+            >Challenge Lords</b-form-checkbox
+          >
         </b-form-group>
 
         <!-- Class -->
         <b-form-group label-cols="6" label="Class:" class="my-1">
-          <b-form-checkbox-group v-model="classes" :options="classList" stacked />
+          <b-form-checkbox-group
+            v-model="classes"
+            :options="classList"
+            stacked
+          />
         </b-form-group>
       </b-col>
     </b-row>
@@ -53,7 +63,11 @@
       <!-- Faction -->
       <b-col class="my-1" cols="12" md="6">
         <b-form-group label-cols="6" label="Faction:">
-          <b-form-checkbox-group v-model="factions" :options="factionList" stacked />
+          <b-form-checkbox-group
+            v-model="factions"
+            :options="factionList"
+            stacked
+          />
         </b-form-group>
       </b-col>
 
@@ -65,7 +79,7 @@
               <b-form-select
                 class="font-default radius-right-0"
                 v-model="levelOp"
-                :options="[ '≥', '=', '≤' ]"
+                :options="['≥', '=', '≤']"
               />
             </b-input-group-prepend>
             <b-form-input
@@ -76,13 +90,17 @@
             />
           </b-input-group>
         </b-form-group>
-        <b-form-group label-cols="6" label="Number of Attacks:" label-for="txtNoAtks">
+        <b-form-group
+          label-cols="6"
+          label="Number of Attacks:"
+          label-for="txtNoAtks"
+        >
           <b-input-group>
             <b-input-group-prepend>
               <b-form-select
                 class="font-default radius-right-0"
                 v-model="numAttacksOp"
-                :options="[ '≥', '=', '≤' ]"
+                :options="['≥', '=', '≤']"
               />
             </b-input-group-prepend>
             <b-form-input
@@ -99,7 +117,7 @@
               <b-form-select
                 class="font-default radius-right-0"
                 v-model="attackOp"
-                :options="[ '≥', '=', '≤' ]"
+                :options="['≥', '=', '≤']"
               />
             </b-input-group-prepend>
             <b-form-input
@@ -116,7 +134,7 @@
               <b-form-select
                 class="font-default radius-right-0"
                 v-model="armorClassOp"
-                :options="[ '≥', '=', '≤' ]"
+                :options="['≥', '=', '≤']"
               />
             </b-input-group-prepend>
             <b-form-input
@@ -133,7 +151,7 @@
               <b-form-select
                 class="font-default radius-right-0"
                 v-model="skillOp"
-                :options="[ '≥', '=', '≤' ]"
+                :options="['≥', '=', '≤']"
               />
             </b-input-group-prepend>
             <b-form-input
@@ -150,7 +168,7 @@
               <b-form-select
                 class="font-default radius-right-0"
                 v-model="hitPointsOp"
-                :options="[ '≥', '=', '≤' ]"
+                :options="['≥', '=', '≤']"
               />
             </b-input-group-prepend>
             <b-form-input
@@ -192,49 +210,117 @@
           <b-form-input v-model="flavorText" @keypress.enter="onSearch" />
         </b-form-group>
         <b-form-group label-cols="6" label="Flavor Traits:" label-class="my-1">
-          <v-select multiple v-model="flavorTraits" :options="flavorTraitList" />
+          <v-select
+            multiple
+            v-model="flavorTraits"
+            :options="flavorTraitList"
+          />
         </b-form-group>
       </b-col>
 
-      <!-- Feats -->
-      <!--<b-col class="my-1" cols="12" md="6">
-        <div v-for="i in (selectedFeats.length + Math.min(1, featList.length))" :key="i">
-          <b-form-row v-if="!selectedFeats[i - 1]">
+      <b-col class="my-1" cols="12" md="6">
+        <!-- Feats -->
+        <b-form-row
+          class="form-group"
+          v-for="i in selectedFeats.length + Math.min(1, featList.length)"
+          :key="'Feat' + i"
+        >
+          <template v-if="!selectedFeats[i - 1]">
             <b-col cols="6">
-              <b-select v-model="selectedFeats[i - 1]" :options="featList">
+              <b-select
+                v-model="selectedFeats[i - 1]"
+                :options="featList"
+                @input="featOps[selectedFeats[i - 1]] = '='"
+              >
                 <template v-slot:first>
-                  <b-form-select-option :value="undefined">- Select Feat -</b-form-select-option>
+                  <b-form-select-option :value="undefined"
+                    >- Select Feat -</b-form-select-option
+                  >
                 </template>
               </b-select>
             </b-col>
-          </b-form-row>
-          <template v-else>
-            <b-form-row class="form-group">
-              <label class="col-5 col-form-label">{{ selectedFeats[i - 1] }}:</label>
-              <b-col cols="1">
-                <b-link>✘</b-link>
-              </b-col>
-              <b-col cols="6">
-                <b-input-group>
-                  <b-input-group-prepend>
-                    <b-form-select
-                      class="font-default radius-right-0"
-                      v-model="hitPointsOp"
-                      :options="[ '≥', '=', '≤' ]"
-                    />
-                  </b-input-group-prepend>
-                  <b-form-input
-                    :id="'txtFeat' + i"
-                    type="number"
-                    v-model.number="featValues[selectedFeats[i - 1]]"
-                    @keypress.enter="onSearch"
-                  />
-                </b-input-group>
-              </b-col>
-            </b-form-row>
           </template>
-        </div>
-      </b-col>-->
+          <template v-else>
+            <label class="col-5 col-form-label"
+              >{{ selectedFeats[i - 1] }}:</label
+            >
+            <b-col cols="1">
+              <a href="#" @click.prevent="deselectFeat(i - 1)"
+                ><span class="font-default">✘</span></a
+              >
+            </b-col>
+            <b-col cols="6">
+              <b-input-group>
+                <b-input-group-prepend>
+                  <b-form-select
+                    class="font-default radius-right-0"
+                    v-model="featOps[selectedFeats[i - 1]]"
+                    :options="['≥', '=', '≤']"
+                  />
+                </b-input-group-prepend>
+                <b-form-input
+                  :id="'txtFeat' + i"
+                  placeholder="Any"
+                  type="number"
+                  v-model.number="featValues[selectedFeats[i - 1]]"
+                  @keypress.enter="onSearch"
+                />
+              </b-input-group>
+            </b-col>
+          </template>
+        </b-form-row>
+
+        <!-- Misc -->
+        <b-form-row
+          class="form-group"
+          v-for="i in selectedMisc.length + Math.min(1, miscList.length)"
+          :key="'Misc' + i"
+        >
+          <template v-if="!selectedMisc[i - 1]">
+            <b-col cols="6">
+              <b-select
+                v-model="selectedMisc[i - 1]"
+                :options="miscList"
+                @input="miscOps[selectedMisc[i - 1]] = '='"
+              >
+                <template v-slot:first>
+                  <b-form-select-option :value="undefined"
+                    >- Select Misc -</b-form-select-option
+                  >
+                </template>
+              </b-select>
+            </b-col>
+          </template>
+          <template v-else>
+            <label class="col-5 col-form-label"
+              >{{ selectedMisc[i - 1] }}:</label
+            >
+            <b-col cols="1">
+              <a href="#" @click.prevent="deselectMisc(i - 1)"
+                ><span class="font-default">✘</span></a
+              >
+            </b-col>
+            <b-col cols="6">
+              <b-input-group>
+                <b-input-group-prepend>
+                  <b-form-select
+                    class="font-default radius-right-0"
+                    v-model="miscOps[selectedMisc[i - 1]]"
+                    :options="['≥', '=', '≤']"
+                  />
+                </b-input-group-prepend>
+                <b-form-input
+                  :id="'txtMisc' + i"
+                  placeholder="Any"
+                  type="number"
+                  v-model.number="miscValues[selectedMisc[i - 1]]"
+                  @keypress.enter="onSearch"
+                />
+              </b-input-group>
+            </b-col>
+          </template>
+        </b-form-row>
+      </b-col>
     </b-row>
 
     <b-button
@@ -242,7 +328,8 @@
       class="w-100 my-1"
       :disabled="!canSearch"
       @click.prevent="onSearch"
-    >Search</b-button>
+      >Search</b-button
+    >
   </div>
 </template>
 
@@ -277,22 +364,26 @@ function initialState() {
     flavorText: null,
     flavorTraits: [],
     selectedFeats: [],
+    featOps: {},
     featValues: {},
-    isBusy: false
+    selectedMisc: [],
+    miscOps: {},
+    miscValues: {},
+    isBusy: false,
   };
 }
 
 export default {
   name: "SearchAdvanced",
   props: {
-    cards: Array,
-    referenceLists: Object,
-    pageSettings: Object
+    pageSettings: Object,
   },
   data() {
     return initialState();
   },
   computed: {
+    cards() { return this.$store.state.cards; },
+    referenceLists() { return this.$store.state.referenceLists; },
     canSearch() {
       return this.cards && !this.isBusy;
     },
@@ -311,14 +402,20 @@ export default {
     traitList() {
       if (!this.referenceLists || !this.referenceLists.traitList) return [];
       return this.referenceLists.traitList.filter(
-        t => !this.traits.includes(t)
+        (t) => !this.traits.includes(t)
       );
     },
     featList() {
       if (!this.referenceLists || !this.referenceLists.featList) return [];
       return this.referenceLists.featList.filter(
-        f => !this.selectedFeats.includes(f)
+        (f) => !this.selectedFeats.includes(f)
       );
+    },
+    miscList() {
+       // I admit this is inelegant
+      return ['Challenge Rating', 'Charges', 'GP'].filter(
+        (f) => !this.selectedMisc.includes(f)
+      )
     },
     editionList() {
       return (this.referenceLists && this.referenceLists.editionList) || [];
@@ -333,13 +430,21 @@ export default {
       if (!this.referenceLists || !this.referenceLists.flavorTraitList)
         return [];
       return this.referenceLists.flavorTraitList.filter(
-        t => !this.flavorTraits.includes(t)
+        (t) => !this.flavorTraits.includes(t)
       );
-    }
+    },
   },
   methods: {
     clear() {
       Object.assign(this.$data, initialState());
+    },
+    deselectFeat(index) {
+      this.featValues[this.selectedFeats[index]] = null;
+      this.selectedFeats.splice(index, 1);
+    },
+    deselectMisc(index) {
+      this.miscValues[this.selectedMisc[index]] = null;
+      this.selectedMisc.splice(index, 1);
     },
     onSearch() {
       if (this.isBusy) return;
@@ -352,15 +457,15 @@ export default {
       let artist = this.artist && this.artist.toLowerCase();
 
       let searchResults = [];
-      let filter = x => {
+      let filter = (x) => {
         if (!this.pageSettings.include4ex || this.set) {
-          let sets = x.printInfos.map(y => y.set).filter(y => y);
+          let sets = x.printInfos.map((y) => y.set).filter((y) => y);
           // Include 4Ex
           let _4exSets = ["4EX", "AMH", "RttA"];
           if (
             !this.pageSettings.include4ex &&
             sets[0] &&
-            !sets.filter(s => !_4exSets.includes(s))[0]
+            !sets.filter((s) => !_4exSets.includes(s))[0]
           )
             return false;
 
@@ -383,13 +488,13 @@ export default {
         if (this.traits[0]) {
           if (!x.traits) return false;
           let traits = x.traits.split("/");
-          if (this.traits.filter(t => !traits.includes(t))[0]) return false;
+          if (this.traits.filter((t) => !traits.includes(t))[0]) return false;
         }
         // Artist
         if (
           artist &&
           !x.printInfos.filter(
-            y => y.artist && y.artist.toLowerCase().includes(artist)
+            (y) => y.artist && y.artist.toLowerCase().includes(artist)
           )[0]
         ) {
           return false;
@@ -406,13 +511,14 @@ export default {
         if (this.classes[0]) {
           if (!x.class) return false;
           let classes = x.class.split("/");
-          if (this.classes.filter(c => !classes.includes(c))[0]) return false;
+          if (this.classes.filter((c) => !classes.includes(c))[0]) return false;
         }
         // Faction
         if (this.factions[0]) {
           if (!x.faction) return false;
           let factions = x.faction.split("/");
-          if (this.factions.filter(f => !factions.includes(f))[0]) return false;
+          if (this.factions.filter((f) => !factions.includes(f))[0])
+            return false;
         }
         // Level
         if (typeof this.level === "number") {
@@ -487,7 +593,7 @@ export default {
         }
         // Rarity
         if (this.rarity) {
-          let rarities = x.printInfos.map(y => y.rarity).filter(y => y);
+          let rarities = x.printInfos.map((y) => y.rarity).filter((y) => y);
           if (!rarities.includes(this.rarity)) return false;
         }
         // Edition
@@ -498,7 +604,8 @@ export default {
         if (
           flavorText &&
           !x.printInfos.filter(
-            y => y.flavorText && y.flavorText.toLowerCase().includes(flavorText)
+            (y) =>
+              y.flavorText && y.flavorText.toLowerCase().includes(flavorText)
           )[0]
         ) {
           return false;
@@ -506,19 +613,80 @@ export default {
         // Flavor Traits
         if (this.flavorTraits[0]) {
           let allFlavorTraits = x.printInfos
-            .map(x => x.flavorTraits)
-            .filter(y => y);
+            .map((y) => y.flavorTraits)
+            .filter((y) => y);
           let flavorTraits = new Set(
-            allFlavorTraits.map(y => y.split("/")).flat()
+            allFlavorTraits.map((y) => y.split("/")).flat()
           );
-          if (this.flavorTraits.filter(t => !flavorTraits.has(t))[0])
+          if (this.flavorTraits.filter((t) => !flavorTraits.has(t))[0])
             return false;
         }
+        // Feats
+        if (this.selectedFeats.length > 0) {
+          if (!x.feats) return false;
+          let featsMap = {};
+          x.feats.split("/").forEach(f => {
+            let featValue = f.split(" +");
+            let feat = featValue[0];
+            let value = featValue[1];
+            featsMap[feat] = value;
+          });
+          for (let i = 0; i < this.selectedFeats.length; i++) {
+            let feat = this.selectedFeats[i];
+            let value = featsMap[feat];
+            if (value == null) return false; // Don't really care what the value is
+            let compareValue = this.featValues[feat];
+            if (typeof compareValue === "number") {
+              let featOp = this.featOps[feat];
+              if (featOp === "≥") {
+                if (compareValue > value) return false;
+              } else if (featOp === "≤") {
+                if (compareValue < value) return false;
+              } else {
+                if (compareValue != value) return false;
+              }
+            }
+          }
+        }
+        // Misc
+        if (this.selectedMisc.length > 0) {
+          if (!x.misc) return false;
+          let miscMap = {};
+          x.misc.split("/").forEach(f => {
+            if (f.includes("Challenge Rating")) {
+              let miscValue = f.split(" ");
+              miscMap["Challenge Rating"] = miscValue[2];
+            } else if (f.includes("Charge")) {
+              let miscValue = f.split(" ");
+              miscMap["Charges"] = miscValue[0];
+            } else if (f.includes("gp")) {
+              let miscValue = f.split(" ");
+              miscMap["GP"] = miscValue[0];
+            }
+          });
+          for (let i = 0; i < this.selectedMisc.length; i++) {
+            let misc = this.selectedMisc[i];
+            let value = miscMap[misc];
+            if (value == null) return false; // Don't really care what the value is
+            let compareValue = this.miscValues[misc];
+            if (typeof compareValue === "number") {
+              let miscOp = this.miscOps[misc];
+              if (miscOp === "≥") {
+                if (compareValue > value) return false;
+              } else if (miscOp === "≤") {
+                if (compareValue < value) return false;
+              } else {
+                if (compareValue != value) return false;
+              }
+            }
+          }
+        }
+
         return true;
       };
 
       utility
-        .forEachAsync(this.cards, x => {
+        .forEachAsync(this.cards, (x) => {
           if (filter(x)) searchResults.push(x);
         })
         .then(() => {
@@ -531,8 +699,8 @@ export default {
           this.isBusy = false;
           this.$emit("search-completed", searchResults);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

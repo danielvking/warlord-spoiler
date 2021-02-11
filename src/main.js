@@ -6,10 +6,23 @@ import './plugins/vue-select'
 import App from './App.vue'
 import './scss/bootstrapConfig.scss'
 import router from './router'
+import store from './store'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faMinusSquare, faPlusSquare, faPrint, faFileExport } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(faMinusSquare)
+library.add(faPlusSquare)
+library.add(faPrint)
+library.add(faFileExport)
+
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false
 
 new Vue({
   router,
-  render: h => h(App)
+  render: h => h(App),
+  store: store,
+  beforeCreate() { this.$store.commit('initialize'); }
 }).$mount('#app')

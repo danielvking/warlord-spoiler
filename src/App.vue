@@ -18,7 +18,7 @@
   background-attachment: fixed;
 }
 
-#app > div {
+#scrollRegion {
   overflow-y: scroll;
   height: 100%;
 }
@@ -39,5 +39,10 @@
 
 h1, h2, h3, h4, h5, h6 {
   font-family: "Vhatis Warlord Title";
+}
+
+.shrink {
+  white-space: nowrap;
+  width: 1px;
 }
 </style>
