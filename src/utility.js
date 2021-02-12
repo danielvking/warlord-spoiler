@@ -1,4 +1,42 @@
+let tokenStrCache = []
+
 export default {
+    includesTokens(str, tokenStr) {
+        str = str && str.toLowerCase();
+        tokenStr = tokenStr && tokenStr.toLowerCase();
+
+        let tokenStrRegex = tokenStrCache.filter(x => x.tokenStr === tokenStr)[0];
+        if (!tokenStrRegex) {
+            let quoteSplit = tokenStr.split('"');
+            let regexParts = [];
+            for (let i = 0; i < quoteSplit.length; i++) {
+                let token = quoteSplit[i];
+                if (token === "") continue;
+                if (i % 2 === 1 && i !== quoteSplit.length - 1) {
+                    // Quoted token, match entire quoted text, and it cannot be bordered by a word character
+                    let prefix = /\w/.test(token[0]);
+                    let suffix = /\w/.test(token[token.length - 1]);
+                    token = this.escapeRegExp(token);
+                    if (prefix) token = "(^|(?<=\\W))" + token;
+                    if (suffix) token = token + "($|(?=\\W))";
+                    regexParts.push(token);
+                } else {
+                    // Unquoted text, break up words, and it can be contained in another word
+                    let tokens = token.split(" ").filter(x => x !== "");
+                    tokens.forEach(tokenPart => regexParts.push(this.escapeRegExp(tokenPart)));
+                }
+            }
+            tokenStrRegex = { tokenStr: tokenStr, regex: new RegExp(regexParts.join(".*"), "m") };
+            tokenStrCache.push(tokenStrRegex);
+
+            if (tokenStrCache.length > 20) tokenStrCache.shift();
+        }
+
+        return tokenStrRegex.regex.test(str);
+    },
+    escapeRegExp(str) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    },
     forEachAsync(array, fn, maxTimePerChunk, context) {
         return new Promise(resolve => {
             context = context || window;

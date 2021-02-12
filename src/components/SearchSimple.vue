@@ -67,7 +67,7 @@ export default {
       this.isBusy = true;
       this.$emit("search-started");
 
-      let searchText = (this.searchText && this.searchText.toLowerCase()) || "";
+      let searchText = this.searchText || "";
       let searchResults = [];
       let filter = x => {
         // Include 4Ex
@@ -84,14 +84,14 @@ export default {
         if (
           this.byName &&
           x.name &&
-          x.name.toLowerCase().includes(searchText)
+          utility.includesTokens(x.name, searchText)
         ) {
           return true;
         }
         if (
           this.byText &&
           x.text &&
-          x.text.toLowerCase().includes(searchText)
+          utility.includesTokens(x.text, searchText)
         ) {
           return true;
         }

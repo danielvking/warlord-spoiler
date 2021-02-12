@@ -15,7 +15,7 @@
             <a
               href="#"
               @click.prevent="importCards"
-              aria-label="file import"
+              title="Load deck"
               class="mr-1"
             >
               <font-awesome-icon icon="folder-open" />
@@ -23,7 +23,7 @@
             <a
               href="#"
               @click.prevent="exportCards"
-              aria-label="file export"
+              title="Save deck"
               class="mr-1"
             >
               <font-awesome-icon icon="save" />
@@ -31,7 +31,7 @@
             <router-link
               :to="{ name: 'printDeck' }"
               target="_blank"
-              aria-label="print"
+              title="Print"
             >
               <font-awesome-icon icon="print" />
             </router-link>
@@ -60,7 +60,7 @@
                 <a
                   href="#"
                   @click.prevent="decrementCardToDeck(data.item.card.index)"
-                  aria-label="minus"
+                  title="Minus one"
                   class="mr-1"
                 >
                   <font-awesome-icon icon="minus-square" />
@@ -68,7 +68,7 @@
                 <a
                   href="#"
                   @click.prevent="incrementCardToDeck(data.item.card.index)"
-                  aria-label="plus"
+                  title="Plus one"
                 >
                   <font-awesome-icon icon="plus-square" />
                 </a>
