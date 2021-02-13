@@ -464,7 +464,7 @@ export default {
         if (!this.pageSettings.include4ex || this.set) {
           let sets = x.printInfos.map((y) => y.set).filter((y) => y);
           // Include 4Ex
-          let _4exSets = ["4EX", "AMH", "RttA"];
+          let _4exSets = ["4EX", "AMH", "RttA", "4th Edition Expanded (4EX)", "Aftermath (AMH)", "Return to the Accordlands (RttA)"];
           if (
             !this.pageSettings.include4ex &&
             sets[0] &&
