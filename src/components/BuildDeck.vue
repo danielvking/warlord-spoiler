@@ -79,7 +79,6 @@
             </b-table>
             <b-table
               class="mb-0"
-              :items="typedCards[type]"
               :fields="[
                 { label: 'Total' },
                 { key: 'buttons', class: 'text-right shrink' },
