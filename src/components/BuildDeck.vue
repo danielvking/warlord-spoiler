@@ -47,8 +47,8 @@
               :items="typedCards[type]"
               :fields="[
                 { key: 'card.name', label: type },
-                { key: 'count', class: 'text-right shrink', label: '' },
-                { key: 'buttons', class: 'shrink', label: '' },
+                { key: 'count', label: '', class: 'text-right shrink' },
+                { key: 'buttons', class: 'text-right shrink' },
               ]"
               small
               borderless
@@ -56,6 +56,9 @@
               hover
               @row-clicked="(cardCount) => viewDetail(cardCount.card)"
             >
+              <template #head(buttons)>
+                <span>({{ typedCards[type].reduce((s, x) => s + x.count, 0) }})</span>
+              </template>
               <template v-slot:cell(buttons)="data">
                 <a
                   href="#"
@@ -72,6 +75,22 @@
                 >
                   <font-awesome-icon icon="plus-square" />
                 </a>
+              </template>
+            </b-table>
+            <b-table
+              class="mb-0"
+              :items="typedCards[type]"
+              :fields="[
+                { label: 'Total' },
+                { key: 'buttons', class: 'text-right shrink' },
+              ]"
+              small
+              borderless
+              striped
+              hover
+            >
+              <template #head(buttons)>
+                <span>{{ cards.reduce((s, x) => s + x.count, 0) }}</span>
               </template>
             </b-table>
           </div>
