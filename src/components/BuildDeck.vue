@@ -156,6 +156,13 @@ export default {
           let lines = x.split(/[\r\n]+/);
           for (let i = 0; i < lines.length; i++) {
             let line = lines[i];
+
+            // normalize from untap.in
+            let lineIsUntapSpecific = (line.indexOf('//') == 0)
+            if( lineIsUntapSpecific ) {
+              continue
+            }
+
             if (line !== "") {
               let spaceIndex = line.indexOf(" ");
               if (spaceIndex < 0) {
