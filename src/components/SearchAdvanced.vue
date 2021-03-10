@@ -18,6 +18,9 @@
         <b-form-group label-cols="6" label="Traits:" label-class="my-1">
           <v-select multiple v-model="traits" :options="traitList" />
         </b-form-group>
+        <b-form-group label-cols="6" label="Exclude Traits:" label-class="my-1">
+          <v-select multiple v-model="excludeTraits" :options="traitList" />
+        </b-form-group>
         <b-form-group label-cols="6" label="Artist:">
           <b-form-input v-model="artist" @keypress.enter="onSearch" />
         </b-form-group>
@@ -341,6 +344,7 @@ function initialState() {
     name: null,
     text: null,
     traits: [],
+    excludeTraits: [],
     artist: null,
     type: null,
     alignment: null,
@@ -382,8 +386,12 @@ export default {
     return initialState();
   },
   computed: {
-    cards() { return this.$store.state.cards; },
-    referenceLists() { return this.$store.state.referenceLists; },
+    cards() {
+      return this.$store.state.cards;
+    },
+    referenceLists() {
+      return this.$store.state.referenceLists;
+    },
     canSearch() {
       return this.cards && !this.isBusy;
     },
@@ -412,10 +420,10 @@ export default {
       );
     },
     miscList() {
-       // I admit this is inelegant
-      return ['Challenge Rating', 'Charges', 'GP'].filter(
+      // I admit this is inelegant
+      return ["Challenge Rating", "Charges", "GP"].filter(
         (f) => !this.selectedMisc.includes(f)
-      )
+      );
     },
     editionList() {
       return (this.referenceLists && this.referenceLists.editionList) || [];
@@ -451,17 +459,12 @@ export default {
       this.isBusy = true;
       this.$emit("search-started");
 
-      let name = this.name && this.name.toLowerCase();
-      let text = this.text && this.text.toLowerCase();
-      let flavorText = this.flavorText && this.flavorText.toLowerCase();
-      let artist = this.artist && this.artist.toLowerCase();
-
       let searchResults = [];
       let filter = (x) => {
         if (!this.pageSettings.include4ex || this.set) {
           let sets = x.printInfos.map((y) => y.set).filter((y) => y);
           // Include 4Ex
-          let _4exSets = ["4EX", "AMH", "RttA"];
+          let _4exSets = ["4EX", "AMH", "RttA", "4th Edition Expanded (4EX)", "Aftermath (AMH)", "Return to the Accordlands (RttA)"];
           if (
             !this.pageSettings.include4ex &&
             sets[0] &&
@@ -477,24 +480,34 @@ export default {
           if (x.challengeLord) return false;
         }
         // Name
-        if (name && (!x.name || !x.name.toLowerCase().includes(name))) {
+        if (
+          this.name &&
+          (!x.name || !utility.includesTokens(x.name, this.name))
+        ) {
           return false;
         }
         // Text
-        if (text && (!x.text || !x.text.toLowerCase().includes(text))) {
+        if (
+          this.text &&
+          (!x.text || !utility.includesTokens(x.text, this.text))
+        ) {
           return false;
         }
         // Traits
-        if (this.traits[0]) {
-          if (!x.traits) return false;
-          let traits = x.traits.split("/");
-          if (this.traits.filter((t) => !traits.includes(t))[0]) return false;
+        if (this.traits[0] || this.excludeTraits[0]) {
+          let traits = x.traits ? x.traits.split("/") : [];
+          if (this.traits[0]) {
+            if (this.traits.filter((t) => !traits.includes(t))[0]) return false;
+          }
+          if (this.excludeTraits[0]) {
+            if (this.excludeTraits.filter((t) => traits.includes(t))[0]) return false;
+          }
         }
         // Artist
         if (
-          artist &&
+          this.artist &&
           !x.printInfos.filter(
-            (y) => y.artist && y.artist.toLowerCase().includes(artist)
+            (y) => y.artist && utility.includesTokens(y.artist, this.artist)
           )[0]
         ) {
           return false;
@@ -602,10 +615,11 @@ export default {
         }
         // Flavor Text
         if (
-          flavorText &&
+          this.flavorText &&
           !x.printInfos.filter(
             (y) =>
-              y.flavorText && y.flavorText.toLowerCase().includes(flavorText)
+              y.flavorText &&
+              utility.includesTokens(y.flavorText, this.flavorText)
           )[0]
         ) {
           return false;
@@ -625,7 +639,7 @@ export default {
         if (this.selectedFeats.length > 0) {
           if (!x.feats) return false;
           let featsMap = {};
-          x.feats.split("/").forEach(f => {
+          x.feats.split("/").forEach((f) => {
             let featValue = f.split(" +");
             let feat = featValue[0];
             let value = featValue[1];
@@ -652,7 +666,7 @@ export default {
         if (this.selectedMisc.length > 0) {
           if (!x.misc) return false;
           let miscMap = {};
-          x.misc.split("/").forEach(f => {
+          x.misc.split("/").forEach((f) => {
             if (f.includes("Challenge Rating")) {
               let miscValue = f.split(" ");
               miscMap["Challenge Rating"] = miscValue[2];

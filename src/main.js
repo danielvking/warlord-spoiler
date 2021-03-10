@@ -8,13 +8,14 @@ import './scss/bootstrapConfig.scss'
 import router from './router'
 import store from './store'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faMinusSquare, faPlusSquare, faPrint, faFileExport } from '@fortawesome/free-solid-svg-icons'
+import { faMinusSquare, faPlusSquare, faPrint, faFolderOpen, faSave } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(faMinusSquare)
 library.add(faPlusSquare)
 library.add(faPrint)
-library.add(faFileExport)
+library.add(faFolderOpen)
+library.add(faSave)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

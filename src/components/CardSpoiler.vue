@@ -79,7 +79,7 @@
                       @click.prevent="
                         $store.commit('incrementCardToDeck', data.item.index)
                       "
-                      aria-label="Add to build"
+                      title="Add to build"
                     >
                       <font-awesome-icon icon="plus-square" />
                     </a>
@@ -109,7 +109,7 @@
                       @click.prevent="
                         $store.commit('incrementCardToDeck', data.item.index)
                       "
-                      aria-label="Add to build"
+                      title="Add to build"
                     >
                       <font-awesome-icon icon="plus-square" />
                     </a>

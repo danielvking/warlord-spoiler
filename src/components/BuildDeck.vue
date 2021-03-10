@@ -12,12 +12,29 @@
             >
           </div>
           <div class="float-right">
-            <router-link :to="{ name: 'printDeck' }" target="_blank" aria-label="print" class="mr-1">
+            <a
+              href="#"
+              @click.prevent="importCards"
+              title="Load deck"
+              class="mr-1"
+            >
+              <font-awesome-icon icon="folder-open" />
+            </a>
+            <a
+              href="#"
+              @click.prevent="exportCards"
+              title="Save deck"
+              class="mr-1"
+            >
+              <font-awesome-icon icon="save" />
+            </a>
+            <router-link
+              :to="{ name: 'printDeck' }"
+              target="_blank"
+              title="Print"
+            >
               <font-awesome-icon icon="print" />
             </router-link>
-            <a href="#" @click.prevent="exportCards" aria-label="file export">
-              <font-awesome-icon icon="file-export" />
-            </a>
           </div>
         </div>
         <template v-if="$store.state.cardsLoaded">
@@ -30,8 +47,8 @@
               :items="typedCards[type]"
               :fields="[
                 { key: 'card.name', label: type },
-                { key: 'count', class: 'text-right shrink', label: '' },
-                { key: 'buttons', class: 'shrink', label: '' },
+                { key: 'count', label: '', class: 'text-right shrink' },
+                { key: 'buttons', class: 'text-right shrink' },
               ]"
               small
               borderless
@@ -39,26 +56,40 @@
               hover
               @row-clicked="(cardCount) => viewDetail(cardCount.card)"
             >
+              <template #head(buttons)>
+                <span>({{ typedCards[type].reduce((s, x) => s + x.count, 0) }})</span>
+              </template>
               <template v-slot:cell(buttons)="data">
                 <a
                   href="#"
-                  @click.prevent="
-                    $store.commit('decrementCardToDeck', data.item.card.index)
-                  "
-                  aria-label="minus"
+                  @click.prevent="decrementCardToDeck(data.item.card.index)"
+                  title="Minus one"
                   class="mr-1"
                 >
                   <font-awesome-icon icon="minus-square" />
                 </a>
                 <a
                   href="#"
-                  @click.prevent="
-                    $store.commit('incrementCardToDeck', data.item.card.index)
-                  "
-                  aria-label="plus"
+                  @click.prevent="incrementCardToDeck(data.item.card.index)"
+                  title="Plus one"
                 >
                   <font-awesome-icon icon="plus-square" />
                 </a>
+              </template>
+            </b-table>
+            <b-table
+              class="mb-0"
+              :fields="[
+                { label: 'Total' },
+                { key: 'buttons', class: 'text-right shrink' },
+              ]"
+              small
+              borderless
+              striped
+              hover
+            >
+              <template #head(buttons)>
+                <span>{{ cards.reduce((s, x) => s + x.count, 0) }}</span>
               </template>
             </b-table>
           </div>
@@ -83,7 +114,10 @@ export default {
       return this.$store.state.cardIndex;
     },
     showDeck() {
-      return Object.keys(this.$store.state.deck).length && this.$store.getters.showDeck;
+      return (
+        Object.keys(this.$store.state.deck).length &&
+        this.$store.getters.showDeck
+      );
     },
     cards() {
       let deck = this.$store.state.deck;
@@ -112,11 +146,78 @@ export default {
     clear() {
       this.$store.commit("clearDeck");
     },
+    importCards() {
+      if (this.$store.state.cardsLoaded) {
+        utility.readText().then((x) => {
+          let cards = this.$store.state.cards;
+          let deck = [];
+
+          // Parse
+          let lines = x.split(/[\r\n]+/);
+          for (let i = 0; i < lines.length; i++) {
+            let line = lines[i];
+
+            // normalize from untap.in
+            let lineIsUntapSpecific = (line.indexOf('//') == 0)
+            if( lineIsUntapSpecific ) {
+              continue
+            }
+
+            if (line !== "") {
+              let spaceIndex = line.indexOf(" ");
+              if (spaceIndex < 0) {
+                alert(
+                  `Error line ${
+                    i + 1
+                  }: each line must be a number, space, and card name`
+                );
+                return;
+              }
+              let count = +line.substring(0, spaceIndex);
+              if (isNaN(count)) {
+                alert(
+                  `Error line ${
+                    i + 1
+                  }: each line must be a number, space, and card name`
+                );
+                return;
+              }
+              let cardName = line.substring(spaceIndex + 1);
+
+              let matchingCards = cards.filter((x) => x.name === cardName);
+              if (matchingCards.length === 0) {
+                alert(`Error line ${i + 1}: unrecognized card ${cardName}`);
+                return;
+              } else if (matchingCards.length > 1) {
+                alert(`Warning line ${i + 1}: ${cardName} is ambiguous`);
+              }
+              deck.push({ cardString: matchingCards[0].index, count: count });
+            }
+
+            // Set deck
+            this.clear();
+            deck.forEach((cardStringCount) => {
+              for (let i = 0; i < cardStringCount.count; i++) {
+                this.incrementCardToDeck(cardStringCount.cardString);
+              }
+            });
+          }
+        });
+      }
+    },
     exportCards() {
       if (this.$store.state.cardsLoaded) {
-        let cardTxt = this.cards.map(x => `${x.count} ${x.card.name}`).join("\n");
+        let cardTxt = this.cards
+          .map((x) => `${x.count} ${x.card.name}`)
+          .join("\n");
         utility.saveText(cardTxt, "deck.txt");
       }
+    },
+    decrementCardToDeck(cardString) {
+      this.$store.commit("decrementCardToDeck", cardString);
+    },
+    incrementCardToDeck(cardString) {
+      this.$store.commit("incrementCardToDeck", cardString);
     },
     viewDetail(card) {
       this.$router.push({ path: "card-detail", query: { card: card.index } });

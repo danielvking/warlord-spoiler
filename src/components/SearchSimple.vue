@@ -67,13 +67,13 @@ export default {
       this.isBusy = true;
       this.$emit("search-started");
 
-      let searchText = (this.searchText && this.searchText.toLowerCase()) || "";
+      let searchText = this.searchText || "";
       let searchResults = [];
       let filter = x => {
         // Include 4Ex
         if (!this.pageSettings.include4ex) {
           let sets = x.printInfos.map(y => y.set).filter(y => y);
-          let _4exSets = ["4EX", "AMH", "RttA"];
+          let _4exSets = ["4EX", "AMH", "RttA", "4th Edition Expanded (4EX)", "Aftermath (AMH)", "Return to the Accordlands (RttA)"];
           if (sets[0] && !sets.filter(s => !_4exSets.includes(s))[0])
             return false;
         }
@@ -84,14 +84,14 @@ export default {
         if (
           this.byName &&
           x.name &&
-          x.name.toLowerCase().includes(searchText)
+          utility.includesTokens(x.name, searchText)
         ) {
           return true;
         }
         if (
           this.byText &&
           x.text &&
-          x.text.toLowerCase().includes(searchText)
+          utility.includesTokens(x.text, searchText)
         ) {
           return true;
         }
