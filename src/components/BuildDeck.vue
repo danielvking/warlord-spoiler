@@ -28,6 +28,16 @@
             >
               <font-awesome-icon icon="save" />
             </a>
+
+            <a
+              href="#"
+              title="Format Validator"
+              class="mr-1"
+              v-on:click="showFormatValidator = !showFormatValidator"
+            >
+              <font-awesome-icon icon="check" />
+            </a>
+
             <router-link
               :to="{ name: 'printDeck' }"
               target="_blank"
@@ -37,6 +47,13 @@
             </router-link>
           </div>
         </div>
+        <template v-if="showFormatValidator">
+          <div class="flex-grow-1 p-1">
+            <v-select placeholder="Format validator"
+              v-model="edition"
+              :options="editionList" />
+          </div>
+        </template>
         <template v-if="$store.state.cardsLoaded">
           <div class="flex-grow-1 p-1 overflow-auto">
             <b-table
@@ -47,6 +64,7 @@
               :items="typedCards[type]"
               :fields="[
                 { key: 'card.name', label: type },
+                { key: 'editionCheck', label:'' },
                 { key: 'count', label: '', class: 'text-right shrink' },
                 { key: 'buttons', class: 'text-right shrink' },
               ]"
@@ -56,9 +74,20 @@
               hover
               @row-clicked="(cardCount) => viewDetail(cardCount.card)"
             >
+              <template v-if="showFormatValidator" #head(editionCheck)>
+                <span>Legal</span>
+              </template>
+
+              <template v-if="showFormatValidator && edition" #cell(editionCheck)="data">
+                  <span>
+                    {{ data.item.card.editions.some(cardEdition => cardEdition===edition) ? "yes":"no" }}
+                  </span>
+              </template>
+
               <template #head(buttons)>
                 <span>({{ typedCards[type].reduce((s, x) => s + x.count, 0) }})</span>
               </template>
+
               <template v-slot:cell(buttons)="data">
                 <a
                   href="#"
@@ -140,6 +169,12 @@ export default {
         }
         return map;
       }, {});
+    },
+    editionList() {
+      return (this.referenceLists && this.referenceLists.editionList) || [];
+    },
+    referenceLists() {
+      return this.$store.state.referenceLists;
     },
   },
   methods: {
@@ -223,6 +258,12 @@ export default {
       this.$router.push({ path: "card-detail", query: { card: card.index } });
     },
   },
+  data() {
+    return{
+      edition: undefined,
+      showFormatValidator: false
+    }
+  }
 };
 </script>
 
