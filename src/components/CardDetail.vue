@@ -58,7 +58,7 @@
             <div v-if="cardData.class" class="clearfix">
               <div class="card-stat-label"><span>Class:</span></div>
               <div class="card-stat-value">
-                <span>{{ cardData.class }}</span>
+                <span>{{ cardData.class | slashToMaybeBreak }}</span>
               </div>
             </div>
             <div v-if="cardData.attack" class="clearfix">
@@ -90,7 +90,7 @@
             <div v-if="cardData.faction" class="clearfix">
               <div class="card-stat-label"><span>Faction:</span></div>
               <div class="card-stat-value">
-                <span>{{ cardData.faction | slashToLineBreak }}</span>
+                <span>{{ cardData.faction | slashToMaybeBreak }}</span>
               </div>
             </div>
             <div v-if="cardData.traits" class="clearfix">
@@ -215,6 +215,12 @@ export default {
       value = value.replace(hashReg, "\r\n");
       return value;
     },
+    slashToMaybeBreak(value) {
+      if (!value) return value;
+      let hashReg = /\//gm;
+      value = value.replace(hashReg, "/\u200B");
+      return value;
+    },
     formatSetName(value) {
       let display = value.set;
       if (value.setNumber != null) display += ` (${value.setNumber})`;
@@ -239,6 +245,8 @@ export default {
 
 <style scoped>
 .card-image {
+  position: sticky;
+  top: 5px;
   max-height: 400px;
   max-width: 350px;
 }
