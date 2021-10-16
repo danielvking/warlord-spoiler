@@ -26,11 +26,13 @@
 @font-face {
   font-family: "Vhatis Warlord Text";
   src: url(/fonts/vhatis_warlord_text.ttf) format("truetype");
+  unicode-range: U+20-22,U+27-29,U+2B-3B,U+3D,U+41-5A,U+61-7F;
 }
 
 @font-face {
   font-family: "Vhatis Warlord Title";
   src: url(/fonts/vhatis_warlord_title.ttf) format("truetype");
+  unicode-range: U+20-22,U+27-29,U+2B-3B,U+3D,U+41-5A,U+61-7F;
 }
 
 #app {
