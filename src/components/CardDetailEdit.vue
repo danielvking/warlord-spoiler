@@ -19,46 +19,44 @@
     </div>
     <template v-if="cardIndex">
       <h3 class="my-2">{{ cardTemp.name }}</h3>
-      <b-radio-group
-        v-model="viewOption"
-        :options="['Art', 'JSON']"
-        class="mb-2 w-100"
-        buttons
-      />
       <b-row>
-        <!-- Image -->
-        <b-col
-          v-if="viewOption === 'Art'"
-          cols="12"
-          md="6"
-          class="d-flex justify-content-center mb-2"
-        >
-          <img
-            v-if="imageUrl"
-            :src="imageUrlOverride || imageUrl"
-            class="card-image"
-          />
-        </b-col>
-
-        <!-- JSON -->
-        <b-col
-          v-if="viewOption === 'JSON'"
-          cols="12"
-          md="6"
-          class="d-flex flex-column mb-2"
-        >
-          <b-textarea
+        <b-col cols="12" md="6" class="d-flex flex-column">
+          <div
+            class="card-view d-flex flex-column pb-2"
             :class="
-              'text-monospace flex-fill' +
-              (cardJsonWrapped ? '' : ' text-nowrap')
+              viewOption === 'JSON' ? 'bound-height' : 'align-items-center'
             "
-            v-model="cardJson"
-            rows="10"
-            size="sm"
-            @focus="cardJsonSelected = true"
-            @blur="cardJsonSelected = false"
-          ></b-textarea>
-          <b-checkbox v-model="cardJsonWrapped">Wrap Text</b-checkbox>
+          >
+            <b-radio-group
+              v-model="viewOption"
+              :options="['Art', 'JSON']"
+              class="mb-2 w-100"
+              buttons
+            />
+            <!-- Image -->
+            <template v-if="viewOption === 'Art'">
+              <img
+                v-if="imageUrl"
+                :src="imageUrlOverride || imageUrl"
+                class="card-image"
+              />
+            </template>
+            <!-- JSON -->
+            <template v-if="viewOption === 'JSON'">
+              <b-textarea
+                :class="
+                  'text-monospace flex-fill' +
+                  (cardJsonWrapped ? '' : ' text-nowrap')
+                "
+                v-model="cardJson"
+                rows="10"
+                size="sm"
+                @focus="cardJsonSelected = true"
+                @blur="cardJsonSelected = false"
+              ></b-textarea>
+              <b-checkbox v-model="cardJsonWrapped">Wrap Text</b-checkbox>
+            </template>
+          </div>
         </b-col>
 
         <b-col cols="12" md="6">
@@ -654,7 +652,9 @@ export default {
     cardJson() {
       try {
         if (this.cardJsonSelected) {
-          this.cardIndex[this.card] = JSON.parse(this.cardJson);
+          let data = JSON.parse(this.cardJson);
+          data.index = this.card;
+          this.cardIndex[this.card] = data;
         }
       } catch {
         // We honestly don't care if you want to make invalid javascript
@@ -688,12 +688,7 @@ export default {
       );
     },
     "cardTemp.type": function (newValue) {
-      setProp(
-        this.cardData,
-        "type",
-        newValue,
-        cardKeyOrder
-      );
+      setProp(this.cardData, "type", newValue, cardKeyOrder);
     },
     "cardTemp.attack": function (newValue) {
       setProp(
@@ -928,10 +923,17 @@ export default {
 
 <style scoped>
 .card-image {
-  position: sticky;
-  top: 5px;
   max-height: 400px;
   max-width: 350px;
+}
+
+.card-view {
+  position: sticky;
+  top: 0px;
+}
+
+.bound-height {
+  height: min(100%, 100vh);
 }
 
 .card-stat-label {
