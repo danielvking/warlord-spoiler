@@ -31,18 +31,32 @@ export default new Vuex.Store({
         cardIndex: {},
         referenceLists: {},
         viewPortWidth: window.innerWidth,
-        deck: {}
+        deck: {},
+        editedCards: {},
+        settings: {
+            isEditMode: false,
+            isEditTextWrapped: false,
+            editViewOption: "Art"
+        }
     },
     getters: {
-        showDeck(state) {
+        showSidebar(state) {
             return state.viewPortWidth >= 992 // Bootstrap "large" breakpoint;
-        }
+        },
     },
     mutations: {
         initialize(state) {
             let deck = localStorage.getItem("deck");
             if (deck) {
                 state.deck = JSON.parse(deck);
+            }
+            let editedCards = localStorage.getItem("editedCards");
+            if (editedCards) {
+                state.editedCards = JSON.parse(editedCards);
+            }
+            let settings = localStorage.getItem("settings");
+            if (settings) {
+                state.settings = JSON.parse(settings);
             }
             // I'm going to break the number one rule of vuex and have asynchronous changes, because I need the viewport reactive
             window.addEventListener("resize",
@@ -85,6 +99,33 @@ export default new Vuex.Store({
             state.deck = {};
             localStorage.removeItem("deck");
         },
+        editCard(state, cardString) {
+            if (!state.editedCards[cardString]) {
+                let existing = state.cardIndex[cardString];
+                if (existing) {
+                    Vue.set(state.editedCards, cardString, JSON.parse(JSON.stringify(existing)));
+                } else {
+                    Vue.set(state.editedCards, cardString, { name: "New Card", index: cardString });
+                }
+                localStorage.setItem("editedCards", JSON.stringify(state.editedCards));
+            }
+        },
+        cancelEditCard(state, cardString) {
+            Vue.delete(state.editedCards, cardString);
+        },
+        saveEditedCards(state) {
+            localStorage.setItem("editedCards", JSON.stringify(state.editedCards))
+        },
+        clearEditedCards(state) {
+            state.editedCards = {};
+            localStorage.removeItem("editedCards", JSON.stringify(state.editedCards))
+        },
+        saveSettings(state, settings) {
+            Object.keys(settings).forEach(key => {
+                Vue.set(state.settings, key, settings[key]);
+            });
+            localStorage.setItem("settings", JSON.stringify(state.settings));
+        }
     },
     actions: {
         // Returns a promise that the card state has been set

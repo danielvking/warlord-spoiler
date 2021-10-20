@@ -3,8 +3,9 @@ import Router from 'vue-router'
 
 import PrintDeck from '@/components/PrintDeck.vue'
 import CardSpoiler from '@/components/CardSpoiler.vue'
-import CardDetail from '@/components/CardDetail.vue'
+import CardDetailParent from '@/components/CardDetailParent.vue'
 import PageNotFound from '@/components/PageNotFound.vue'
+import EnableEdit from '@/components/EnableEdit.vue'
 
 Vue.use(Router)
 
@@ -15,6 +16,10 @@ export default new Router({
       path: '/print-deck',
       name: 'printDeck',
       component: PrintDeck
+    },
+    {
+      path: "/edit",
+      component: EnableEdit
     },
     {
       path: '*',
@@ -31,7 +36,7 @@ export default new Router({
         {
           path: 'card-detail',
           name: 'cardDetailPage',
-          component: CardDetail,
+          component: CardDetailParent,
           props: (route) => ({ card: route.query.card })
         }
       ]

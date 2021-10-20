@@ -2,7 +2,8 @@
   <div
     class="super-site-container d-flex flex-row justify-content-center mx-auto"
   >
-    <build-deck class="align-self-start" />
+    <build-deck v-if="!isEditMode" class="align-self-start" />
+    <edit-cards v-else class="align-self-start"/>
     <header-footer class="flex-grow-1 mx-0">
       <router-view />
       <b-container v-show="showSearch" class="mt-2" fluid>
@@ -70,16 +71,14 @@
                   hover
                   :per-page="perPage"
                   :current-page="currentPage"
-                  @row-clicked="(card) => viewDetail(card)"
+                  @row-clicked="(card) => viewCardDetail(card)"
                 >
                   <template v-slot:cell(buttons)="data">
                     <a
-                      v-if="showDeck"
+                      v-if="showSidebar"
                       href="#"
-                      @click.prevent="
-                        $store.commit('incrementCardToDeck', data.item.index)
-                      "
-                      title="Add to build"
+                      @click.prevent="addCard(data.item.index)"
+                      :title="addCardText"
                     >
                       <font-awesome-icon icon="plus-square" />
                     </a>
@@ -100,16 +99,14 @@
                   hover
                   :per-page="perPage"
                   :current-page="currentPage"
-                  @row-clicked="(card) => viewDetail(card)"
+                  @row-clicked="(card) => viewCardDetail(card)"
                 >
                   <template v-slot:cell(buttons)="data">
                     <a
-                      v-if="showDeck"
+                      v-if="showSidebar"
                       href="#"
-                      @click.prevent="
-                        $store.commit('incrementCardToDeck', data.item.index)
-                      "
-                      title="Add to build"
+                      @click.prevent="addCard(data.item.index)"
+                      :title="addCardText"
                     >
                       <font-awesome-icon icon="plus-square" />
                     </a>
@@ -147,20 +144,25 @@
 <script>
 import HeaderFooter from "@/components/HeaderFooter.vue";
 import BuildDeck from "@/components/BuildDeck.vue";
+import EditCards from "@/components/EditCards.vue";
 import SearchSimple from "@/components/SearchSimple.vue";
 import SearchAdvanced from "@/components/SearchAdvanced.vue";
 import CardCompact from "@/components/CardCompact.vue";
 import utility from "@/utility.js";
+import addRemoveCardMixin from "@/mixins/addRemoveCardMixin.js";
+import routeMixin from "@/mixins/routeMixin.js";
 
 export default {
   name: "CardSpoiler",
   components: {
     HeaderFooter,
     BuildDeck,
+    EditCards,
     CardCompact,
     SearchSimple,
     SearchAdvanced,
   },
+  mixins: [addRemoveCardMixin, routeMixin],
   data() {
     return {
       isBusy: true,
@@ -194,9 +196,12 @@ export default {
     referenceLists() {
       return this.$store.state.referenceLists;
     },
-    showDeck() {
-      return this.$store.getters.showDeck;
+    showSidebar() {
+      return this.$store.getters.showSidebar;
     },
+    isEditMode() {
+      return this.$store.state.settings.isEditMode;
+    }
   },
   methods: {
     computeShowSearch(route, oldRoute) {
@@ -209,14 +214,12 @@ export default {
         });
       } else if (
         route.name === "cardDetailPage" &&
-        oldRoute && oldRoute.name === "searchPage"
+        oldRoute &&
+        oldRoute.name === "searchPage"
       ) {
         let scrollRegion = document.getElementById("scrollRegion");
         this.lastScrollPostion = scrollRegion.scrollTop;
       }
-    },
-    viewDetail(card) {
-      this.$router.push({ path: "card-detail", query: { card: card.index } });
     },
     searchStarted() {
       this.isBusy = true;

@@ -640,7 +640,7 @@ export default {
           if (!x.feats) return false;
           let featsMap = {};
           x.feats.split("/").forEach((f) => {
-            let featValue = f.split(" +");
+            let featValue = f.split(/ (?=[-+])/);
             let feat = featValue[0];
             let value = featValue[1];
             featsMap[feat] = value;
@@ -666,16 +666,16 @@ export default {
         if (this.selectedMisc.length > 0) {
           if (!x.misc) return false;
           let miscMap = {};
-          x.misc.split("/").forEach((f) => {
-            if (f.includes("Challenge Rating")) {
-              let miscValue = f.split(" ");
-              miscMap["Challenge Rating"] = miscValue[2];
-            } else if (f.includes("Charge")) {
-              let miscValue = f.split(" ");
+          x.misc.split("/").forEach((m) => {
+            if (m.match(/^-?\d+ Charges?$/)) {
+              let miscValue = m.split(/(?<=-?\d+) /);
               miscMap["Charges"] = miscValue[0];
-            } else if (f.includes("gp")) {
-              let miscValue = f.split(" ");
+            } else if (m.match(/^-?\d+ gp$/)) {
+              let miscValue = m.split(/(?<=-?\d+) /);
               miscMap["GP"] = miscValue[0];
+            } else {
+              let miscValue = m.split(/ (?=-?\d+)/);
+              miscMap[m] = miscValue[1];
             }
           });
           for (let i = 0; i < this.selectedMisc.length; i++) {

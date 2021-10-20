@@ -124,5 +124,40 @@ export default {
         a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
         a.setAttribute('download', filename);
         a.click();
+    },
+    stringCompare(a, b) {
+        return (a || "").localeCompare(b || "");
+    },
+    insertKeyOrdered(obj, key, keyOrder, setFunc, deleteFunc) {
+        // Having these functions allows optionally doing this with reactivity
+        if (!setFunc) setFunc = (x, y, z) => x[y] = z;
+        if (!deleteFunc) deleteFunc = (x, y) => delete x[y];
+
+        // Map each defined key to an index
+        let keySet = {};
+        for (let i = 0; i < keyOrder.length; i++) {
+            keySet[keyOrder[i]] = i + 1; 
+        }
+
+        // Insert and/or quit early
+        if (obj[key] != null) return;
+        let keyIndex = keySet[key];
+        deleteFunc(obj, key);
+        let keys = Object.keys(obj);
+        setFunc(obj, key, null);
+        if (!keyIndex) return;
+
+        // Look for the first key that doesn't match and shift everything
+        for (let i = 0; i < keys.length; i++) {
+            let oKey = keys[i];
+            if (keySet[oKey] > keyIndex) {
+                for (let j = i; j < keys.length; j++) {
+                    let temp = obj[keys[j]];
+                    deleteFunc(obj, keys[j]);
+                    setFunc(obj, keys[j], temp);
+                }
+                return;
+            }
+        }
     }
 }

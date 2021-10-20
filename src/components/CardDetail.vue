@@ -9,18 +9,18 @@
       </div>
       <div class="float-right">
         <a
-          v-if="showDeck"
+          v-if="showSidebar"
           href="#"
-          @click.prevent="$store.commit('incrementCardToDeck', card)"
-          aria-label="Add to build"
-        >
-          <font-awesome-icon icon="plus-square" /> Add to build</a
+          @click.prevent="addCard(card)"
+          :aria-label="addCardText"
+        ><font-awesome-icon icon="plus-square" /> {{ addCardText }}</a
         >
       </div>
     </div>
     <template v-if="cardIndex">
       <h3 class="my-2">{{ cardData.name }}</h3>
       <b-row>
+        <!-- Image -->
         <b-col cols="12" md="6" class="d-flex justify-content-center mb-2">
           <img
             v-if="imageUrl"
@@ -31,54 +31,63 @@
 
         <b-col cols="12" md="6">
           <div class="p-1">
+            <!-- Name -->
             <div class="clearfix">
               <div class="card-stat-label"><span>Card Name:</span></div>
               <div class="card-stat-value">
                 <span>{{ cardData.name }}</span>
               </div>
             </div>
+            <!-- Level -->
             <div v-if="cardData.level" class="clearfix">
               <div class="card-stat-label"><span>Level:</span></div>
               <div class="card-stat-value">
                 <span>{{ cardData.level }}</span>
               </div>
             </div>
+            <!-- Alignment -->
             <div v-if="cardData.alignment" class="clearfix">
               <div class="card-stat-label"><span>Alignment:</span></div>
               <div class="card-stat-value">
                 <span>{{ cardData.alignment }}</span>
               </div>
             </div>
+            <!-- Type -->
             <div v-if="cardData.type" class="clearfix">
               <div class="card-stat-label"><span>Type:</span></div>
               <div class="card-stat-value">
                 <span>{{ cardData.type }}</span>
               </div>
             </div>
+            <!-- Class -->
             <div v-if="cardData.class" class="clearfix">
               <div class="card-stat-label"><span>Class:</span></div>
               <div class="card-stat-value">
                 <span>{{ cardData.class | slashToMaybeBreak }}</span>
               </div>
             </div>
+            <!-- Attack -->
             <div v-if="cardData.attack" class="clearfix">
               <div class="card-stat-label"><span>Attack:</span></div>
               <div class="card-stat-value">
                 <span>{{ cardData.attack }}</span>
               </div>
             </div>
+            <!-- Armor Class -->
             <div v-if="cardData.armorClass" class="clearfix">
               <div class="card-stat-label"><span>Armor Class:</span></div>
               <div class="card-stat-value">
                 <span>{{ cardData.armorClass }}</span>
               </div>
             </div>
+            <!-- Skill -->
             <div v-if="cardData.skill" class="clearfix">
               <div class="card-stat-label"><span>Skill:</span></div>
               <div class="card-stat-value">
                 <span>{{ cardData.skill }}</span>
               </div>
             </div>
+            <!-- Hit Points -->
             <div v-if="cardData.hitPoints" class="clearfix">
               <div class="card-stat-label">
                 <span>Hit Points:</span>
@@ -87,30 +96,35 @@
                 <span>{{ cardData.hitPoints }}</span>
               </div>
             </div>
+            <!-- Faction -->
             <div v-if="cardData.faction" class="clearfix">
               <div class="card-stat-label"><span>Faction:</span></div>
               <div class="card-stat-value">
                 <span>{{ cardData.faction | slashToMaybeBreak }}</span>
               </div>
             </div>
+            <!-- Traits -->
             <div v-if="cardData.traits" class="clearfix">
               <div class="card-stat-label"><span>Traits:</span></div>
               <div class="card-stat-value">
                 <span>{{ cardData.traits | slashToLineBreak }}</span>
               </div>
             </div>
+            <!-- Feats -->
             <div v-if="cardData.feats" class="clearfix">
               <div class="card-stat-label"><span>Feats:</span></div>
               <div class="card-stat-value">
                 <span>{{ cardData.feats | slashToLineBreak }}</span>
               </div>
             </div>
+            <!-- Misc -->
             <div v-if="cardData.misc" class="clearfix">
               <div class="card-stat-label"><span>Misc:</span></div>
               <div class="card-stat-value">
                 <span>{{ cardData.misc | slashToLineBreak }}</span>
               </div>
             </div>
+            <!-- Editions -->
             <div class="clearfix my-2">
               <div class="card-stat-label"><span>Formats:</span></div>
               <div
@@ -123,11 +137,14 @@
               </div>
               <div v-else class="card-stat-value"><span>Open</span></div>
             </div>
+            <!-- Text -->
             <div
               class="my-3"
               v-html="$options.filters.formatCardText(cardData.text)"
             ></div>
+            <!-- Print Info -->
             <div v-for="(printInfo, i) in cardData.printInfos" :key="i">
+              <!-- Image Link (Set, Set Number) -->
               <div
                 class="card-print-link"
                 @click="setImage(printInfo.imageUrl)"
@@ -135,24 +152,28 @@
                 <span>{{ printInfo | formatSetName }}</span>
               </div>
               <div class="mx-2">
+                <!-- Rarity -->
                 <div v-if="printInfo.rarity" class="clearfix">
                   <div class="card-stat-label"><span>Rarity:</span></div>
                   <div class="card-stat-value">
                     <span>{{ printInfo.rarity }}</span>
                   </div>
                 </div>
+                <!-- Flavor Traits -->
                 <div v-if="printInfo.flavorTraits" class="clearfix">
                   <div class="card-stat-label"><span>Flavor Traits:</span></div>
                   <div class="card-stat-value">
                     <span>{{ printInfo.flavorTraits }}</span>
                   </div>
                 </div>
+                <!-- Artist -->
                 <div v-if="printInfo.artist" class="clearfix">
                   <div class="card-stat-label"><span>Artist:</span></div>
                   <div class="card-stat-value">
                     <span>{{ printInfo.artist }}</span>
                   </div>
                 </div>
+                <!-- Flavor Text -->
                 <div class="my-2">
                   <i>{{ printInfo.flavorText }}</i>
                 </div>
@@ -161,6 +182,7 @@
           </div>
         </b-col>
       </b-row>
+      <!-- Errata -->
       <div v-if="cardData.errata" class="my-3">
         <div class="font-weight-bold"><span>Rulings:</span></div>
         <div class="card-errata">
@@ -172,8 +194,11 @@
 </template>
 
 <script>
+import addRemoveCardMixin from "@/mixins/addRemoveCardMixin.js";
+
 export default {
   name: "CardDetail",
+  mixins: [addRemoveCardMixin],
   props: {
     card: String,
   },
@@ -189,8 +214,8 @@ export default {
     cardData() {
       return this.cardIndex[this.card] || {};
     },
-    showDeck() {
-      return this.$store.getters.showDeck;
+    showSidebar() {
+      return this.$store.getters.showSidebar;
     },
     imageUrl() {
       if (!this.cardData) return null;

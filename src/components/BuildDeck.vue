@@ -1,5 +1,5 @@
 <template>
-  <div v-if="showDeck" class="deck-container-outer">
+  <div v-if="showSidebar" class="deck-container-outer">
     <div class="deck-container-middle">
       <div class="deck-container-inner content-region">
         <div class="site-subheader">
@@ -49,22 +49,24 @@
         </div>
         <template v-if="showFormatValidator">
           <div class="flex-grow-1 p-1">
-            <v-select placeholder="Format validator"
+            <v-select
+              placeholder="Format validator"
               v-model="edition"
-              :options="editionList" />
+              :options="editionList"
+            />
           </div>
         </template>
         <template v-if="$store.state.cardsLoaded">
           <div class="flex-grow-1 p-1 overflow-auto">
             <b-table
               v-for="type in Object.keys(typedCards)
-                .map((x) => x)
+                .map((x) => x) // Shallow copy
                 .sort()"
               :key="type"
               :items="typedCards[type]"
               :fields="[
                 { key: 'card.name', label: type },
-                { key: 'editionCheck', label:'' },
+                { key: 'editionCheck', label: '' },
                 { key: 'count', label: '', class: 'text-right shrink' },
                 { key: 'buttons', class: 'text-right shrink' },
               ]"
@@ -72,20 +74,33 @@
               borderless
               striped
               hover
-              @row-clicked="(cardCount) => viewDetail(cardCount.card)"
+              @row-clicked="(cardCount) => viewCardDetail(cardCount.card)"
             >
               <template v-if="showFormatValidator" #head(editionCheck)>
                 <span>Legal</span>
               </template>
 
-              <template v-if="showFormatValidator && edition" #cell(editionCheck)="data">
-                  <span>
-                    {{ data.item.card.editions.some(cardEdition => cardEdition===edition) ? "yes":"no" }}
-                  </span>
+              <template
+                v-if="showFormatValidator && edition"
+                #cell(editionCheck)="data"
+              >
+                <span>
+                  {{
+                    data.item.card.editions.some(
+                      (cardEdition) => cardEdition === edition
+                    )
+                      ? "yes"
+                      : "no"
+                  }}
+                </span>
               </template>
 
               <template #head(buttons)>
-                <span>({{ typedCards[type].reduce((s, x) => s + x.count, 0) }})</span>
+                <span
+                  >({{
+                    typedCards[type].reduce((s, x) => s + x.count, 0)
+                  }})</span
+                >
               </template>
 
               <template v-slot:cell(buttons)="data">
@@ -135,17 +150,19 @@
 
 <script>
 import utility from "@/utility.js";
+import routeMixin from "@/mixins/routeMixin.js";
 
 export default {
   name: "BuildDeck",
+  mixins: [routeMixin],
   computed: {
     cardIndex() {
       return this.$store.state.cardIndex;
     },
-    showDeck() {
+    showSidebar() {
       return (
         Object.keys(this.$store.state.deck).length &&
-        this.$store.getters.showDeck
+        this.$store.getters.showSidebar
       );
     },
     cards() {
@@ -158,7 +175,7 @@ export default {
             count: deck[x],
           };
         })
-        .sort((x) => x.card);
+        .sort((x, y) => utility.stringCompare(x.card.name, y.card.name));
     },
     typedCards() {
       return this.cards.reduce((map, cardCount) => {
@@ -193,9 +210,9 @@ export default {
             let line = lines[i];
 
             // normalize from untap.in
-            let lineIsUntapSpecific = (line.indexOf('//') == 0)
-            if( lineIsUntapSpecific ) {
-              continue
+            let lineIsUntapSpecific = line.indexOf("//") == 0;
+            if (lineIsUntapSpecific) {
+              continue;
             }
 
             if (line !== "") {
@@ -254,16 +271,13 @@ export default {
     incrementCardToDeck(cardString) {
       this.$store.commit("incrementCardToDeck", cardString);
     },
-    viewDetail(card) {
-      this.$router.push({ path: "card-detail", query: { card: card.index } });
-    },
   },
   data() {
-    return{
+    return {
       edition: undefined,
-      showFormatValidator: false
-    }
-  }
+      showFormatValidator: false,
+    };
+  },
 };
 </script>
 

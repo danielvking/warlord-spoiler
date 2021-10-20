@@ -7,6 +7,7 @@ import {
     FormGroupPlugin,
     FormRadioPlugin,
     FormSelectPlugin,
+    FormTextareaPlugin,
     InputGroupPlugin,
     LayoutPlugin,
     PaginationPlugin,
@@ -22,6 +23,7 @@ Vue.use(FormInputPlugin)
 Vue.use(FormGroupPlugin)
 Vue.use(FormRadioPlugin)
 Vue.use(FormSelectPlugin)
+Vue.use(FormTextareaPlugin)
 Vue.use(InputGroupPlugin)
 Vue.use(LayoutPlugin)
 Vue.use(PaginationPlugin)
