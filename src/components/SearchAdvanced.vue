@@ -668,10 +668,10 @@ export default {
           let miscMap = {};
           x.misc.split("/").forEach((m) => {
             if (m.match(/^-?\d+ Charges?$/)) {
-              let miscValue = m.split(/(?<=-?\d+) /);
+              let miscValue = m.split(" ");
               miscMap["Charges"] = miscValue[0];
             } else if (m.match(/^-?\d+ gp$/)) {
-              let miscValue = m.split(/(?<=-?\d+) /);
+              let miscValue = m.split(" ");
               miscMap["GP"] = miscValue[0];
             } else {
               let miscValue = m.split(/ (?=-?\d+)/);

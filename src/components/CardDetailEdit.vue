@@ -494,11 +494,11 @@ function fromSlashesToMisc(miscStr) {
   misc.forEach((m, i) => {
     let value;
     if (m.match(/^-?\d+ Charges?$/)) {
-      let miscValue = m.split(/(?<=-?\d+) /);
+      let miscValue = m.split(" ");
       selectedMisc[i] = "Charges";
       value = +miscValue[0];
     } else if (m.match(/^-?\d+ gp$/)) {
-      let miscValue = m.split(/(?<=-?\d+) /);
+      let miscValue = m.split(" ");
       selectedMisc[i] = "GP";
       value = +miscValue[0];
     } else {
