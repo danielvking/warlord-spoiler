@@ -675,7 +675,7 @@ export default {
               miscMap["GP"] = miscValue[0];
             } else {
               let miscValue = m.split(/ (?=-?\d+)/);
-              miscMap[m] = miscValue[1];
+              miscMap[miscValue[0]] = miscValue[1];
             }
           });
           for (let i = 0; i < this.selectedMisc.length; i++) {
