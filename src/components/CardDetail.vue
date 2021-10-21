@@ -252,6 +252,11 @@ export default {
       return display;
     },
   },
+  watch: {
+    card() {
+      this.imageUrlOverride = null;
+    }
+  },
   mounted() {
     this.$nextTick(() => {
       // Adjust scroll

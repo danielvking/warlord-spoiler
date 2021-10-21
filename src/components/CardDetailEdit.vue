@@ -637,6 +637,9 @@ export default {
     },
   },
   watch: {
+    card() {
+      this.imageUrlOverride = null;
+    },
     cardData: {
       handler() {
         this.initializeTemp();
