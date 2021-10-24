@@ -2,7 +2,14 @@
 export default {
     methods: {
         viewCardDetail(card) {
-            this.$router.push({ name: "cardDetailPage", query: { card: card.index } });
+            this.$router.push({ name: "cardDetailPage", query: { card: card.index } })
+                .catch(failure => {
+                    if (failure.name === "NavigationDuplicated") {
+                        // It is totally possible this is a page we're already on; we don't care
+                    } else {
+                        throw failure;
+                    }
+                });
         },
     }
 }

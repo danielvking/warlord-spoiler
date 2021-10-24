@@ -530,6 +530,10 @@ function fromMiscToSlashes(miscArr, miscValues) {
     })
     .join("/");
 }
+function fromArrayToArray(arr) {
+  if (!arr || !arr[0]) return undefined;
+  return arr.map(x => x);
+}
 
 export default {
   name: "CardDetailEdit",
@@ -561,7 +565,8 @@ export default {
         featValues: {},
         selectedMisc: [],
         miscValues: {},
-        challengeLord: false,
+        editions: [],
+        challengeLord: undefined,
         printInfos: [],
         errata: "",
       },
@@ -779,15 +784,26 @@ export default {
       },
       deep: true,
     },
+    "cardTemp.editions": function(newValue) {
+        if (newValue && this.cardData.editions && newValue.length === this.cardData.editions.length) {
+          if (newValue.every((x, i) => x === this.cardData.editions[i])) {
+            return;
+          }
+        }
+        setProp(
+          this.cardData,
+          "editions",
+          fromArrayToArray(this.cardTemp.editions, newValue),
+          cardKeyOrder
+        );
+    },
     "cardTemp.challengeLord": function (newValue) {
       setProp(this.cardData, "challengeLord", newValue || false, cardKeyOrder);
     },
     "cardTemp.printInfos": {
       handler: function (newValue) {
-        this.cardData.printInfos = this.cardData.printInfos || [];
-
         // Modifying elements is handled externally
-        if (this.cardData.printInfos.length !== this.cardTemp.printInfos.length)
+        if (!this.cardData.printInfos || this.cardData.printInfos.length !== this.cardTemp.printInfos.length)
           return;
 
         // We could probably give each of these a watcher somehow... but this is easier
@@ -879,6 +895,7 @@ export default {
       let misc = fromSlashesToMisc(this.cardData.misc);
       this.cardTemp.selectedMisc = misc.selectedMisc;
       this.cardTemp.miscValues = misc.miscValues;
+      this.cardTemp.editions = fromArrayToArray(this.cardData.editions) || [];
       this.cardTemp.challengeLord = this.cardData.challengeLord || false;
       this.cardTemp.printInfos = (this.cardData.printInfos || []).map((x) => {
         return {
@@ -910,11 +927,18 @@ export default {
       this.cardTemp.selectedMisc.splice(index, 1);
     },
     addPrintInfo() {
-      this.cardTemp.printInfos.splice(0, 0, {});
+      this.cardTemp.printInfos.splice(0, 0, { flavorTraits: [] });
+      if (!this.cardData.printInfos) {
+        Vue.set(this.cardData, "printInfos", []);
+      }
       this.cardData.printInfos.splice(0, 0, {});
     },
     removePrintInfo(index) {
       this.cardTemp.printInfos.splice(index, 1);
+      if (!this.cardTemp.printInfos || !this.cardTemp.printInfos[0]) {
+        Vue.delete(this.cardData, "printInfos");
+        return;
+      }
       this.cardData.printInfos.splice(index, 1);
     },
     saveChanges() {
