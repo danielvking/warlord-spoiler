@@ -3,7 +3,7 @@
     <b-row class="site-header d-flex">
       <div class="site-header-margin">
         <div class="p-2 h-100">
-          <b-dropdown variant="outline-light" size="lg" class="h-100" toggle-class="border-0" no-caret>
+          <b-dropdown variant="outline-light" class="h-100" toggle-class="border-0 px-2" no-caret>
               <template #button-content>
                 <font-awesome-icon icon="bars"/>
               </template>
