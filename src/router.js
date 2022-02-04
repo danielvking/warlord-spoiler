@@ -6,6 +6,7 @@ import CardSpoiler from '@/components/CardSpoiler.vue'
 import CardDetailParent from '@/components/CardDetailParent.vue'
 import PageNotFound from '@/components/PageNotFound.vue'
 import EnableEdit from '@/components/EnableEdit.vue'
+import BuildCard from '@/components/BuildCard.vue'
 
 Vue.use(Router)
 
@@ -20,6 +21,10 @@ export default new Router({
     {
       path: "/edit",
       component: EnableEdit
+    },
+    {
+      path: "/build-card",
+      component: BuildCard
     },
     {
       path: '*',

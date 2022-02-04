@@ -1,7 +1,19 @@
 <template>
   <b-container class="site-container">
-    <b-row class="site-header">
+    <b-row class="site-header d-flex">
+      <div class="site-header-margin">
+        <div class="p-2 h-100">
+          <b-dropdown variant="outline-light" size="lg" class="h-100" toggle-class="border-0" no-caret>
+              <template #button-content>
+                <font-awesome-icon icon="bars"/>
+              </template>
+              <b-dropdown-item to="/">Home</b-dropdown-item>
+              <b-dropdown-item to="/build-card">Card Builder</b-dropdown-item>
+          </b-dropdown>
+        </div>
+      </div>
       <h1>The Accordlands</h1>
+      <div class="site-header-margin"></div>
     </b-row>
     <b-row class="flex-grow-1 content-region">
       <div class="w-100">
@@ -38,10 +50,19 @@
   color: white;
 }
 
-.site-header h1 {
-  width: 100%;
-  margin: 5px;
+.site-header {
   text-align: center;
+}
+
+.site-header h1 {
+  margin: 5px;
+  display: inline;
+}
+
+.site-header .site-header-margin {
+  flex-basis: 0;
+  flex-grow: 1;
+  text-align: left;
 }
 
 .site-subheader h6 {

@@ -2,6 +2,7 @@ import Vue from 'vue'
 
 import {
     ButtonPlugin,
+    DropdownPlugin,
     FormCheckboxPlugin,
     FormInputPlugin,
     FormGroupPlugin,
@@ -18,6 +19,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(ButtonPlugin)
+Vue.use(DropdownPlugin)
 Vue.use(FormCheckboxPlugin)
 Vue.use(FormInputPlugin)
 Vue.use(FormGroupPlugin)
