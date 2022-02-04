@@ -644,8 +644,8 @@ export default {
     "cardTemp.printInfo": {
       handler: function (newValue) {
         let hasData =
-          this.cardTemp.printInfo.flavorTraits[0] ||
-          this.cardTemp.printInfo.flavorText;
+          newValue.flavorTraits[0] ||
+          newValue.flavorText;
 
         // Remove or add print info
         if (!this.cardData.printInfos) {
@@ -670,13 +670,13 @@ export default {
           setProp(
             this.cardData.printInfos[0],
             "flavorTraits",
-            fromArrayToSlashes(this.cardTemp.printInfo.flavorTraits),
+            fromArrayToSlashes(newValue.flavorTraits),
             printKeyOrder
           );
           setProp(
             this.cardData.printInfos[0],
             "flavorText",
-            fromEmptyToUndefined(this.cardTemp.printInfo.flavorText),
+            fromEmptyToUndefined(newValue.flavorText),
             printKeyOrder
           );
         }
