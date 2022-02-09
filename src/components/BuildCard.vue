@@ -1,6 +1,6 @@
 <template>
   <header-footer>
-    <b-container fluid>
+    <b-container fluid @focusout="saveChanges">
       <div class="my-2 text-center">
         <span>Welcome to the card builder!</span>
       </div>
@@ -22,68 +22,79 @@
               />
               <!-- Image -->
               <template v-if="viewOption === 'Art'">
+                <b-button
+                  variant="outline-primary"
+                  class="mb-2 w-100"
+                  @click="uploadImage"
+                  >Upload Image</b-button
+                >
                 <img
                   ref="imageActual"
                   class="card-image"
                   :src="cardImageDataUrl"
                 />
-                <div class="image-holder">
-                  <div ref="imageHolder">
-                    <img class="user-image" src="/images/VanGogh.jpg" />
-                    <template v-if="cardTemplateUrl">
-                      <img :src="cardTemplateUrl" @load="refreshImage()" />
-                      <div class="image-name card-title">
-                        {{ cardData.name }}
-                      </div>
-                      <div class="image-atk card-title">
-                        {{ cardData.attack }}
-                      </div>
-                      <div class="image-ac card-title">
-                        {{ cardData.armorClass }}
-                      </div>
-                      <div
-                        class="image-lvl card-title"
-                        :class="
-                          cardData.alignment === 'Evil' ? 'text-white' : ''
-                        "
-                      >
-                        {{ cardData.level }}
-                      </div>
-                      <div class="image-sk card-title">
-                        {{ cardData.skill }}
-                      </div>
-                      <div class="image-hp card-title">
-                        {{ cardData.hitPoints }}
-                      </div>
-                      <div class="image-text card-text">
-                        <div ref="imageTextWrapper" class="image-text-wrapper">
-                          <div class="image-text-edge float-left"></div>
-                          <div class="image-text-edge float-right"></div>
-                          <div class="image-text-corner-top float-left"></div>
-                          <div class="image-text-corner-top float-right"></div>
-                          <div
-                            class="image-text-corner-bottom float-left"
-                          ></div>
-                          <div
-                            class="image-text-corner-bottom float-right"
-                          ></div>
-                          <span
-                            ref="imageTextSpan"
-                            v-html="formattedCardText"
-                          ></span>
-                        </div>
-                      </div>
-                    </template>
-                    <!--<img
-                      v-else
-                      src="/images/No_Template.png"
-                      @load="refreshImage()"
-                    />-->
-                  </div>
-                </div>
               </template>
+              <div class="image-holder">
+                <div ref="imageHolder">
+                  <img
+                    v-if="cardUserImageDataUrl"
+                    class="user-image"
+                    :src="cardUserImageDataUrl"
+                    @load="refreshImage()"
+                  />
+                  <template v-if="cardTemplateUrl">
+                    <img :src="cardTemplateUrl" @load="refreshImage()" />
+                    <div class="image-name card-title">
+                      {{ cardData.name }}
+                    </div>
+                    <div class="image-atk card-title">
+                      {{ cardData.attack }}
+                    </div>
+                    <div class="image-ac card-title">
+                      {{ cardData.armorClass }}
+                    </div>
+                    <div
+                      class="image-lvl card-title"
+                      :class="cardData.alignment === 'Evil' ? 'text-white' : ''"
+                    >
+                      {{ cardData.level }}
+                    </div>
+                    <div class="image-sk card-title">
+                      {{ cardData.skill }}
+                    </div>
+                    <div class="image-hp card-title">
+                      {{ cardData.hitPoints }}
+                    </div>
+                    <div class="image-text card-text">
+                      <div ref="imageTextWrapper" class="image-text-wrapper">
+                        <div class="image-text-edge float-left"></div>
+                        <div class="image-text-edge float-right"></div>
+                        <div class="image-text-corner-top float-left"></div>
+                        <div class="image-text-corner-top float-right"></div>
+                        <div class="image-text-corner-bottom float-left"></div>
+                        <div class="image-text-corner-bottom float-right"></div>
+                        <span
+                          ref="imageTextSpan"
+                          v-html="formattedCardText"
+                        ></span>
+                      </div>
+                    </div>
+                  </template>
+                  <img
+                    v-else
+                    src="/images/No_Template.png"
+                    @load="refreshImage()"
+                  />
+                </div>
+              </div>
               <!-- JSON -->
               <template v-if="viewOption === 'JSON'">
+                <b-button
+                  class="mb-2 w-100"
+                  variant="outline-primary"
+                  @click="uploadJson"
+                  >Upload JSON</b-button
+                >
                 <b-textarea
                   :class="
                     'text-monospace flex-fill' +
@@ -96,6 +107,12 @@
                   @blur="cardJsonSelected = false"
                 ></b-textarea>
                 <b-checkbox v-model="cardJsonWrapped">Wrap Text</b-checkbox>
+                <b-button
+                  class="my-2 w-100"
+                  variant="outline-secondary"
+                  @click="downloadJson"
+                  >Download JSON</b-button
+                >
               </template>
             </div>
           </b-col>
@@ -147,6 +164,7 @@
                     multiple
                     v-model="cardTemp.classes"
                     :options="classList"
+                    placeholder="(Classless)"
                   />
                 </div>
               </div>
@@ -328,6 +346,16 @@
               </div>
             </div>
           </b-col>
+
+          <b-col cols="12">
+            <b-button
+              variant="primary"
+              size="lg"
+              class="mb-2 w-100"
+              @click="downloadImage"
+              >Download Card Image</b-button
+            >
+          </b-col>
         </b-row>
       </template>
     </b-container>
@@ -338,8 +366,8 @@
 import Vue from "vue";
 import HeaderFooter from "@/components/HeaderFooter.vue";
 import utility from "@/utility.js";
-import addRemoveCardMixin from "@/mixins/addRemoveCardMixin.js";
 import domtoimage from "dom-to-image";
+import cardTemplates from "@/cardTemplates.js";
 
 // Static lists for preferred property order; just to keep things organized
 const cardKeyOrder = [
@@ -464,7 +492,7 @@ function emptyPrintInfo() {
   };
 }
 
-// DOM manipulation for images
+// Visually transforms elements to fit
 function rectifyScale(selector) {
   let element = document.querySelector(selector);
   if (!element) return;
@@ -488,7 +516,6 @@ export default {
   components: {
     HeaderFooter,
   },
-  mixins: [addRemoveCardMixin],
   data() {
     return {
       viewOption: "Art",
@@ -517,6 +544,7 @@ export default {
       },
       formattedCardText: "",
       cardImageCancelToken: { cancel: false },
+      cardUserImageDataUrl: null,
       cardImageDataUrl: null,
     };
   },
@@ -539,290 +567,7 @@ export default {
         key += "|" + faction;
       }
 
-      switch (key) {
-        case "Character|Classless|Evil|Deverenian":
-          return "https://drive.google.com/uc?export=view&id=1w92lEQobIu6g9x_45UGL8lo7Wgfod2QK";
-        case "Character|Classless|Evil|Dwarf":
-          return "https://drive.google.com/uc?export=view&id=17FKleyNyaYeKwFVV4aA7xo81PjehXXCl";
-        case "Character|Classless|Evil|Elf":
-          return "https://drive.google.com/uc?export=view&id=11R3xcjBuUn7lPPJWsHi8ZOLA4q32irxZ";
-        case "Character|Classless|Evil|Free Kingdoms":
-          return "https://drive.google.com/uc?export=view&id=1a7OuGh5_ja0F91T3YXJ8ITwKGrLK6DFG";
-        case "Character|Classless|Evil|Mercenary":
-          return "https://drive.google.com/uc?export=view&id=1itOop-i9gEu0RPdyiDm5Y8GXCpdWFJ_q";
-        case "Character|Classless|Evil|Nothrog":
-          return "https://drive.google.com/uc?export=view&id=1PwvVYC3gPppwsUtVghM5nux2lzZttagV";
-        case "Character|Classless|Evil|The Chosen":
-          return "https://drive.google.com/uc?export=view&id=183frgPSB5UhTTYVbu_woA1Va8ZJsmLTw";
-        case "Character|Classless|Good|Deverenian":
-          return "https://drive.google.com/uc?export=view&id=115i71o3NlAiSpwbCAFXN_xJpiXH4IZ3-";
-        case "Character|Classless|Good|Dwarf":
-          return "https://drive.google.com/uc?export=view&id=1D7C4bxFoLANSYIXdwcSEl-Q5_N2J40YZ";
-        case "Character|Classless|Good|Elf":
-          return "https://drive.google.com/uc?export=view&id=1Ab1vPNB2WDFjHrwOwUwfqE558pABkfmM";
-        case "Character|Classless|Good|Free Kingdoms":
-          return "https://drive.google.com/uc?export=view&id=1UVXQO17xKQkEnx1lBP6CCspw6_5NqeEj";
-        case "Character|Classless|Good|Mercenary":
-          return "https://drive.google.com/uc?export=view&id=1nxiFupFKerp6TA52D0lYBwpFtoFcMYXD";
-        case "Character|Classless|Good|Nothrog":
-          return "https://drive.google.com/uc?export=view&id=1VlABgZA1cOuMeB7yFFJVe6qp4MeDc82N";
-        case "Character|Classless|Good|The Chosen":
-          return "https://drive.google.com/uc?export=view&id=1eIfjJj-0D6twU5ST5snwY7Awa4O00chS";
-        case "Character|Cleric|Evil|Deverenian":
-          return "https://drive.google.com/uc?export=view&id=1iiGk_Mtcj_igxIakga4d9swHjALn6Rsn";
-        case "Character|Cleric|Evil|Dwarf":
-          return "https://drive.google.com/uc?export=view&id=1-xYPEcs9p8IY91ox4LYthFrH_5qlYK3_";
-        case "Character|Cleric|Evil|Elf":
-          return "https://drive.google.com/uc?export=view&id=1tP-iYvxGEJUwXZ7JHxbPuh6rhjQBcnJG";
-        case "Character|Cleric|Evil|Free Kingdoms":
-          return "https://drive.google.com/uc?export=view&id=1w4_vgQdFjlwQMlNpjeL_L4q0-Nfolrng";
-        case "Character|Cleric|Evil|Mercenary":
-          return "https://drive.google.com/uc?export=view&id=1uwJsOBqVtxlp-VoPSMw-tJDZE_EN6WZM";
-        case "Character|Cleric|Evil|Nothrog":
-          return "https://drive.google.com/uc?export=view&id=14mNcXvTDaFngVBDcwiaYXVV88wxja4Xc";
-        case "Character|Cleric|Evil|The Chosen":
-          return "https://drive.google.com/uc?export=view&id=1LuSTMcAW27hTmGuBzLDhvBfYY7q6FA87";
-        case "Character|Cleric|Good|Deverenian":
-          return "https://drive.google.com/uc?export=view&id=1K7terOMtVvbMPBeS5eUbAjGd-SScyAK4";
-        case "Character|Cleric|Good|Dwarf":
-          return "https://drive.google.com/uc?export=view&id=1PSD_gwl-6bqNGOpum1_Ktuif6SNMJdnN";
-        case "Character|Cleric|Good|Elf":
-          return "https://drive.google.com/uc?export=view&id=1y4xR-1WfQ1IbYNksd02u8i6PqpPRAs0A";
-        case "Character|Cleric|Good|Free Kingdoms":
-          return "https://drive.google.com/uc?export=view&id=1rw1w22xCslh8aE2dVd3pKfoS7wsiwbm0";
-        case "Character|Cleric|Good|Mercenary":
-          return "https://drive.google.com/uc?export=view&id=1QADQjDQAhVFp3iklC1Ac3ivajexq1GIc";
-        case "Character|Cleric|Good|Nothrog":
-          return "https://drive.google.com/uc?export=view&id=1LTnR89j1cWdLSc5iowyWDEmYSGY_NYoP";
-        case "Character|Cleric|Good|The Chosen":
-          return "https://drive.google.com/uc?export=view&id=18jQDXRB1kg-lS8PZUtn4X6LCHZrfQXgg";
-        case "Character|Fighter|Evil|Deverenian":
-          return "https://drive.google.com/uc?export=view&id=1mdXQizXbIWke_QLIYgRWsQMQmVIB_1p5";
-        case "Character|Fighter|Evil|Dwarf":
-          return "https://drive.google.com/uc?export=view&id=1vlV28WLU-_ZXCDjVKB8BcavqCpAoimSo";
-        case "Character|Fighter|Evil|Elf":
-          return "https://drive.google.com/uc?export=view&id=1X53PpZdtwig7UDUoEzZUV6TEZJXA8qXu";
-        case "Character|Fighter|Evil|Free Kingdoms":
-          return "https://drive.google.com/uc?export=view&id=1bhN8rAEmXpLww7_u0erU9FD2lLqvRfth";
-        case "Character|Fighter|Evil|Mercenary":
-          return "https://drive.google.com/uc?export=view&id=1rTBZl5kwh203NbdKtdn6DkFIyqY2AUUG";
-        case "Character|Fighter|Evil|Nothrog":
-          return "https://drive.google.com/uc?export=view&id=1BsBLu3v1ReVw5jcUOkqAakTIjkO53xse";
-        case "Character|Fighter|Evil|The Chosen":
-          return "https://drive.google.com/uc?export=view&id=1KryfTW9JDpOXio2HTFTL0mz8kfpWeh2D";
-        case "Character|Fighter|Good|Deverenian":
-          return "https://drive.google.com/uc?export=view&id=1L68dGqoDkDEjLlCxxo-14aX15R4xxvHl";
-        case "Character|Fighter|Good|Dwarf":
-          return "https://drive.google.com/uc?export=view&id=1OM3RHyrXSneeeJCsBdhOzrspYWfsf0Pu";
-        case "Character|Fighter|Good|Elf":
-          return "https://drive.google.com/uc?export=view&id=1FWqyGn9qDPLjjspwEnisDM1ePORC4Z1M";
-        case "Character|Fighter|Good|Free Kingdoms":
-          return "https://drive.google.com/uc?export=view&id=1GgilRmw5f0JN6sHBfG4MrSINIDajHp9-";
-        case "Character|Fighter|Good|Mercenary":
-          return "https://drive.google.com/uc?export=view&id=1AwvgeqzKK6---X9Vl6Ciru6kz1be359-";
-        case "Character|Fighter|Good|Nothrog":
-          return "https://drive.google.com/uc?export=view&id=1kEvP0zv_Dl3j5_1gAN7L1AxTpUsmNiTP";
-        case "Character|Fighter|Good|The Chosen":
-          return "https://drive.google.com/uc?export=view&id=1SkhShkIt4ll63cWFchPihw8sIx3RgILO";
-        case "Character|Rogue|Evil|Deverenian":
-          return "https://drive.google.com/uc?export=view&id=1VDwv4TGMPlpCVZsK8HEYIFetCdrrQwS8";
-        case "Character|Rogue|Evil|Dwarf":
-          return "https://drive.google.com/uc?export=view&id=1JkvVWu5yYjBWxSq32IvYP8CiFKiGK24Z";
-        case "Character|Rogue|Evil|Elf":
-          return "https://drive.google.com/uc?export=view&id=1oiJC90LRiC4nBrumrEvOgXxZFQNVnkeX";
-        case "Character|Rogue|Evil|Free Kingdoms":
-          return "https://drive.google.com/uc?export=view&id=17oPG--Cr57R9qyC40zZg5xcWDoZdXsJC";
-        case "Character|Rogue|Evil|Mercenary":
-          return "https://drive.google.com/uc?export=view&id=1CdTlX53_Z0CF_bpwIqixjpDE94nDUhUb";
-        case "Character|Rogue|Evil|Nothrog":
-          return "https://drive.google.com/uc?export=view&id=1xoyFg9G145lf1Ad1b_jPfWu1wXya514_";
-        case "Character|Rogue|Evil|The Chosen":
-          return "https://drive.google.com/uc?export=view&id=1kkdilQZhP8EzK19dNtzRA7RKm0BTE4Br";
-        case "Character|Rogue|Good|Deverenian":
-          return "https://drive.google.com/uc?export=view&id=1wThRSg9X2p4OyuhTHOsO5TbpDs2du5QQ";
-        case "Character|Rogue|Good|Dwarf":
-          return "https://drive.google.com/uc?export=view&id=19quefPvw0R53x4974VjWLkJs1umySUC4";
-        case "Character|Rogue|Good|Elf":
-          return "https://drive.google.com/uc?export=view&id=1Mtw4dM6BhskOgMIESvPrfORvStaHtlPp";
-        case "Character|Rogue|Good|Free Kingdoms":
-          return "https://drive.google.com/uc?export=view&id=1X7S8nQDYDi0RYZVNRSBPTtaPWmiN7KoY";
-        case "Character|Rogue|Good|Mercenary":
-          return "https://drive.google.com/uc?export=view&id=1f8n2CjmX7R1EjMiE7iVPi-zJQmZ6lFCM";
-        case "Character|Rogue|Good|Nothrog":
-          return "https://drive.google.com/uc?export=view&id=1cSA77c6Ju9SOWjLnoM4oJ6eHKHutZmhI";
-        case "Character|Rogue|Good|The Chosen":
-          return "https://drive.google.com/uc?export=view&id=14Gt1gzeX8aEQTJJOFJFZ5MFBFUWFOKZL";
-        case "Character|Wizard|Evil|Deverenian":
-          return "https://drive.google.com/uc?export=view&id=1_OjfGMIMdVgknQHyinXvxI8h1ncElfnx";
-        case "Character|Wizard|Evil|Dwarf":
-          return "https://drive.google.com/uc?export=view&id=1jfeBlTJ-4mlulx8Z2pTKtLsJda9-kyjc";
-        case "Character|Wizard|Evil|Elf":
-          return "https://drive.google.com/uc?export=view&id=16wv-cSSg20B-WXzBvFlXSNu0vdRbll7Y";
-        case "Character|Wizard|Evil|Free Kingdoms":
-          return "https://drive.google.com/uc?export=view&id=1yZWShxpBC4vu7AOE2_Td_sO2SSwSLC-i";
-        case "Character|Wizard|Evil|Mercenary":
-          return "https://drive.google.com/uc?export=view&id=17NYEz-gpeGk9pBXYiKLTGX3dzP9csK2t";
-        case "Character|Wizard|Evil|Nothrog":
-          return "https://drive.google.com/uc?export=view&id=17OrmMhUlliWPRLwy8bXRYusJidKTqg0p";
-        case "Character|Wizard|Evil|The Chosen":
-          return "https://drive.google.com/uc?export=view&id=1jifSIfUyubxnnd-z-2SyAKsKBPTn3UXs";
-        case "Character|Wizard|Good|Deverenian":
-          return "https://drive.google.com/uc?export=view&id=15ZIhcGESio-28V8Plg0mZmaKYkfFBzJX";
-        case "Character|Wizard|Good|Dwarf":
-          return "https://drive.google.com/uc?export=view&id=1_u_i7dnUoWiFRnZAJPebmY95uLDVd5X4";
-        case "Character|Wizard|Good|Elf":
-          return "https://drive.google.com/uc?export=view&id=1b3PLBj8mdVcMByYrCw1CF-JltRiKxOPM";
-        case "Character|Wizard|Good|Free Kingdoms":
-          return "https://drive.google.com/uc?export=view&id=1neNK4kExrwPn7ZjxoD_WT3kYkaYyGhi2";
-        case "Character|Wizard|Good|Mercenary":
-          return "https://drive.google.com/uc?export=view&id=1mDl69auRGtXpUG0gE7ZWQkBDpalu7Zfb";
-        case "Character|Wizard|Good|Nothrog":
-          return "https://drive.google.com/uc?export=view&id=12ns7HbLl3u8Blq7fdq3KitzAlJphtw7-";
-        case "Character|Wizard|Good|The Chosen":
-          return "https://drive.google.com/uc?export=view&id=1hDgwG6-GKcw2cRSxHzfTd9m0EdMpmr6_";
-        //case "Character|Classless|Evil|Deverenian":
-        //  return "/images/Dev E Class Half.png";
-        //case "Character|Classless|Evil|Dwarf":
-        //  return "/images/Dw E Class Half.png";
-        //case "Character|Classless|Evil|Elf":
-        //  return "/images/Elv E Class Half.png";
-        //case "Character|Classless|Evil|Free Kingdoms":
-        //  return "/images/Freek E Class Half.png";
-        //case "Character|Classless|Evil|Mercenary":
-        //  return "/images/Merc E Class Half.png";
-        //case "Character|Classless|Evil|Nothrog":
-        //  return "/images/Ntg E Class Half.png";
-        //case "Character|Classless|Evil|The Chosen":
-        //  return "/images/Cho E Class.png";
-        //case "Character|Classless|Good|Deverenian":
-        //  return "/images/Dev G Class Half.png";
-        //case "Character|Classless|Good|Dwarf":
-        //  return "/images/Dw G Class Half.png";
-        //case "Character|Classless|Good|Elf":
-        //  return "/images/Elv G Class Half.png";
-        //case "Character|Classless|Good|Free Kingdoms":
-        //  return "/images/Freek G Class Half.png";
-        //case "Character|Classless|Good|Mercenary":
-        //  return "/images/Merc G Class Half.png";
-        //case "Character|Classless|Good|Nothrog":
-        //  return "/images/Ntg G Class Half.png";
-        //case "Character|Classless|Good|The Chosen":
-        //  return "/images/Cho G Class.png";
-        //case "Character|Cleric|Evil|Deverenian":
-        //  return "/images/Dev E Cleric Half.png";
-        //case "Character|Cleric|Evil|Dwarf":
-        //  return "/images/Dw E Cleric Half.png";
-        //case "Character|Cleric|Evil|Elf":
-        //  return "/images/Elv E Cleric Half.png";
-        //case "Character|Cleric|Evil|Free Kingdoms":
-        //  return "/images/Freek E Cleric Half.png";
-        //case "Character|Cleric|Evil|Mercenary":
-        //  return "/images/Merc E Cleric Half.png";
-        //case "Character|Cleric|Evil|Nothrog":
-        //  return "/images/Ntg E Cleric Half.png";
-        //case "Character|Cleric|Evil|The Chosen":
-        //  return "/images/Cho E Cleric.png";
-        //case "Character|Cleric|Good|Deverenian":
-        //  return "/images/Dev G Cleric Half.png";
-        //case "Character|Cleric|Good|Dwarf":
-        //  return "/images/Dw G Cleric Half.png";
-        //case "Character|Cleric|Good|Elf":
-        //  return "/images/Elv G Cleric Half.png";
-        //case "Character|Cleric|Good|Free Kingdoms":
-        //  return "/images/Freek G Cleric Half.png";
-        //case "Character|Cleric|Good|Mercenary":
-        //  return "/images/Merc G Cleric Half.png";
-        //case "Character|Cleric|Good|Nothrog":
-        //  return "/images/Ntg G Cleric Half.png";
-        //case "Character|Cleric|Good|The Chosen":
-        //  return "/images/Cho G Cleric.png";
-        //case "Character|Fighter|Evil|Deverenian":
-        //  return "/images/Dev E Fight Half.png";
-        //case "Character|Fighter|Evil|Dwarf":
-        //  return "/images/Dw E Fight Half.png";
-        //case "Character|Fighter|Evil|Elf":
-        //  return "/images/Elv E Fight Half.png";
-        //case "Character|Fighter|Evil|Free Kingdoms":
-        //  return "/images/Freek E Fight Half.png";
-        //case "Character|Fighter|Evil|Mercenary":
-        //  return "/images/Merc E Fight Half.png";
-        //case "Character|Fighter|Evil|Nothrog":
-        //  return "/images/Ntg E Fight Half.png";
-        //case "Character|Fighter|Evil|The Chosen":
-        //  return "/images/Cho E Fight.png";
-        //case "Character|Fighter|Good|Deverenian":
-        //  return "/images/Dev G Fight Half.png";
-        //case "Character|Fighter|Good|Dwarf":
-        //  return "/images/Dw G Fight Half.png";
-        //case "Character|Fighter|Good|Elf":
-        //  return "/images/Elv G Fight Half.png";
-        //case "Character|Fighter|Good|Free Kingdoms":
-        //  return "/images/Freek G Fight Half.png";
-        //case "Character|Fighter|Good|Mercenary":
-        //  return "/images/Merc G Fight Half.png";
-        //case "Character|Fighter|Good|Nothrog":
-        //  return "/images/Ntg G Fight Half.png";
-        //case "Character|Fighter|Good|The Chosen":
-        //  return "/images/Cho G Fight.png";
-        //case "Character|Rogue|Evil|Deverenian":
-        //  return "/images/Dev E Rogue Half.png";
-        //case "Character|Rogue|Evil|Dwarf":
-        //  return "/images/Dw E Rogue Half.png";
-        //case "Character|Rogue|Evil|Elf":
-        //  return "/images/Elv E Rogue Half.png";
-        //case "Character|Rogue|Evil|Free Kingdoms":
-        //  return "/images/Freek E Rogue Half.png";
-        //case "Character|Rogue|Evil|Mercenary":
-        //  return "/images/Merc E Rogue Half.png";
-        //case "Character|Rogue|Evil|Nothrog":
-        //  return "/images/Ntg E Rogue Half.png";
-        //case "Character|Rogue|Evil|The Chosen":
-        //  return "/images/Cho E Rogue.png";
-        //case "Character|Rogue|Good|Deverenian":
-        //  return "/images/Dev G Rogue Half.png";
-        //case "Character|Rogue|Good|Dwarf":
-        //  return "/images/Dw G Rogue Half.png";
-        //case "Character|Rogue|Good|Elf":
-        //  return "/images/Elv G Rogue Half.png";
-        //case "Character|Rogue|Good|Free Kingdoms":
-        //  return "/images/Freek G Rogue Half.png";
-        //case "Character|Rogue|Good|Mercenary":
-        //  return "/images/Merc G Rogue Half.png";
-        //case "Character|Rogue|Good|Nothrog":
-        //  return "/images/Ntg G Rogue Half.png";
-        //case "Character|Rogue|Good|The Chosen":
-        //  return "/images/Cho G Rogue.png";
-        //case "Character|Wizard|Evil|Deverenian":
-        //  return "/images/Dev E Wiz Half.png";
-        //case "Character|Wizard|Evil|Dwarf":
-        //  return "/images/Dw E Wiz Half.png";
-        //case "Character|Wizard|Evil|Elf":
-        //  return "/images/Elv E Wiz Half.png";
-        //case "Character|Wizard|Evil|Free Kingdoms":
-        //  return "/images/Freek E Wiz Half.png";
-        //case "Character|Wizard|Evil|Mercenary":
-        //  return "/images/Merc E Wiz Half.png";
-        //case "Character|Wizard|Evil|Nothrog":
-        //  return "/images/Ntg E Wiz Half.png";
-        //case "Character|Wizard|Evil|The Chosen":
-        //  return "/images/Cho E Wiz.png";
-        //case "Character|Wizard|Good|Deverenian":
-        //  return "/images/Dev G Wiz Half.png";
-        //case "Character|Wizard|Good|Dwarf":
-        //  return "/images/Dw G Wiz Half.png";
-        //case "Character|Wizard|Good|Elf":
-        //  return "/images/Elv G Wiz Half.png";
-        //case "Character|Wizard|Good|Free Kingdoms":
-        //  return "/images/Freek G Wiz Half.png";
-        //case "Character|Wizard|Good|Mercenary":
-        //  return "/images/Merc G Wiz Half.png";
-        //case "Character|Wizard|Good|Nothrog":
-        //  return "/images/Ntg G Wiz Half.png";
-        //case "Character|Wizard|Good|The Chosen":
-        //  return "/images/Cho G Wiz.png";
-        default:
-          return null;
-      }
+      return cardTemplates[key];
     },
     referenceLists() {
       return this.$store.state.referenceLists;
@@ -839,7 +584,7 @@ export default {
     classList() {
       if (!this.referenceLists || !this.referenceLists.classList) return [];
       return this.referenceLists.classList.filter(
-        (t) => !this.cardTemp.classes.includes(t)
+        (t) => t !== "Classless" && !this.cardTemp.classes.includes(t)
       );
     },
     factionList() {
@@ -887,12 +632,11 @@ export default {
       try {
         if (this.cardJsonSelected) {
           this.cardData = JSON.parse(this.cardJson);
-        } else {
-          this.refreshImage();
         }
       } catch {
         // We honestly don't care if you want to make invalid javascript
       }
+      this.refreshImage();
     },
     cardJsonSelected() {
       this.updateJson();
@@ -965,6 +709,9 @@ export default {
       );
     },
     "cardTemp.classes": function (newValue) {
+      if (newValue.length !== 1) {
+        newValue = ["Classless"].concat(newValue)
+      }
       setProp(
         this.cardData,
         "class",
@@ -1043,7 +790,7 @@ export default {
           setProp(
             this.cardData.printInfos[0],
             "flavorText",
-            fromEmptyToUndefined(newValue.flavorText),
+            fromEmptyToUndefined(fixCarriageReturns(newValue.flavorText)),
             printKeyOrder
           );
         }
@@ -1054,8 +801,13 @@ export default {
   mounted() {
     this.$store.dispatch("loadCardData");
     this.updateJson();
+    this.loadSaved();
   },
   methods: {
+    // ------------------- //
+    // - Card Editing UI - //
+    // ------------------- //
+
     updateJson() {
       if (this.cardJsonSelected) return;
       this.cardJson = JSON.stringify(
@@ -1077,7 +829,7 @@ export default {
       this.cardTemp.skill = this.cardData.skill;
       this.cardTemp.hitPoints = this.cardData.hitPoints;
       this.cardTemp.level = this.cardData.level;
-      this.cardTemp.classes = fromSlashesToArray(this.cardData.class);
+      this.cardTemp.classes = fromSlashesToArray(this.cardData.class).filter(x => x !== "Classless");
       this.cardTemp.factions = fromSlashesToArray(this.cardData.faction);
       this.cardTemp.traits = fromSlashesToArray(this.cardData.traits);
       let feats = fromSlashesToFeats(this.cardData.feats);
@@ -1110,6 +862,11 @@ export default {
       Vue.delete(this.cardTemp.miscValues, this.cardTemp.selectedMisc[index]);
       this.cardTemp.selectedMisc.splice(index, 1);
     },
+
+    // -------------------- //
+    // - Image Formatting - //
+    // -------------------- //
+
     formatCardText() {
       let text = "";
 
@@ -1160,8 +917,6 @@ export default {
         let value = this.cardData.text;
         let hashReg = /(Spend Order:|Order:|Spend React:|React:)/gm;
         value = value.replace(hashReg, "<b>$&</b>");
-        hashReg = /\r\n/gm;
-        value = value.replace(hashReg, "\r\n");
         text += value;
       }
 
@@ -1174,6 +929,7 @@ export default {
         if (text) text += "\r\n";
         let value = this.cardData.printInfos[0].flavorText;
         value = value.replace(/(- )/gm, "-&nbsp;");
+        value = value.replace(/\r\n/gm, "<br>");
         text += "<i>" + value + "</i>";
       }
 
@@ -1201,7 +957,7 @@ export default {
 
             if (element.clientHeight >= element.scrollHeight) {
               prevScale = scale;
-              scale -= 5;
+              scale -= 1;
               element.style.height = `${scale}%`;
               reduce();
             } else {
@@ -1230,7 +986,7 @@ export default {
             }
 
             if (element.clientHeight < element.scrollHeight) {
-              scale -= 0.05;
+              scale -= 0.01;
               element.style.fontSize = `${scale}em`;
               reduce();
             } else {
@@ -1317,12 +1073,59 @@ export default {
         if (holder) {
           try {
             this.cardImageDataUrl = await domtoimage.toPng(holder);
-          } catch {
-            // Not sure why this would happen, or what to do if it does
+          } catch (error) {
+            alert("An error occurred rendering the card image: " + error);
           }
         }
       }, 0);
     }),
+
+    // ------------------- //
+    // - Card Management - //
+    // ------------------- //
+
+    loadSaved() {
+      let settings = localStorage.getItem("cardBuilderSettings");
+      if (settings) {
+        let parsed = JSON.parse(settings);
+        this.cardData = parsed.cardData;
+        this.cardUserImageDataUrl = parsed.cardUserImageDataUrl;
+      }
+    },
+    saveChanges() {
+      localStorage.setItem(
+        "cardBuilderSettings",
+        JSON.stringify({
+          cardData: this.cardData,
+          cardUserImageDataUrl: this.cardUserImageDataUrl,
+        })
+      );
+    },
+    uploadImage() {
+      utility.readImage().then((response) => {
+        this.cardUserImageDataUrl = response;
+      });
+    },
+    downloadImage() {
+      let filename =
+        (this.cardData.name || "Untitled").replace(/[^a-z0-9]/gi, "_") + ".png";
+      utility.saveImage(this.cardImageDataUrl, filename);
+    },
+    uploadJson() {
+      utility.readText().then((response) => {
+        try {
+          this.cardData = JSON.parse(response);
+        } catch (error) {
+          alert("An error occurred reading the card data: " + error);
+        }
+      });
+    },
+    downloadJson() {
+      let filename =
+        (this.cardData.name || "Untitled").replace(/[^a-z0-9]/gi, "_") +
+        ".json";
+      utility.saveText(this.cardJson, filename);
+    },
   },
 };
 </script>
@@ -1419,16 +1222,20 @@ export default {
 }
 
 .image-text {
-  left: 57px;
-  top: 328px;
-  width: 261px;
-  height: 140px;
+  left: 53px;
+  top: 324px;
+  width: 269px;
+  height: 148px;
   font-size: 12.5pt;
   display: flex;
   align-items: center;
 }
 
 .image-text >>> p {
+  margin: 0px;
+}
+
+.image-text >>> p + p {
   margin: 0.4em 0px 0px 0px;
 }
 
@@ -1439,18 +1246,18 @@ export default {
 }
 
 .image-text-corner-top {
-  width: 28px;
-  height: calc(14px + (100% - 140px) / 2);
+  width: 32px;
+  height: calc(18px + (100% - 148px) / 2);
 }
 
 .image-text-edge {
   content: "";
-  height: calc(118px + (100% - 140px) / 2);
+  height: calc(122px + (100% - 148px) / 2);
 }
 
 .image-text-corner-bottom {
-  width: 23px;
-  height: calc(22px + (100% - 140px) / 2);
+  width: 27px;
+  height: calc(26px + (100% - 148px) / 2);
 }
 
 .image-text-corner-bottom.float-left {

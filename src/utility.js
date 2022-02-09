@@ -123,7 +123,33 @@ export default {
         let a = document.createElement('a');
         a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
         a.setAttribute('download', filename);
+        document.body.append(a);
         a.click();
+        a.remove();
+    },
+    readImage() {
+        let input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.setAttribute('style', 'display:none');
+        document.body.append(input);
+        return new Promise(resolve => {
+            let fr = new FileReader();
+            input.onchange = () => {
+                fr.onload = x => resolve(x.target.result);
+                fr.readAsDataURL(input.files[0]);
+            }
+            input.click();
+            input.remove();
+        });
+    },
+    saveImage(dataUrl, filename) {
+        let a = document.createElement('a');
+        a.setAttribute('href', dataUrl);
+        a.setAttribute('download', filename);
+        document.body.append(a);
+        a.click();
+        a.remove();
     },
     stringCompare(a, b) {
         return (a || "").localeCompare(b || "");
