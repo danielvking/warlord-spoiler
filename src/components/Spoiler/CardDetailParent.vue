@@ -3,8 +3,8 @@
 </template>
 
 <script>
-import CardDetail from "@/components/CardDetail";
-import CardDetailEdit from "@/components/CardDetailEdit";
+import CardDetail from "@/components/Spoiler/CardDetail";
+import CardDetailEdit from "@/components/Editor/CardDetailEdit";
 
 export default {
   components: { CardDetail, CardDetailEdit },

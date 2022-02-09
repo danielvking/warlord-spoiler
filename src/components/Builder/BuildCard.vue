@@ -364,7 +364,7 @@
 
 <script>
 import Vue from "vue";
-import HeaderFooter from "@/components/HeaderFooter.vue";
+import HeaderFooter from "@/components/Shared/HeaderFooter.vue";
 import utility from "@/utility.js";
 import domtoimage from "dom-to-image";
 import cardTemplates from "@/cardTemplates.js";
@@ -1232,10 +1232,6 @@ export default {
 }
 
 .image-text >>> p {
-  margin: 0px;
-}
-
-.image-text >>> p + p {
   margin: 0.4em 0px 0px 0px;
 }
 

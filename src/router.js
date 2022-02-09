@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-const PrintDeck = () => import('@/components/PrintDeck.vue')
-const CardSpoiler = () => import('@/components/CardSpoiler.vue')
-const CardDetailParent = () => import('@/components/CardDetailParent.vue')
+const PrintDeck = () => import('@/components/Spoiler/PrintDeck.vue')
+const CardSpoiler = () => import('@/components/Spoiler/CardSpoiler.vue')
+const CardDetailParent = () => import('@/components/Spoiler/CardDetailParent.vue')
 const PageNotFound = () => import('@/components/PageNotFound.vue')
-const EnableEdit = () => import('@/components/EnableEdit.vue')
-const BuildCard = () => import('@/components/BuildCard.vue')
+const EnableEdit = () => import('@/components/Editor/EnableEdit.vue')
+const BuildCard = () => import('@/components/Builder/BuildCard.vue')
 
 Vue.use(Router)
 
