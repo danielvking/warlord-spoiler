@@ -142,12 +142,12 @@
 </template>
 
 <script>
-import HeaderFooter from "@/components/Shared/HeaderFooter.vue";
-import BuildDeck from "@/components/Spoiler/BuildDeck.vue";
-import EditCards from "@/components/Editor/EditCards.vue";
-import SearchSimple from "@/components/Spoiler/SearchSimple.vue";
-import SearchAdvanced from "@/components/Spoiler/SearchAdvanced.vue";
-import CardCompact from "@/components/Spoiler/CardCompact.vue";
+import HeaderFooter from "@/components/shared/HeaderFooter.vue";
+import BuildDeck from "@/components/spoiler/BuildDeck.vue";
+import EditCards from "@/components/editor/EditCards.vue";
+import SearchSimple from "@/components/spoiler/SearchSimple.vue";
+import SearchAdvanced from "@/components/spoiler/SearchAdvanced.vue";
+import CardCompact from "@/components/spoiler/CardCompact.vue";
 import utility from "@/utility.js";
 import addRemoveCardMixin from "@/mixins/addRemoveCardMixin.js";
 import routeMixin from "@/mixins/routeMixin.js";

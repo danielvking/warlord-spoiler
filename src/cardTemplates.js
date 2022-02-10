@@ -68,5 +68,6 @@ export default {
     "Character|Wizard|Good|Free Kingdoms": "/images/test/Freek G Wiz Half.png",
     "Character|Wizard|Good|Mercenary": "/images/test/Merc G Wiz Half.png",
     "Character|Wizard|Good|Nothrog": "/images/test/Ntg G Wiz Half.png",
-    "Character|Wizard|Good|The Chosen": "/images/test/Cho G Wiz.png"
+    "Character|Wizard|Good|The Chosen": "/images/test/Cho G Wiz.png",
+    "no_template": "/images/test/No_Template.png"
 }

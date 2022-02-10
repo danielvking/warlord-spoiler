@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import HeaderFooter from "@/components/Shared/HeaderFooter.vue";
+import HeaderFooter from "@/components/shared/HeaderFooter.vue";
 
 export default {
   components: { HeaderFooter },

@@ -68,5 +68,6 @@ export default {
     "Character|Wizard|Good|Free Kingdoms": "https:drive.google.com/uc?export=view&id=1neNK4kExrwPn7ZjxoD_WT3kYkaYyGhi2",
     "Character|Wizard|Good|Mercenary": "https:drive.google.com/uc?export=view&id=1mDl69auRGtXpUG0gE7ZWQkBDpalu7Zfb",
     "Character|Wizard|Good|Nothrog": "https:drive.google.com/uc?export=view&id=12ns7HbLl3u8Blq7fdq3KitzAlJphtw7-",
-    "Character|Wizard|Good|The Chosen": "https:drive.google.com/uc?export=view&id=1hDgwG6-GKcw2cRSxHzfTd9m0EdMpmr6_"
+    "Character|Wizard|Good|The Chosen": "https:drive.google.com/uc?export=view&id=1hDgwG6-GKcw2cRSxHzfTd9m0EdMpmr6_",
+    "no_template": "/images/test/no_template.png"
 }
