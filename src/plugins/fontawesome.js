@@ -2,15 +2,15 @@ import Vue from 'vue'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
-    faBars,
-    faMinusSquare,
-    faPlusSquare,
-    faPrint,
-    faFolderOpen,
-    faSave,
-    faCheck,
-    faEye,
-    faSignOutAlt
+  faBars,
+  faMinusSquare,
+  faPlusSquare,
+  faPrint,
+  faFolderOpen,
+  faSave,
+  faCheck,
+  faEye,
+  faSignOutAlt
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
