@@ -204,7 +204,7 @@ export default {
               return;
             }
 
-            if (element.clientHeight >= element.scrollHeight) {
+            if (element.scrollHeight && element.clientHeight >= element.scrollHeight) {
               prevScale = scale;
               scale -= 1;
               element.style.height = `${scale}%`;
@@ -308,6 +308,8 @@ export default {
         rectifyScale(".image-holder .image-lvl");
         rectifyScale(".image-holder .image-sk");
         rectifyScale(".image-holder .image-hp");
+
+        this.formattedCardText = this.computeFormattedCardText();
 
         let wrapper = this.$refs.imageTextWrapper;
         if (wrapper) {

@@ -317,128 +317,58 @@ import Vue from "vue";
 import HeaderFooter from "@/components/shared/HeaderFooter.vue";
 import utility from "@/utility.js";
 import CardImageCreator from '@/components/builder/CardImageCreator.vue';
+import { createMapper } from "@/cardMapper.js";
 
-// Static lists for preferred property order; just to keep things organized
-const cardKeyOrder = [
-  "name",
-  "text",
-  "type",
-  "alignment",
-  "class",
-  "faction",
-  "attack",
-  "armorClass",
-  "skill",
-  "hitPoints",
-  "level",
-  "traits",
-  "feats",
-  "misc",
-  "printInfos",
-];
-const printKeyOrder = ["flavorText", "flavorTraits"];
-
-// Utility functions for data conversions
-function setProp(obj, key, value, keyOrder) {
-  if (value === undefined) {
-    Vue.delete(obj, key);
-    return;
-  }
-  if (obj[key] === undefined) {
-    utility.insertKeyOrdered(obj, key, keyOrder, Vue.set, Vue.delete);
-  }
-  obj[key] = value;
-}
-function fromEmptyToUndefined(str) {
-  if (str == null || str === "") return undefined;
-  return str;
-}
-function fixCarriageReturns(str) {
-  if (!str) return str;
-  return str.replace(/\r/g, "").replace(/\n/g, "\r\n");
-}
-function fromSlashesToArray(str) {
-  if (!str) return [];
-  return str.split("/");
-}
-function fromArrayToSlashes(arr) {
-  if (arr[0] == null) return undefined;
-  return arr.join("/");
-}
-function fromSlashesToFeats(featStr) {
-  let feats = fromSlashesToArray(featStr);
-  let selectedFeats = [];
-  let featValues = {};
-  feats.forEach((f, i) => {
-    let featValue = f.split(/ (?=[-+]\d+)/);
-    selectedFeats[i] = featValue[0];
-    let value = +featValue[1];
-    if (!isNaN(value)) {
-      featValues[featValue[0]] = value;
-    }
-  });
-  return { selectedFeats, featValues };
-}
-function fromFeatsToSlashes(featArr, featValues) {
-  if (featArr[0] == null) return undefined;
-  return featArr
-    .map((x) => {
-      let value = featValues[x];
-      let valueNum = +value;
-      if (value == null || value === "" || isNaN(valueNum)) return x;
-      if (valueNum >= 0) value = "+" + valueNum;
-      return `${x} ${value}`;
-    })
-    .join("/");
-}
-function fromSlashesToMisc(miscStr) {
-  let misc = fromSlashesToArray(miscStr);
-  var selectedMisc = [];
-  var miscValues = {};
-  misc.forEach((m, i) => {
-    let value;
-    if (m.match(/^-?\d+ Charges?$/)) {
-      let miscValue = m.split(" ");
-      selectedMisc[i] = "Charges";
-      value = +miscValue[0];
-    } else if (m.match(/^-?\d+ gp$/)) {
-      let miscValue = m.split(" ");
-      selectedMisc[i] = "GP";
-      value = +miscValue[0];
-    } else {
-      let miscValue = m.split(/ (?=-?\d+)/);
-      selectedMisc[i] = miscValue[0];
-      value = +miscValue[1];
-    }
-    if (!isNaN(value)) {
-      miscValues[selectedMisc[i]] = value;
-    }
-  });
-  return { selectedMisc, miscValues };
-}
-function fromMiscToSlashes(miscArr, miscValues) {
-  if (miscArr[0] == null) return undefined;
-  return miscArr
-    .map((x) => {
-      let value = miscValues[x];
-      let valueNum = +value;
-      if (value == null || value === "" || isNaN(valueNum)) return x;
-
-      if (x === "Charges") {
-        return `${valueNum} ${valueNum === 1 ? "Charge" : "Charges"}`;
-      } else if (x === "GP") {
-        return `${valueNum} gp`;
-      } else {
-        return `${x} ${valueNum}`;
+const mapperConfig = {
+  props: {
+    "class": {
+      initialize(vm, cardDataProp, cardMappedProp, config) {
+        let { setProp, fromArrayToSlashes, cardKeyOrder } = config.utils;
+        vm.$watch(cardMappedProp + ".classes", newValue => {
+          let cardData = vm[cardDataProp];
+          if (newValue.length !== 1) {
+            newValue = ["Classless"].concat(newValue)
+          }
+          setProp(cardData, "class", fromArrayToSlashes(newValue), cardKeyOrder);
+        });
+      },
+      sync(vm, cardDataProp, cardMappedProp, config) {
+        let { fromSlashesToArray } = config.utils;
+        let cardData = vm[cardDataProp], cardMapped = vm[cardMappedProp];
+        cardMapped.classes = fromSlashesToArray(cardData.class).filter(x => x !== "Classless");
       }
-    })
-    .join("/");
-}
-function emptyPrintInfo() {
-  return {
-    flavorText: "",
-    flavorTraits: [],
-  };
+    },
+    "challengeLord": {},
+    "printinfos": {
+      initialize(vm, cardDataProp, cardMappedProp, config) {
+        let { setProp, fromArrayToSlashes, fromEmptyToUndefined, fixCarriageReturns, cardKeyOrder, printKeyOrder} = config.utils;
+        vm.$watch(cardMappedProp + ".printInfo", newValue => {
+          let cardData = vm[cardDataProp];
+          if (newValue.flavorTraits[0] || newValue.flavorText) {
+            let y = {};
+            setProp(cardData, "printInfos", [y], cardKeyOrder);
+            setProp(y, "flavorTraits", fromArrayToSlashes(newValue.flavorTraits || []), printKeyOrder);
+            setProp(y, "flavorText", fromEmptyToUndefined(fixCarriageReturns(newValue.flavorText)), printKeyOrder);
+          } else {
+            setProp(cardData, "printInfos", undefined, cardKeyOrder);
+          }
+        }, { deep: true });
+      },
+      sync(vm, cardDataProp, cardMappedProp, config) {
+        let { fromSlashesToArray } = config.utils;
+        let cardData = vm[cardDataProp], cardMapped = vm[cardMappedProp];
+        cardMapped.printInfo = (cardData.printInfos || []).map(x => {
+          return {
+            flavorTraits: fromSlashesToArray(x.flavorTraits),
+            flavorText: x.flavorText,
+          };
+        })[0] || {
+          flavorText: "",
+          flavorTraits: []
+        };
+      }
+    }
+  }
 }
 
 export default {
@@ -471,10 +401,14 @@ export default {
         featValues: {},
         selectedMisc: [],
         miscValues: {},
-        printInfo: emptyPrintInfo(),
+        printInfo: {
+          flavorText: "",
+          flavorTraits: [],
+        },
       },
-      cardImageUserDataUrl: null,
-      cardImageDataUrl: null,
+      mapper: null,
+      cardUserImageDataUrl: null,
+      cardImageDataUrl: null
     };
   },
   computed: {
@@ -530,7 +464,7 @@ export default {
   watch: {
     cardData: {
       handler() {
-        this.initializeTemp();
+        this.updateJson();
       },
       deep: true,
     },
@@ -544,6 +478,7 @@ export default {
       try {
         if (this.cardJsonSelected) {
           this.cardData = JSON.parse(this.cardJson);
+          this.updateTemp();
         }
       } catch {
         // We honestly don't care if you want to make invalid javascript
@@ -551,168 +486,14 @@ export default {
     },
     cardJsonSelected() {
       this.updateJson();
-    },
-    "cardTemp.name": function (newValue) {
-      setProp(
-        this.cardData,
-        "name",
-        fromEmptyToUndefined(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.text": function (newValue) {
-      setProp(
-        this.cardData,
-        "text",
-        fromEmptyToUndefined(fixCarriageReturns(newValue)),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.alignment": function (newValue) {
-      setProp(
-        this.cardData,
-        "alignment",
-        fromEmptyToUndefined(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.type": function (newValue) {
-      setProp(this.cardData, "type", newValue, cardKeyOrder);
-    },
-    "cardTemp.attack": function (newValue) {
-      setProp(
-        this.cardData,
-        "attack",
-        fromEmptyToUndefined(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.armorClass": function (newValue) {
-      setProp(
-        this.cardData,
-        "armorClass",
-        fromEmptyToUndefined(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.skill": function (newValue) {
-      setProp(
-        this.cardData,
-        "skill",
-        fromEmptyToUndefined(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.hitPoints": function (newValue) {
-      setProp(
-        this.cardData,
-        "hitPoints",
-        fromEmptyToUndefined(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.level": function (newValue) {
-      setProp(
-        this.cardData,
-        "level",
-        fromEmptyToUndefined(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.classes": function (newValue) {
-      if (newValue.length !== 1) {
-        newValue = ["Classless"].concat(newValue)
-      }
-      setProp(
-        this.cardData,
-        "class",
-        fromArrayToSlashes(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.factions": function (newValue) {
-      setProp(
-        this.cardData,
-        "faction",
-        fromArrayToSlashes(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.traits": function (newValue) {
-      setProp(
-        this.cardData,
-        "traits",
-        fromArrayToSlashes(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.featValues": {
-      handler(newValue) {
-        setProp(
-          this.cardData,
-          "feats",
-          fromFeatsToSlashes(this.cardTemp.selectedFeats, newValue),
-          cardKeyOrder
-        );
-      },
-      deep: true,
-    },
-    "cardTemp.miscValues": {
-      handler(newValue) {
-        setProp(
-          this.cardData,
-          "misc",
-          fromMiscToSlashes(this.cardTemp.selectedMisc, newValue),
-          cardKeyOrder
-        );
-      },
-      deep: true,
-    },
-    "cardTemp.printInfo": {
-      handler: function (newValue) {
-        let hasData = newValue.flavorTraits[0] || newValue.flavorText;
-
-        // Remove or add print info
-        if (!this.cardData.printInfos) {
-          if (hasData) {
-            Vue.set(this.cardData, "printInfos", []);
-            this.cardData.printInfos.splice(0, 0, {});
-          }
-        } else {
-          if (hasData) {
-            if (this.cardData.printInfos.length > 1) {
-              this.cardData.printInfos.splice(
-                1,
-                this.cardData.printInfos.length - 1
-              );
-            }
-          } else {
-            Vue.delete(this.cardData, "printInfos");
-          }
-        }
-
-        if (hasData) {
-          setProp(
-            this.cardData.printInfos[0],
-            "flavorTraits",
-            fromArrayToSlashes(newValue.flavorTraits),
-            printKeyOrder
-          );
-          setProp(
-            this.cardData.printInfos[0],
-            "flavorText",
-            fromEmptyToUndefined(fixCarriageReturns(newValue.flavorText)),
-            printKeyOrder
-          );
-        }
-      },
-      deep: true,
-    },
+    }
   },
   mounted() {
     this.$store.dispatch("loadCardData");
-    this.updateJson();
+    this.mapper = createMapper(this, "cardData", "cardTemp", mapperConfig);
     this.loadSaved();
+    this.updateJson();
+    this.updateTemp();
   },
   methods: {
     // ------------------- //
@@ -729,33 +510,8 @@ export default {
         2
       );
     },
-    initializeTemp() {
-      this.updateJson();
-      this.cardTemp.name = this.cardData.name;
-      this.cardTemp.text = this.cardData.text;
-      this.cardTemp.alignment = this.cardData.alignment;
-      this.cardTemp.type = this.cardData.type;
-      this.cardTemp.attack = this.cardData.attack;
-      this.cardTemp.armorClass = this.cardData.armorClass;
-      this.cardTemp.skill = this.cardData.skill;
-      this.cardTemp.hitPoints = this.cardData.hitPoints;
-      this.cardTemp.level = this.cardData.level;
-      this.cardTemp.classes = fromSlashesToArray(this.cardData.class).filter(x => x !== "Classless");
-      this.cardTemp.factions = fromSlashesToArray(this.cardData.faction);
-      this.cardTemp.traits = fromSlashesToArray(this.cardData.traits);
-      let feats = fromSlashesToFeats(this.cardData.feats);
-      this.cardTemp.selectedFeats = feats.selectedFeats;
-      this.cardTemp.featValues = feats.featValues;
-      let misc = fromSlashesToMisc(this.cardData.misc);
-      this.cardTemp.selectedMisc = misc.selectedMisc;
-      this.cardTemp.miscValues = misc.miscValues;
-      this.cardTemp.printInfo =
-        (this.cardData.printInfos || []).map((x) => {
-          return {
-            flavorTraits: fromSlashesToArray(x.flavorTraits),
-            flavorText: x.flavorText,
-          };
-        })[0] || emptyPrintInfo();
+    updateTemp() {
+      this.mapper.sync();
     },
     selectFeat(index) {
       Vue.set(this.cardTemp.featValues, this.cardTemp.selectedFeats[index], 0);

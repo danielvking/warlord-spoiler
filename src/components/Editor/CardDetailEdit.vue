@@ -400,140 +400,8 @@
 
 <script>
 import Vue from "vue";
-import utility from "@/utility.js";
 import addRemoveCardMixin from "@/mixins/addRemoveCardMixin.js";
-
-// Static lists for preferred property order; just to keep things organized
-const cardKeyOrder = [
-  "name",
-  "text",
-  "type",
-  "alignment",
-  "class",
-  "faction",
-  "attack",
-  "armorClass",
-  "skill",
-  "hitPoints",
-  "level",
-  "traits",
-  "feats",
-  "misc",
-  "editions",
-  "errata",
-  "challengeLord",
-  "printInfos",
-];
-const printKeyOrder = [
-  "set",
-  "setNumber",
-  "rarity",
-  "flavorText",
-  "flavorTraits",
-  "artist",
-  "imageUrl",
-];
-
-// Utility functions for data conversions
-function setProp(obj, key, value, keyOrder) {
-  if (value === undefined) {
-    Vue.delete(obj, key);
-    return;
-  }
-  if (obj[key] === undefined) {
-    utility.insertKeyOrdered(obj, key, keyOrder, Vue.set, Vue.delete);
-  }
-  obj[key] = value;
-}
-function fromEmptyToUndefined(str) {
-  if (str == null || str === "") return undefined;
-  return str;
-}
-function fixCarriageReturns(str) {
-  if (!str) return str;
-  return str.replace(/\r/g, "").replace(/\n/g, "\r\n");
-}
-function fromSlashesToArray(str) {
-  if (!str) return [];
-  return str.split("/");
-}
-function fromArrayToSlashes(arr) {
-  if (arr[0] == null) return undefined;
-  return arr.join("/");
-}
-function fromSlashesToFeats(featStr) {
-  let feats = fromSlashesToArray(featStr);
-  let selectedFeats = [];
-  let featValues = {};
-  feats.forEach((f, i) => {
-    let featValue = f.split(/ (?=[-+]\d+)/);
-    selectedFeats[i] = featValue[0];
-    let value = +featValue[1];
-    if (!isNaN(value)) {
-      featValues[featValue[0]] = value;
-    }
-  });
-  return { selectedFeats, featValues };
-}
-function fromFeatsToSlashes(featArr, featValues) {
-  if (featArr[0] == null) return undefined;
-  return featArr
-    .map((x) => {
-      let value = featValues[x];
-      let valueNum = +value;
-      if (value == null || value === "" || isNaN(valueNum)) return x;
-      if (valueNum >= 0) value = "+" + valueNum;
-      return `${x} ${value}`;
-    })
-    .join("/");
-}
-function fromSlashesToMisc(miscStr) {
-  let misc = fromSlashesToArray(miscStr);
-  var selectedMisc = [];
-  var miscValues = {};
-  misc.forEach((m, i) => {
-    let value;
-    if (m.match(/^-?\d+ Charges?$/)) {
-      let miscValue = m.split(" ");
-      selectedMisc[i] = "Charges";
-      value = +miscValue[0];
-    } else if (m.match(/^-?\d+ gp$/)) {
-      let miscValue = m.split(" ");
-      selectedMisc[i] = "GP";
-      value = +miscValue[0];
-    } else {
-      let miscValue = m.split(/ (?=-?\d+)/);
-      selectedMisc[i] = miscValue[0];
-      value = +miscValue[1];
-    }
-    if (!isNaN(value)) {
-      miscValues[selectedMisc[i]] = value;
-    }
-  });
-  return { selectedMisc, miscValues };
-}
-function fromMiscToSlashes(miscArr, miscValues) {
-  if (miscArr[0] == null) return undefined;
-  return miscArr
-    .map((x) => {
-      let value = miscValues[x];
-      let valueNum = +value;
-      if (value == null || value === "" || isNaN(valueNum)) return x;
-
-      if (x === "Charges") {
-        return `${valueNum} ${valueNum === 1 ? "Charge" : "Charges"}`;
-      } else if (x === "GP") {
-        return `${valueNum} gp`;
-      } else {
-        return `${x} ${valueNum}`;
-      }
-    })
-    .join("/");
-}
-function fromArrayToArray(arr) {
-  if (!arr || !arr[0]) return undefined;
-  return arr.map(x => x);
-}
+import { createMapper } from "@/cardMapper.js";
 
 export default {
   name: "CardDetailEdit",
@@ -570,6 +438,7 @@ export default {
         printInfos: [],
         errata: "",
       },
+      mapper: null
     };
   },
   computed: {
@@ -647,7 +516,7 @@ export default {
     },
     cardData: {
       handler() {
-        this.initializeTemp();
+        this.updateJson();
       },
       deep: true,
     },
@@ -657,12 +526,13 @@ export default {
     viewOption(newValue) {
       this.$store.commit("saveSettings", { editViewOption: newValue });
     },
-    cardJson() {
+    cardJson(newValue) {
       try {
         if (this.cardJsonSelected) {
-          let data = JSON.parse(this.cardJson);
+          let data = JSON.parse(newValue);
           data.index = this.card;
           this.cardIndex[this.card] = data;
+          this.updateTemp();
         }
       } catch {
         // We honestly don't care if you want to make invalid javascript
@@ -671,186 +541,13 @@ export default {
     cardJsonSelected() {
       this.updateJson();
     },
-    "cardTemp.name": function (newValue) {
-      setProp(
-        this.cardData,
-        "name",
-        fromEmptyToUndefined(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.text": function (newValue) {
-      setProp(
-        this.cardData,
-        "text",
-        fromEmptyToUndefined(fixCarriageReturns(newValue)),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.alignment": function (newValue) {
-      setProp(
-        this.cardData,
-        "alignment",
-        fromEmptyToUndefined(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.type": function (newValue) {
-      setProp(this.cardData, "type", newValue, cardKeyOrder);
-    },
-    "cardTemp.attack": function (newValue) {
-      setProp(
-        this.cardData,
-        "attack",
-        fromEmptyToUndefined(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.armorClass": function (newValue) {
-      setProp(
-        this.cardData,
-        "armorClass",
-        fromEmptyToUndefined(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.skill": function (newValue) {
-      setProp(
-        this.cardData,
-        "skill",
-        fromEmptyToUndefined(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.hitPoints": function (newValue) {
-      setProp(
-        this.cardData,
-        "hitPoints",
-        fromEmptyToUndefined(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.level": function (newValue) {
-      setProp(
-        this.cardData,
-        "level",
-        fromEmptyToUndefined(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.classes": function (newValue) {
-      setProp(
-        this.cardData,
-        "class",
-        fromArrayToSlashes(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.factions": function (newValue) {
-      setProp(
-        this.cardData,
-        "faction",
-        fromArrayToSlashes(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.traits": function (newValue) {
-      setProp(
-        this.cardData,
-        "traits",
-        fromArrayToSlashes(newValue),
-        cardKeyOrder
-      );
-    },
-    "cardTemp.featValues": {
-      handler(newValue) {
-        setProp(
-          this.cardData,
-          "feats",
-          fromFeatsToSlashes(this.cardTemp.selectedFeats, newValue),
-          cardKeyOrder
-        );
-      },
-      deep: true,
-    },
-    "cardTemp.miscValues": {
-      handler(newValue) {
-        setProp(
-          this.cardData,
-          "misc",
-          fromMiscToSlashes(this.cardTemp.selectedMisc, newValue),
-          cardKeyOrder
-        );
-      },
-      deep: true,
-    },
-    "cardTemp.editions": function(newValue) {
-        if (newValue && this.cardData.editions && newValue.length === this.cardData.editions.length) {
-          if (newValue.every((x, i) => x === this.cardData.editions[i])) {
-            return;
-          }
-        }
-        setProp(
-          this.cardData,
-          "editions",
-          fromArrayToArray(this.cardTemp.editions, newValue),
-          cardKeyOrder
-        );
-    },
-    "cardTemp.challengeLord": function (newValue) {
-      setProp(this.cardData, "challengeLord", newValue || false, cardKeyOrder);
-    },
-    "cardTemp.printInfos": {
-      handler: function (newValue) {
-        // Modifying elements is handled externally
-        if (!this.cardData.printInfos || this.cardData.printInfos.length !== this.cardTemp.printInfos.length)
-          return;
-
-        // We could probably give each of these a watcher somehow... but this is easier
-        this.cardData.printInfos.forEach((x, i) => {
-          let y = newValue[i];
-          setProp(x, "set", y.set, printKeyOrder);
-          setProp(
-            x,
-            "setNumber",
-            fromEmptyToUndefined(y.setNumber),
-            printKeyOrder
-          );
-          setProp(x, "rarity", y.rarity, printKeyOrder);
-          setProp(
-            x,
-            "flavorTraits",
-            fromArrayToSlashes(y.flavorTraits),
-            printKeyOrder
-          );
-          setProp(x, "artist", fromEmptyToUndefined(y.artist), printKeyOrder);
-          setProp(
-            x,
-            "imageUrl",
-            fromEmptyToUndefined(y.imageUrl),
-            printKeyOrder
-          );
-          setProp(
-            x,
-            "flavorText",
-            fromEmptyToUndefined(y.flavorText),
-            printKeyOrder
-          );
-        });
-      },
-      deep: true,
-    },
-    "cardTemp.errata": function (newValue) {
-      setProp(
-        this.cardData,
-        "errata",
-        fromEmptyToUndefined(fixCarriageReturns(newValue)),
-        cardKeyOrder
-      );
-    },
   },
   mounted() {
-    if (this.cardData) this.initializeTemp();
+    this.mapper = createMapper(this, "cardData", "cardTemp");
+    if (this.cardData) {
+      this.updateJson();
+      this.updateTemp();
+    }
     this.cardJsonWrapped = this.$store.state.settings.isEditTextWrapped;
     this.viewOption = this.$store.state.settings.editViewOption;
     this.$nextTick(() => {
@@ -875,40 +572,8 @@ export default {
         2
       );
     },
-    initializeTemp() {
-      this.updateJson();
-      this.cardTemp.name = this.cardData.name;
-      this.cardTemp.text = this.cardData.text;
-      this.cardTemp.alignment = this.cardData.alignment;
-      this.cardTemp.type = this.cardData.type;
-      this.cardTemp.attack = this.cardData.attack;
-      this.cardTemp.armorClass = this.cardData.armorClass;
-      this.cardTemp.skill = this.cardData.skill;
-      this.cardTemp.hitPoints = this.cardData.hitPoints;
-      this.cardTemp.level = this.cardData.level;
-      this.cardTemp.classes = fromSlashesToArray(this.cardData.class);
-      this.cardTemp.factions = fromSlashesToArray(this.cardData.faction);
-      this.cardTemp.traits = fromSlashesToArray(this.cardData.traits);
-      let feats = fromSlashesToFeats(this.cardData.feats);
-      this.cardTemp.selectedFeats = feats.selectedFeats;
-      this.cardTemp.featValues = feats.featValues;
-      let misc = fromSlashesToMisc(this.cardData.misc);
-      this.cardTemp.selectedMisc = misc.selectedMisc;
-      this.cardTemp.miscValues = misc.miscValues;
-      this.cardTemp.editions = fromArrayToArray(this.cardData.editions) || [];
-      this.cardTemp.challengeLord = this.cardData.challengeLord || false;
-      this.cardTemp.printInfos = (this.cardData.printInfos || []).map((x) => {
-        return {
-          set: x.set,
-          setNumber: x.setNumber,
-          rarity: x.rarity,
-          flavorTraits: fromSlashesToArray(x.flavorTraits),
-          artist: x.artist,
-          flavorText: x.flavorText,
-          imageUrl: x.imageUrl,
-        };
-      });
-      this.cardTemp.errata = this.cardData.errata;
+    updateTemp() {
+      this.mapper.sync();
     },
     selectFeat(index) {
       Vue.set(this.cardTemp.featValues, this.cardTemp.selectedFeats[index], 0);
