@@ -28,7 +28,7 @@
             <!-- JSON -->
             <template v-if="viewOption === 'JSON'">
               <b-textarea
-                :class="'text-monospace flex-fill' + (cardJsonWrapped ? ' editor' : ' editor-wrap')"
+                :class="'text-monospace flex-fill' + (cardJsonWrapped ? ' editor-wrap' : ' editor')"
                 v-model="cardJson"
                 rows="10"
                 size="sm"

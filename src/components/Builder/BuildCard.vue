@@ -31,7 +31,7 @@
               <template v-if="viewOption === 'JSON'">
                 <b-button class="mb-2 w-100" variant="outline-primary" @click="uploadJson">Upload JSON</b-button>
                 <b-textarea
-                  :class="'text-monospace flex-fill' + (cardJsonWrapped ? ' editor' : ' editor-wrap')"
+                  :class="'text-monospace flex-fill' + (cardJsonWrapped ? ' editor-wrap' : ' editor')"
                   v-model="cardJson"
                   rows="10"
                   size="sm"

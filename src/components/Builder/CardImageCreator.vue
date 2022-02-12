@@ -16,10 +16,10 @@
         <div class="image-lvl card-title" :class="cardData.alignment === 'Evil' ? 'text-white' : ''">
           {{ cardData.level }}
         </div>
-        <div class="image-sk card-title">
+        <div class="image-sk card-title text-white">
           {{ cardData.skill }}
         </div>
-        <div class="image-hp card-title">
+        <div class="image-hp card-title text-white">
           {{ cardData.hitPoints }}
         </div>
         <div class="image-text card-text">
@@ -444,7 +444,6 @@ export default {
   line-height: 43px;
   font-size: 16pt;
   white-space: nowrap;
-  color: white;
 }
 
 .image-hp {
@@ -455,7 +454,6 @@ export default {
   line-height: 39px;
   font-size: 16pt;
   white-space: nowrap;
-  color: white;
   text-shadow: 2px 1px 1px #ba4224;
 }
 
@@ -509,4 +507,11 @@ export default {
 .card-text {
   font-family: "Vhatis Warlord Text";
 }
+
+/* Horrible dark mode hack */
+.card-title:not(.text-white),
+.card-text:not(.text-white) {
+  filter: brightness(0);
+}
+
 </style>
