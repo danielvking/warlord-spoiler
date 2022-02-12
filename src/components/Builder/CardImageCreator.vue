@@ -71,18 +71,40 @@ function rectifyScale(selector) {
   }
 }
 
+// Sanitized HTML
+function sanitizeHtml(html) {
+  html = html.replace(/&/gm, "&amp;");
+  html = html.replace(/</gm, "&lt;");
+  html = html.replace(/>/gm, "&gt;");
+  return html;
+}
+
+// Checks for shady tags
+function legalHtml(html) {
+  return (
+    !html.match(/<(?!\/?(p|b|i|br)>)/m) &&
+    !html.replace(/<[^<>]*>/gm).match(/[<>]/m)
+  );
+}
+
 export default {
   props: {
     cardData: Object,
     cardImageUrl: String,
+    headerHtml: String,
+    mainHtml: String,
+    flavorHtml: String,
   },
   data() {
     return {
       formattedCardText: "",
-      cancelToken: { cancel: false }
+      cancelToken: { cancel: false },
     };
   },
   computed: {
+    keywordRegex() {
+      return this.$store.getters.keywordRegex;
+    },
     cardTemplateUrl() {
       let type = this.cardData.type || "";
       let _class = this.cardData.class || "";
@@ -102,90 +124,124 @@ export default {
     },
     noTemplateUrl() {
       return cardTemplates["no_template"];
-    }
-  },
-  watch: {
-    cardData: {
-      handler() {
-        this.refreshImage();
-      },
-      deep: true
     },
-    cardImageUrl() {
-      this.refreshImage();
-    }
-  },
-  methods: {
-    computeFormattedCardText() {
-      let text = "";
 
-      function sanitize(html) {
-        html = html.replace(/&/gm, "&amp;");
-        html = html.replace(/</gm, "&lt;");
-        html = html.replace(/>/gm, "&rt;");
-        return html;
-      }
-
+    formattedHeaderText() {
       function bulletSplit(str, isBold) {
         let temp = str.replace(/ /gm, "&nbsp;").split("/");
         if (isBold) temp = temp.map((x) => "<b>" + x + "</b>");
         return temp.join(" • ");
       }
 
-      // Header
+      let headerText = "";
       if (this.cardData.faction) {
-        text += bulletSplit(sanitize(this.cardData.faction), true);
+        headerText += bulletSplit(sanitizeHtml(this.cardData.faction), true);
       }
       if (this.cardData.traits) {
-        if (text) text += " • ";
-        text += bulletSplit(sanitize(this.cardData.traits), true);
+        if (headerText) headerText += " • ";
+        headerText += bulletSplit(sanitizeHtml(this.cardData.traits), true);
       }
       if (this.cardData.feats) {
-        if (text) text += " • ";
-        text += bulletSplit(sanitize(this.cardData.feats), true);
+        if (headerText) headerText += " • ";
+        headerText += bulletSplit(sanitizeHtml(this.cardData.feats), true);
       }
       if (this.cardData.misc) {
-        if (text) text += " • ";
-        text += bulletSplit(sanitize(this.cardData.misc), true);
+        if (headerText) headerText += " • ";
+        headerText += bulletSplit(sanitizeHtml(this.cardData.misc), true);
       }
       if (
         this.cardData.printInfos &&
         this.cardData.printInfos[0] &&
         this.cardData.printInfos[0].flavorTraits
       ) {
-        if (text) text += " • ";
-        text += bulletSplit(
-          sanitize(this.cardData.printInfos[0].flavorTraits),
+        if (headerText) headerText += " • ";
+        headerText += bulletSplit(
+          sanitizeHtml(this.cardData.printInfos[0].flavorTraits),
           false
         );
       }
+      if (headerText) headerText = "<p>" + headerText + "</p>";
 
-      // Main text
+      this.$emit("update:headerHtml", headerText);
+      return headerText;
+    },
+    formattedMainText() {
+      let mainText = "";
       if (this.cardData.text) {
-        if (text) text += "\r\n";
-        let value = this.cardData.text;
-        let hashReg = /(Spend Order:|Order:|Spend React:|React:)/gm;
-        value = value.replace(hashReg, "<b>$&</b>");
-        text += value;
+        mainText = sanitizeHtml(this.cardData.text);
+        mainText = mainText.replace(this.keywordRegex, "<b>$&</b>"); // Bold keywords
+        mainText = mainText.replace(/\r\n/gm, "</p><p>"); // Line breaks separate paragraphs
+        mainText = "<p>" + mainText + "</p>";
       }
 
-      // Flavor text
+      this.$emit("update:mainHtml", mainText);
+      return mainText;
+    },
+    formattedFlavorText() {
+      let flavorText = "";
       if (
         this.cardData.printInfos &&
         this.cardData.printInfos[0] &&
         this.cardData.printInfos[0].flavorText
       ) {
-        if (text) text += "\r\n";
-        let value = this.cardData.printInfos[0].flavorText;
-        value = value.replace(/(- )/gm, "-&nbsp;");
-        value = value.replace(/\r\n/gm, "<br>");
-        text += "<i>" + value + "</i>";
+        flavorText = sanitizeHtml(this.cardData.printInfos[0].flavorText);
+        flavorText = flavorText.replace(/(- )/gm, "-&nbsp;"); // Don't break the space after a dash
+        flavorText = flavorText.replace(/\r\n/gm, "<br>"); // Line breaks same paragraph
+        flavorText = "<i>" + flavorText + "</i>";
+        flavorText = "<p>" + flavorText + "</p>";
       }
 
-      // Paragraph wrap things
-      text = "<p>" + text.replace(/\r\n/gm, "</p><p>") + "</p>";
+      this.$emit("update:flavorHtml", flavorText);
+      return flavorText;
+    },
+  },
+  watch: {
+    cardData: {
+      handler() {
+        this.refreshImage();
+      },
+      deep: true,
+    },
+    cardImageUrl() {
+      this.refreshImage();
+    },
+    headerHtml() {
+      if (!this.headerHtml) {
+        this.$emit("update:headerHtml", this.formattedHeaderText);
+      }
+      this.refreshImage();
+    },
+    mainHtml() {
+      if (!this.mainHtml) {
+        this.$emit("update:mainHtml", this.formattedMainText);
+      }
+      this.refreshImage();
+    },
+    flavorHtml() {
+      if (!this.flavorHtml) {
+        this.$emit("update:flavorHtml", this.formattedFlavorText);
+      }
+      this.refreshImage();
+    },
+  },
+  methods: {
+    computeFormattedCardText() {
+      let header = this.formattedHeaderText;
+      if (this.headerHtml && legalHtml(this.headerHtml)) {
+        header = this.headerHtml;
+      }
 
-      return text;
+      let main = this.formattedMainText;
+      if (this.mainHtml && legalHtml(this.mainHtml)) {
+        main = this.mainHtml;
+      }
+
+      let flavor = this.formattedFlavorText;
+      if (this.flavorHtml && legalHtml(this.flavorHtml)) {
+        flavor = this.flavorHtml;
+      }
+
+      return header + main + flavor;
     },
     verticallyAlign(element, token) {
       return new Promise((resolve) => {
@@ -204,7 +260,10 @@ export default {
               return;
             }
 
-            if (element.scrollHeight && element.clientHeight >= element.scrollHeight) {
+            if (
+              element.scrollHeight &&
+              element.clientHeight >= element.scrollHeight
+            ) {
               prevScale = scale;
               scale -= 1;
               element.style.height = `${scale}%`;
@@ -300,16 +359,18 @@ export default {
       let token = { cancel: false };
       this.cancelToken = token;
 
+      this.formattedCardText = this.computeFormattedCardText();
+
       // Need to allow the DOM to refresh before recomputing sizes
       setTimeout(async () => {
+        if (token.cancel) return;
+        
         rectifyScale(".image-holder .image-name");
         rectifyScale(".image-holder .image-atk");
         rectifyScale(".image-holder .image-ac");
         rectifyScale(".image-holder .image-lvl");
         rectifyScale(".image-holder .image-sk");
         rectifyScale(".image-holder .image-hp");
-
-        this.formattedCardText = this.computeFormattedCardText();
 
         let wrapper = this.$refs.imageTextWrapper;
         if (wrapper) {
@@ -323,7 +384,7 @@ export default {
         let holder = this.$refs.imageHolder;
         if (holder) {
           try {
-            this.$emit('input', await domtoimage.toPng(holder));
+            this.$emit("input", await domtoimage.toPng(holder));
           } catch (error) {
             alert("An error occurred rendering the card image");
             throw error;
@@ -331,8 +392,8 @@ export default {
         }
       }, 0);
     }),
-  }
-}
+  },
+};
 </script>
 
 <style scoped>

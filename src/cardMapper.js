@@ -9,6 +9,7 @@ import utility from "@/utility";
 const cardKeyOrder = [
   "name",
   "text",
+  "textFormat",
   "type",
   "alignment",
   "class",
@@ -31,6 +32,7 @@ const printKeyOrder = [
   "setNumber",
   "rarity",
   "flavorText",
+  "flavorTextFormat",
   "flavorTraits",
   "artist",
   "imageUrl",
@@ -196,6 +198,7 @@ const standardConfig = {
   props: {
     "name": standardMap("name", fromEmptyToUndefined),
     "text": standardMap("text", x => fromEmptyToUndefined(fixCarriageReturns(x))),
+    "textFormat": standardMap("textFormat", fromEmptyToUndefined),
     "type": standardMap("type", fromEmptyToUndefined),
     "alignment": standardMap("alignment", fromEmptyToUndefined),
     "class": standardMap("class", fromArrayToSlashes, "classes", fromSlashesToArray),
@@ -210,7 +213,7 @@ const standardConfig = {
       initialize(vm, cardDataProp, cardMappedProp) {
         vm.$watch(cardMappedProp + ".featValues", newValue => {
           let cardData = vm[cardDataProp], cardMapped = vm[cardMappedProp];
-          setProp(cardData, "feats", fromMiscToSlashes(cardMapped.selectedFeats, newValue), cardKeyOrder);
+          setProp(cardData, "feats", fromFeatsToSlashes(cardMapped.selectedFeats, newValue), cardKeyOrder);
         }, { deep: true });
       },
       sync(vm, cardDataProp, cardMappedProp) {
@@ -269,6 +272,7 @@ const standardConfig = {
               setProp(y, "artist", fromEmptyToUndefined(x.artist), printKeyOrder);
               setProp(y, "imageUrl", fromEmptyToUndefined(x.imageUrl), printKeyOrder);
               setProp(y, "flavorText", fromEmptyToUndefined(fixCarriageReturns(x.flavorText)), printKeyOrder);
+              setProp(y, "flavorTextFormat", fromEmptyToUndefined(x.flavorTextFormat), printKeyOrder);
             });
           } else {
             setProp(cardData, "printInfos", undefined, cardKeyOrder);

@@ -20,9 +20,15 @@
                 class="mb-2 w-100"
                 buttons
               />
-              <card-image-creator :card-data="cardData"
-                                  :card-image-url="cardUserImageDataUrl"
-                                  @input="x => cardImageDataUrl = x"/>
+
+              <card-image-creator
+                :card-data="cardData"
+                :card-image-url="cardUserImageDataUrl"
+                @input="(x) => (cardImageDataUrl = x)"
+                :main-html.sync="formatText.main.text"
+                :flavor-html.sync="formatText.flavor.text"
+              />
+
               <!-- Image -->
               <template v-if="viewOption === 'Art'">
                 <b-button
@@ -270,9 +276,15 @@
               <div class="my-3">
                 <b-form-textarea
                   rows="4"
-                  v-model="cardTemp.text"
+                  :value="
+                    formatText.main.isAuto ? cardTemp.text : cardTemp.textFormat
+                  "
+                  @input="updateTextEditor"
                   placeholder="[Card Text]"
                 />
+                <b-checkbox v-model="formatText.main.isAuto"
+                  >Auto-format</b-checkbox
+                >
               </div>
               <!-- Flavor Traits -->
               <div class="clearfix">
@@ -290,9 +302,17 @@
               <div class="my-2">
                 <b-form-textarea
                   rows="2"
-                  v-model="cardTemp.printInfo.flavorText"
+                  :value="
+                    formatText.flavor.isAuto
+                      ? cardTemp.printInfo.flavorText
+                      : cardTemp.printInfo.flavorTextFormat
+                  "
+                  @input="updateFlavorTextEditor"
                   placeholder="[Flavor Text]"
                 />
+                <b-checkbox v-model="formatText.flavor.isAuto"
+                  >Auto-format</b-checkbox
+                >
               </div>
             </div>
           </b-col>
@@ -316,59 +336,102 @@
 import Vue from "vue";
 import HeaderFooter from "@/components/shared/HeaderFooter.vue";
 import utility from "@/utility.js";
-import CardImageCreator from '@/components/builder/CardImageCreator.vue';
+import CardImageCreator from "@/components/builder/CardImageCreator.vue";
 import { createMapper } from "@/cardMapper.js";
 
 const mapperConfig = {
   props: {
-    "class": {
+    class: {
       initialize(vm, cardDataProp, cardMappedProp, config) {
         let { setProp, fromArrayToSlashes, cardKeyOrder } = config.utils;
-        vm.$watch(cardMappedProp + ".classes", newValue => {
+        vm.$watch(cardMappedProp + ".classes", (newValue) => {
           let cardData = vm[cardDataProp];
           if (newValue.length !== 1) {
-            newValue = ["Classless"].concat(newValue)
+            newValue = ["Classless"].concat(newValue);
           }
-          setProp(cardData, "class", fromArrayToSlashes(newValue), cardKeyOrder);
+          setProp(
+            cardData,
+            "class",
+            fromArrayToSlashes(newValue),
+            cardKeyOrder
+          );
         });
       },
       sync(vm, cardDataProp, cardMappedProp, config) {
         let { fromSlashesToArray } = config.utils;
-        let cardData = vm[cardDataProp], cardMapped = vm[cardMappedProp];
-        cardMapped.classes = fromSlashesToArray(cardData.class).filter(x => x !== "Classless");
-      }
+        let cardData = vm[cardDataProp],
+          cardMapped = vm[cardMappedProp];
+        cardMapped.classes = fromSlashesToArray(cardData.class).filter(
+          (x) => x !== "Classless"
+        );
+      },
     },
-    "challengeLord": {},
-    "printinfos": {
+    challengeLord: {},
+    printinfos: {
       initialize(vm, cardDataProp, cardMappedProp, config) {
-        let { setProp, fromArrayToSlashes, fromEmptyToUndefined, fixCarriageReturns, cardKeyOrder, printKeyOrder} = config.utils;
-        vm.$watch(cardMappedProp + ".printInfo", newValue => {
-          let cardData = vm[cardDataProp];
-          if (newValue.flavorTraits[0] || newValue.flavorText) {
-            let y = {};
-            setProp(cardData, "printInfos", [y], cardKeyOrder);
-            setProp(y, "flavorTraits", fromArrayToSlashes(newValue.flavorTraits || []), printKeyOrder);
-            setProp(y, "flavorText", fromEmptyToUndefined(fixCarriageReturns(newValue.flavorText)), printKeyOrder);
-          } else {
-            setProp(cardData, "printInfos", undefined, cardKeyOrder);
-          }
-        }, { deep: true });
+        let {
+          setProp,
+          fromArrayToSlashes,
+          fromEmptyToUndefined,
+          fixCarriageReturns,
+          cardKeyOrder,
+          printKeyOrder,
+        } = config.utils;
+        vm.$watch(
+          cardMappedProp + ".printInfo",
+          (newValue) => {
+            let cardData = vm[cardDataProp];
+            if (newValue.flavorTraits[0] || newValue.flavorText) {
+              let y = {};
+              setProp(cardData, "printInfos", [y], cardKeyOrder);
+              setProp(
+                y,
+                "flavorTraits",
+                fromArrayToSlashes(newValue.flavorTraits || []),
+                printKeyOrder
+              );
+              setProp(
+                y,
+                "flavorText",
+                fromEmptyToUndefined(fixCarriageReturns(newValue.flavorText)),
+                printKeyOrder
+              );
+              setProp(
+                y,
+                "flavorTextFormat",
+                fromEmptyToUndefined(newValue.flavorTextFormat),
+                printKeyOrder
+              );
+            } else {
+              setProp(cardData, "printInfos", undefined, cardKeyOrder);
+            }
+          },
+          { deep: true }
+        );
       },
       sync(vm, cardDataProp, cardMappedProp, config) {
         let { fromSlashesToArray } = config.utils;
-        let cardData = vm[cardDataProp], cardMapped = vm[cardMappedProp];
-        cardMapped.printInfo = (cardData.printInfos || []).map(x => {
+        let cardData = vm[cardDataProp],
+          cardMapped = vm[cardMappedProp];
+        cardMapped.printInfo = (cardData.printInfos || []).map((x) => {
           return {
             flavorTraits: fromSlashesToArray(x.flavorTraits),
             flavorText: x.flavorText,
           };
         })[0] || {
           flavorText: "",
-          flavorTraits: []
+          flavorTraits: [],
         };
-      }
-    }
-  }
+      },
+    },
+  },
+};
+
+function dehtml(html) {
+  html = html.replace(/\s+/gm, " ");
+  html = html.replace(/<br>|<\/p><p>/gm, "\r\n");
+  html = html.replace(/<[^<>]*>/gm, "");
+  return html;
 }
 
 export default {
@@ -387,6 +450,7 @@ export default {
       cardTemp: {
         name: "",
         text: "",
+        textFormat: "",
         type: "",
         alignment: "",
         attack: "",
@@ -406,9 +470,21 @@ export default {
           flavorTraits: [],
         },
       },
+      formatText: {
+        main: {
+          isAuto: true,
+          text: "",
+          editor: "",
+        },
+        flavor: {
+          isAuto: true,
+          text: "",
+          editor: "",
+        },
+      },
       mapper: null,
       cardUserImageDataUrl: null,
-      cardImageDataUrl: null
+      cardImageDataUrl: null,
     };
   },
   computed: {
@@ -486,7 +562,59 @@ export default {
     },
     cardJsonSelected() {
       this.updateJson();
-    }
+    },
+
+    // These all just sync formatting
+    "formatText.main.isAuto"(newValue) {
+      if (newValue) {
+        this.formatText.main.text = "";
+      }
+      this.cardTemp.textFormat = this.formatText.main.text;
+    },
+    "formatText.main.text"() {
+      if (!this.formatText.main.isAuto) {
+        // Coerce
+        this.formatText.main.text = this.cardTemp.textFormat;
+      }
+    },
+    "cardTemp.text"() {
+      if (!this.formatText.main.isAuto) {
+        // Coerce
+        this.cardTemp.text = dehtml(this.cardTemp.textFormat);
+      }
+    },
+    "cardTemp.textFormat"(newValue) {
+      if (!this.formatText.main.isAuto) {
+        this.formatText.main.text = newValue;
+        this.cardTemp.text = dehtml(newValue);
+      }
+    },
+    "formatText.flavor.isAuto"(newValue) {
+      if (newValue) {
+        this.formatText.flavor.text = "";
+      }
+      this.cardTemp.printinfo.flavorTextFormat = this.formatText.flavor.text;
+    },
+    "formatText.flavor.text"() {
+      if (!this.formatText.flavor.isAuto) {
+        // Coerce
+        this.formatText.flavor.text = this.cardTemp.printinfo.flavorTextFormat;
+      }
+    },
+    "cardTemp.printinfo.flavorText"() {
+      if (!this.formatText.flavor.isAuto) {
+        // Coerce
+        this.cardTemp.printinfo.flavorText = dehtml(
+          this.cardTemp.printinfo.flavorTextFormat
+        );
+      }
+    },
+    "cardTemp.printinfo.flavorTextFormat"(newValue) {
+      if (!this.formatText.flavor.isAuto) {
+        this.formatText.flavor.text = newValue;
+        this.cardTemp.printinfo.flavorText = dehtml(newValue);
+      }
+    },
   },
   mounted() {
     this.$store.dispatch("loadCardData");
@@ -528,6 +656,22 @@ export default {
       this.cardTemp.miscValues[this.cardTemp.selectedMisc[index]] = 0; // Force update
       Vue.delete(this.cardTemp.miscValues, this.cardTemp.selectedMisc[index]);
       this.cardTemp.selectedMisc.splice(index, 1);
+    },
+    updateTextEditor(newValue) {
+      if (this.formatText.main.isAuto) {
+        this.cardTemp.text = newValue;
+        this.cardTemp.textFormat = "";
+      } else {
+        this.cardTemp.textFormat = newValue;
+      }
+    },
+    updateFlavorTextEditor(newValue) {
+      if (this.formatText.flavor.isAuto) {
+        this.cardTemp.printinfo.flavorText = newValue;
+        this.cardTemp.printinfo.flavorTextFormat = "";
+      } else {
+        this.cardTemp.printinfo.flavorTextFormat = newValue;
+      }
     },
 
     // ------------------- //

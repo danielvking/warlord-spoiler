@@ -41,8 +41,43 @@ export default new Vuex.Store({
   },
   getters: {
     showSidebar(state) {
-      return state.viewPortWidth >= 992 // Bootstrap "large" breakpoint;
+      return state.viewPortWidth >= 992; // Bootstrap "large" breakpoint;
     },
+    keywordRegex(state) {
+      if (!state.cardsLoaded) return /(?!)/; // Nothing
+
+      // Basic keywords
+      let keywords = ["Spend Order:", "Order:", "Spend React:", "React:"];
+
+      function addConjecturedPlurals(word) {
+        keywords.push(word + "s");
+        keywords.push(word + "es");
+        if (word.endsWith("y")) {
+          keywords.push(word.replace(/y$/, "ies"));
+        } else if (word.endsWith("f")) {
+          keywords.push(word.replace(/f$/, "ves"));
+        }
+      }
+
+      // Dynamically aquire keywords from reference lists
+      state.referenceLists.factionList.forEach(x => {
+        keywords.push(x);
+        addConjecturedPlurals(x);
+      });
+      state.referenceLists.traitList.forEach(x => {
+        keywords.push(x);
+        addConjecturedPlurals(x);
+      });
+      state.referenceLists.featList.forEach(x => {
+        keywords.push(x);
+      });
+
+      // This is probably excessive, but lets escape them to avoid regex injection
+      keywords = keywords.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+
+      // Matches any keyword not embedded inside another word
+      return new RegExp(`(?<!\\w)(${keywords.join("|")})(?!\\w)`, "gm");
+    }
   },
   mutations: {
     initialize(state) {
