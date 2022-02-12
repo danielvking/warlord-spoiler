@@ -1,14 +1,12 @@
 <template>
   <div class="print-background content-region">
-    <p class="pt-2 text-center dont-print">In Firefox you may need to set the page to landscape and/or open up the print preview manually.</p>
-    <div
-      v-for="group in groupedCardIndices"
-      :key="'G' + group[0]"
-      class="outer-group"
-    >
+    <p class="pt-2 text-center dont-print">
+      In Firefox you may need to set the page to landscape and/or open up the print preview manually.
+    </p>
+    <div v-for="group in groupedCardIndices" :key="'G' + group[0]" class="outer-group">
       <div class="inner-group clearfix">
         <div v-for="i in group" :key="i" class="image-container">
-          <img :id="'img' + i" :src="cardImages[i].image" @load="cardLoaded(i)"/>
+          <img :id="'img' + i" :src="cardImages[i].image" @load="cardLoaded(i)" />
         </div>
       </div>
     </div>
@@ -20,7 +18,7 @@ export default {
   name: "PrintDeck",
   data() {
     return {
-      cardImages: []
+      cardImages: [],
     };
   },
   computed: {
@@ -64,14 +62,14 @@ export default {
       this.cardImages = cardImages;
     },
     cardLoaded(index) {
-      let imgElem = document.getElementById('img' + index);
+      let imgElem = document.getElementById("img" + index);
       if (imgElem.width > imgElem.height) {
-        imgElem.classList.add('img-rotate');
+        imgElem.classList.add("img-rotate");
       } else {
-        imgElem.classList.remove('img-rotate');
+        imgElem.classList.remove("img-rotate");
       }
       this.cardImages[index].loaded = true;
-    }
+    },
   },
   mounted() {
     this.$store.dispatch("loadCardData").then(this.initializeCardImages);
@@ -79,8 +77,8 @@ export default {
   watch: {
     imagesLoaded(newVal) {
       if (newVal) window.print();
-    }
-  }
+    },
+  },
 };
 </script>
 

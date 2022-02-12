@@ -4,11 +4,11 @@
       <div class="site-header-margin">
         <div class="p-2 h-100">
           <b-dropdown variant="outline-light" class="h-100" toggle-class="border-0 px-2" no-caret>
-              <template #button-content>
-                <font-awesome-icon icon="bars"/>
-              </template>
-              <b-dropdown-item to="/">Home</b-dropdown-item>
-              <b-dropdown-item to="/build-card">Card Builder</b-dropdown-item>
+            <template #button-content>
+              <font-awesome-icon icon="bars" />
+            </template>
+            <b-dropdown-item to="/">Home</b-dropdown-item>
+            <b-dropdown-item to="/build-card">Card Builder</b-dropdown-item>
           </b-dropdown>
         </div>
       </div>
@@ -21,10 +21,7 @@
       </div>
     </b-row>
     <b-row class="site-footer">
-      <a
-        class="my-1 mx-3 text-muted"
-        href="https://github.com/danielvking/warlord-spoiler"
-        target="_blank"
+      <a class="my-1 mx-3 text-muted" href="https://github.com/danielvking/warlord-spoiler" target="_blank"
         >View on GitHub</a
       >
     </b-row>

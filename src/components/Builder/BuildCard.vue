@@ -10,16 +10,9 @@
           <b-col cols="12" md="6" class="d-flex flex-column">
             <div
               class="card-view d-flex flex-column pb-2"
-              :class="
-                viewOption === 'JSON' ? 'bound-height' : 'align-items-center'
-              "
+              :class="viewOption === 'JSON' ? 'bound-height' : 'align-items-center'"
             >
-              <b-radio-group
-                v-model="viewOption"
-                :options="['Art', 'JSON']"
-                class="mb-2 w-100"
-                buttons
-              />
+              <b-radio-group v-model="viewOption" :options="['Art', 'JSON']" class="mb-2 w-100" buttons />
 
               <card-image-creator
                 :card-data="cardData"
@@ -31,31 +24,14 @@
 
               <!-- Image -->
               <template v-if="viewOption === 'Art'">
-                <b-button
-                  variant="outline-primary"
-                  class="mb-2 w-100"
-                  @click="uploadImage"
-                  >Upload Image</b-button
-                >
-                <img
-                  ref="imageActual"
-                  class="card-image"
-                  :src="cardImageDataUrl"
-                />
+                <b-button variant="outline-primary" class="mb-2 w-100" @click="uploadImage">Upload Image</b-button>
+                <img ref="imageActual" class="card-image" :src="cardImageDataUrl" />
               </template>
               <!-- JSON -->
               <template v-if="viewOption === 'JSON'">
-                <b-button
-                  class="mb-2 w-100"
-                  variant="outline-primary"
-                  @click="uploadJson"
-                  >Upload JSON</b-button
-                >
+                <b-button class="mb-2 w-100" variant="outline-primary" @click="uploadJson">Upload JSON</b-button>
                 <b-textarea
-                  :class="
-                    'text-monospace flex-fill' +
-                    (cardJsonWrapped ? '' : ' text-nowrap')
-                  "
+                  :class="'text-monospace flex-fill' + (cardJsonWrapped ? '' : ' text-nowrap')"
                   v-model="cardJson"
                   rows="10"
                   size="sm"
@@ -63,12 +39,7 @@
                   @blur="cardJsonSelected = false"
                 ></b-textarea>
                 <b-checkbox v-model="cardJsonWrapped">Wrap Text</b-checkbox>
-                <b-button
-                  class="my-2 w-100"
-                  variant="outline-secondary"
-                  @click="downloadJson"
-                  >Download JSON</b-button
-                >
+                <b-button class="my-2 w-100" variant="outline-secondary" @click="downloadJson">Download JSON</b-button>
               </template>
             </div>
           </b-col>
@@ -93,14 +64,9 @@
               <div class="clearfix">
                 <div class="card-stat-label"><span>Alignment:</span></div>
                 <div class="card-stat-value">
-                  <b-form-select
-                    v-model="cardTemp.alignment"
-                    :options="alignmentList"
-                  >
+                  <b-form-select v-model="cardTemp.alignment" :options="alignmentList">
                     <template #first>
-                      <b-form-select-option
-                        :value="undefined"
-                      ></b-form-select-option>
+                      <b-form-select-option :value="undefined"></b-form-select-option>
                     </template>
                   </b-form-select>
                 </div>
@@ -116,12 +82,7 @@
               <div class="clearfix">
                 <div class="card-stat-label"><span>Class:</span></div>
                 <div class="card-stat-value">
-                  <v-select
-                    multiple
-                    v-model="cardTemp.classes"
-                    :options="classList"
-                    placeholder="(Classless)"
-                  />
+                  <v-select multiple v-model="cardTemp.classes" :options="classList" placeholder="(Classless)" />
                 </div>
               </div>
               <!-- Attack -->
@@ -158,22 +119,14 @@
               <div class="clearfix">
                 <div class="card-stat-label"><span>Faction:</span></div>
                 <div class="card-stat-value">
-                  <v-select
-                    multiple
-                    v-model="cardTemp.factions"
-                    :options="factionList"
-                  />
+                  <v-select multiple v-model="cardTemp.factions" :options="factionList" />
                 </div>
               </div>
               <!-- Traits -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Traits:</span></div>
                 <div class="card-stat-value">
-                  <v-select
-                    multiple
-                    v-model="cardTemp.traits"
-                    :options="traitList"
-                  />
+                  <v-select multiple v-model="cardTemp.traits" :options="traitList" />
                 </div>
               </div>
               <!-- Feats -->
@@ -181,8 +134,7 @@
                 <div class="card-stat-label"><span>Feats:</span></div>
                 <div class="card-stat-value">
                   <b-form-row
-                    v-for="i in cardTemp.selectedFeats.length +
-                    Math.min(1, featList.length)"
+                    v-for="i in cardTemp.selectedFeats.length + Math.min(1, featList.length)"
                     :key="'Feat' + i"
                   >
                     <template v-if="cardTemp.selectedFeats[i - 1] == null">
@@ -193,30 +145,22 @@
                           @input="selectFeat(i - 1)"
                         >
                           <template v-slot:first>
-                            <b-form-select-option :value="undefined"
-                              >- Select Feat -</b-form-select-option
-                            >
+                            <b-form-select-option :value="undefined">- Select Feat -</b-form-select-option>
                           </template>
                         </b-select>
                       </b-col>
                     </template>
                     <template v-else>
-                      <label class="col-7 col-form-label"
-                        >{{ cardTemp.selectedFeats[i - 1] }}:</label
-                      >
+                      <label class="col-7 col-form-label">{{ cardTemp.selectedFeats[i - 1] }}:</label>
                       <b-col cols="1">
-                        <a href="#" @click.prevent="deselectFeat(i - 1)"
-                          ><span class="font-default">✘</span></a
-                        >
+                        <a href="#" @click.prevent="deselectFeat(i - 1)"><span class="font-default">✘</span></a>
                       </b-col>
                       <b-col cols="4">
                         <b-input-group>
                           <b-form-input
                             :id="'txtFeat' + i"
                             type="number"
-                            v-model.number="
-                              cardTemp.featValues[cardTemp.selectedFeats[i - 1]]
-                            "
+                            v-model.number="cardTemp.featValues[cardTemp.selectedFeats[i - 1]]"
                           />
                         </b-input-group>
                       </b-col>
@@ -229,42 +173,29 @@
                 <div class="card-stat-label"><span>Misc:</span></div>
                 <div class="card-stat-value">
                   <b-form-row
-                    v-for="i in cardTemp.selectedMisc.length +
-                    Math.min(1, miscList.length)"
+                    v-for="i in cardTemp.selectedMisc.length + Math.min(1, miscList.length)"
                     :key="'Misc' + i"
                   >
                     <template v-if="cardTemp.selectedMisc[i - 1] == null">
                       <b-col cols="8">
-                        <b-select
-                          v-model="cardTemp.selectedMisc[i - 1]"
-                          :options="miscList"
-                          @input="selectMisc(i - 1)"
-                        >
+                        <b-select v-model="cardTemp.selectedMisc[i - 1]" :options="miscList" @input="selectMisc(i - 1)">
                           <template v-slot:first>
-                            <b-form-select-option :value="undefined"
-                              >- Select Misc -</b-form-select-option
-                            >
+                            <b-form-select-option :value="undefined">- Select Misc -</b-form-select-option>
                           </template>
                         </b-select>
                       </b-col>
                     </template>
                     <template v-else>
-                      <label class="col-7 col-form-label"
-                        >{{ cardTemp.selectedMisc[i - 1] }}:</label
-                      >
+                      <label class="col-7 col-form-label">{{ cardTemp.selectedMisc[i - 1] }}:</label>
                       <b-col cols="1">
-                        <a href="#" @click.prevent="deselectMisc(i - 1)"
-                          ><span class="font-default">✘</span></a
-                        >
+                        <a href="#" @click.prevent="deselectMisc(i - 1)"><span class="font-default">✘</span></a>
                       </b-col>
                       <b-col cols="4">
                         <b-input-group>
                           <b-form-input
                             :id="'txtMisc' + i"
                             type="number"
-                            v-model.number="
-                              cardTemp.miscValues[cardTemp.selectedMisc[i - 1]]
-                            "
+                            v-model.number="cardTemp.miscValues[cardTemp.selectedMisc[i - 1]]"
                           />
                         </b-input-group>
                       </b-col>
@@ -276,26 +207,17 @@
               <div class="my-3">
                 <b-form-textarea
                   rows="4"
-                  :value="
-                    formatText.main.isAuto ? cardTemp.text : cardTemp.textFormat
-                  "
+                  :value="formatText.main.isAuto ? cardTemp.text : cardTemp.textFormat"
                   @input="updateTextEditor"
                   placeholder="[Card Text]"
                 />
-                <b-checkbox v-model="formatText.main.isAuto"
-                  >Auto-format</b-checkbox
-                >
+                <b-checkbox v-model="formatText.main.isAuto">Auto-format</b-checkbox>
               </div>
               <!-- Flavor Traits -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Flavor Traits:</span></div>
                 <div class="card-stat-value">
-                  <v-select
-                    multiple
-                    taggable
-                    v-model="cardTemp.printInfo.flavorTraits"
-                    :options="flavorTraitList"
-                  />
+                  <v-select multiple taggable v-model="cardTemp.printInfo.flavorTraits" :options="flavorTraitList" />
                 </div>
               </div>
               <!-- Flavor Text -->
@@ -303,26 +225,18 @@
                 <b-form-textarea
                   rows="2"
                   :value="
-                    formatText.flavor.isAuto
-                      ? cardTemp.printInfo.flavorText
-                      : cardTemp.printInfo.flavorTextFormat
+                    formatText.flavor.isAuto ? cardTemp.printInfo.flavorText : cardTemp.printInfo.flavorTextFormat
                   "
                   @input="updateFlavorTextEditor"
                   placeholder="[Flavor Text]"
                 />
-                <b-checkbox v-model="formatText.flavor.isAuto"
-                  >Auto-format</b-checkbox
-                >
+                <b-checkbox v-model="formatText.flavor.isAuto">Auto-format</b-checkbox>
               </div>
             </div>
           </b-col>
 
           <b-col cols="12">
-            <b-button
-              variant="primary"
-              size="lg"
-              class="mb-2 w-100"
-              @click="downloadImage"
+            <b-button variant="primary" size="lg" class="mb-2 w-100" @click="downloadImage"
               >Download Card Image</b-button
             >
           </b-col>
@@ -349,34 +263,21 @@ const mapperConfig = {
           if (newValue.length !== 1) {
             newValue = ["Classless"].concat(newValue);
           }
-          setProp(
-            cardData,
-            "class",
-            fromArrayToSlashes(newValue),
-            cardKeyOrder
-          );
+          setProp(cardData, "class", fromArrayToSlashes(newValue), cardKeyOrder);
         });
       },
       sync(vm, cardDataProp, cardMappedProp, config) {
         let { fromSlashesToArray } = config.utils;
         let cardData = vm[cardDataProp],
           cardMapped = vm[cardMappedProp];
-        cardMapped.classes = fromSlashesToArray(cardData.class).filter(
-          (x) => x !== "Classless"
-        );
+        cardMapped.classes = fromSlashesToArray(cardData.class).filter((x) => x !== "Classless");
       },
     },
     challengeLord: {},
     printinfos: {
       initialize(vm, cardDataProp, cardMappedProp, config) {
-        let {
-          setProp,
-          fromArrayToSlashes,
-          fromEmptyToUndefined,
-          fixCarriageReturns,
-          cardKeyOrder,
-          printKeyOrder,
-        } = config.utils;
+        let { setProp, fromArrayToSlashes, fromEmptyToUndefined, fixCarriageReturns, cardKeyOrder, printKeyOrder } =
+          config.utils;
         vm.$watch(
           cardMappedProp + ".printInfo",
           (newValue) => {
@@ -384,24 +285,9 @@ const mapperConfig = {
             if (newValue.flavorTraits[0] || newValue.flavorText) {
               let y = {};
               setProp(cardData, "printInfos", [y], cardKeyOrder);
-              setProp(
-                y,
-                "flavorTraits",
-                fromArrayToSlashes(newValue.flavorTraits || []),
-                printKeyOrder
-              );
-              setProp(
-                y,
-                "flavorText",
-                fromEmptyToUndefined(fixCarriageReturns(newValue.flavorText)),
-                printKeyOrder
-              );
-              setProp(
-                y,
-                "flavorTextFormat",
-                fromEmptyToUndefined(newValue.flavorTextFormat),
-                printKeyOrder
-              );
+              setProp(y, "flavorTraits", fromArrayToSlashes(newValue.flavorTraits || []), printKeyOrder);
+              setProp(y, "flavorText", fromEmptyToUndefined(fixCarriageReturns(newValue.flavorText)), printKeyOrder);
+              setProp(y, "flavorTextFormat", fromEmptyToUndefined(newValue.flavorTextFormat), printKeyOrder);
             } else {
               setProp(cardData, "printInfos", undefined, cardKeyOrder);
             }
@@ -495,43 +381,30 @@ export default {
       return this.$store.state.referenceLists;
     },
     typeList() {
-      return (
-        (this.referenceLists && this.referenceLists.typeList) ||
-        []
-      ).filter((x) => x === "Character");
+      return ((this.referenceLists && this.referenceLists.typeList) || []).filter((x) => x === "Character");
     },
     alignmentList() {
       return (this.referenceLists && this.referenceLists.alignmentList) || [];
     },
     classList() {
       if (!this.referenceLists || !this.referenceLists.classList) return [];
-      return this.referenceLists.classList.filter(
-        (t) => t !== "Classless" && !this.cardTemp.classes.includes(t)
-      );
+      return this.referenceLists.classList.filter((t) => t !== "Classless" && !this.cardTemp.classes.includes(t));
     },
     factionList() {
       if (!this.referenceLists || !this.referenceLists.factionList) return [];
-      return this.referenceLists.factionList.filter(
-        (t) => !this.cardTemp.factions.includes(t)
-      );
+      return this.referenceLists.factionList.filter((t) => !this.cardTemp.factions.includes(t));
     },
     traitList() {
       if (!this.referenceLists || !this.referenceLists.traitList) return [];
-      return this.referenceLists.traitList.filter(
-        (t) => !this.cardTemp.traits.includes(t)
-      );
+      return this.referenceLists.traitList.filter((t) => !this.cardTemp.traits.includes(t));
     },
     featList() {
       if (!this.referenceLists || !this.referenceLists.featList) return [];
-      return this.referenceLists.featList.filter(
-        (f) => !this.cardTemp.selectedFeats.includes(f)
-      );
+      return this.referenceLists.featList.filter((f) => !this.cardTemp.selectedFeats.includes(f));
     },
     miscList() {
       // I admit this is inelegant
-      return ["Challenge Rating", "Charges", "GP"].filter(
-        (f) => !this.cardTemp.selectedMisc.includes(f)
-      );
+      return ["Challenge Rating", "Charges", "GP"].filter((f) => !this.cardTemp.selectedMisc.includes(f));
     },
     flavorTraitList() {
       return (this.referenceLists && this.referenceLists.flavorTraitList) || [];
@@ -604,9 +477,7 @@ export default {
     "cardTemp.printinfo.flavorText"() {
       if (!this.formatText.flavor.isAuto) {
         // Coerce
-        this.cardTemp.printinfo.flavorText = dehtml(
-          this.cardTemp.printinfo.flavorTextFormat
-        );
+        this.cardTemp.printinfo.flavorText = dehtml(this.cardTemp.printinfo.flavorTextFormat);
       }
     },
     "cardTemp.printinfo.flavorTextFormat"(newValue) {
@@ -701,8 +572,7 @@ export default {
       });
     },
     downloadImage() {
-      let filename =
-        (this.cardData.name || "Untitled").replace(/[^a-z0-9]/gi, "_") + ".png";
+      let filename = (this.cardData.name || "Untitled").replace(/[^a-z0-9]/gi, "_") + ".png";
       utility.saveImage(this.cardImageDataUrl, filename);
     },
     uploadJson() {
@@ -715,9 +585,7 @@ export default {
       });
     },
     downloadJson() {
-      let filename =
-        (this.cardData.name || "Untitled").replace(/[^a-z0-9]/gi, "_") +
-        ".json";
+      let filename = (this.cardData.name || "Untitled").replace(/[^a-z0-9]/gi, "_") + ".json";
       utility.saveText(this.cardJson, filename);
     },
   },

@@ -7,53 +7,28 @@
         </div>
         <div class="px-2 py-1">
           <div class="float-left">
-            <a href="#" @click.prevent="clear"
-              ><span class="font-default">✘</span> Clear</a
-            >
+            <a href="#" @click.prevent="clear"><span class="font-default">✘</span> Clear</a>
           </div>
           <div class="float-right">
-            <a
-              href="#"
-              @click.prevent="importCards"
-              title="Load deck"
-              class="mr-1"
-            >
+            <a href="#" @click.prevent="importCards" title="Load deck" class="mr-1">
               <font-awesome-icon icon="folder-open" />
             </a>
-            <a
-              href="#"
-              @click.prevent="exportCards"
-              title="Save deck"
-              class="mr-1"
-            >
+            <a href="#" @click.prevent="exportCards" title="Save deck" class="mr-1">
               <font-awesome-icon icon="save" />
             </a>
 
-            <a
-              href="#"
-              title="Format Validator"
-              class="mr-1"
-              v-on:click="showFormatValidator = !showFormatValidator"
-            >
+            <a href="#" title="Format Validator" class="mr-1" v-on:click="showFormatValidator = !showFormatValidator">
               <font-awesome-icon icon="check" />
             </a>
 
-            <router-link
-              :to="{ name: 'printDeck' }"
-              target="_blank"
-              title="Print"
-            >
+            <router-link :to="{ name: 'printDeck' }" target="_blank" title="Print">
               <font-awesome-icon icon="print" />
             </router-link>
           </div>
         </div>
         <template v-if="showFormatValidator">
           <div class="flex-grow-1 p-1">
-            <v-select
-              placeholder="Format validator"
-              v-model="edition"
-              :options="editionList"
-            />
+            <v-select placeholder="Format validator" v-model="edition" :options="editionList" />
           </div>
         </template>
         <template v-if="$store.state.cardsLoaded">
@@ -80,53 +55,28 @@
                 <span>Legal</span>
               </template>
 
-              <template
-                v-if="showFormatValidator && edition"
-                #cell(editionCheck)="data"
-              >
+              <template v-if="showFormatValidator && edition" #cell(editionCheck)="data">
                 <span>
-                  {{
-                    data.item.card.editions.some(
-                      (cardEdition) => cardEdition === edition
-                    )
-                      ? "yes"
-                      : "no"
-                  }}
+                  {{ data.item.card.editions.some((cardEdition) => cardEdition === edition) ? "yes" : "no" }}
                 </span>
               </template>
 
               <template #head(buttons)>
-                <span
-                  >({{
-                    typedCards[type].reduce((s, x) => s + x.count, 0)
-                  }})</span
-                >
+                <span>({{ typedCards[type].reduce((s, x) => s + x.count, 0) }})</span>
               </template>
 
               <template v-slot:cell(buttons)="data">
-                <a
-                  href="#"
-                  @click.prevent="decrementCardToDeck(data.item.card.index)"
-                  title="Minus one"
-                  class="mr-1"
-                >
+                <a href="#" @click.prevent="decrementCardToDeck(data.item.card.index)" title="Minus one" class="mr-1">
                   <font-awesome-icon icon="minus-square" />
                 </a>
-                <a
-                  href="#"
-                  @click.prevent="incrementCardToDeck(data.item.card.index)"
-                  title="Plus one"
-                >
+                <a href="#" @click.prevent="incrementCardToDeck(data.item.card.index)" title="Plus one">
                   <font-awesome-icon icon="plus-square" />
                 </a>
               </template>
             </b-table>
             <b-table
               class="mb-0"
-              :fields="[
-                { label: 'Total' },
-                { key: 'buttons', class: 'text-right shrink' },
-              ]"
+              :fields="[{ label: 'Total' }, { key: 'buttons', class: 'text-right shrink' }]"
               small
               borderless
               striped
@@ -160,10 +110,7 @@ export default {
       return this.$store.state.cardIndex;
     },
     showSidebar() {
-      return (
-        Object.keys(this.$store.state.deck).length &&
-        this.$store.getters.showSidebar
-      );
+      return Object.keys(this.$store.state.deck).length && this.$store.getters.showSidebar;
     },
     cards() {
       let deck = this.$store.state.deck;
@@ -218,20 +165,12 @@ export default {
             if (line !== "") {
               let spaceIndex = line.indexOf(" ");
               if (spaceIndex < 0) {
-                alert(
-                  `Error line ${
-                    i + 1
-                  }: each line must be a number, space, and card name`
-                );
+                alert(`Error line ${i + 1}: each line must be a number, space, and card name`);
                 return;
               }
               let count = +line.substring(0, spaceIndex);
               if (isNaN(count)) {
-                alert(
-                  `Error line ${
-                    i + 1
-                  }: each line must be a number, space, and card name`
-                );
+                alert(`Error line ${i + 1}: each line must be a number, space, and card name`);
                 return;
               }
               let cardName = line.substring(spaceIndex + 1);
@@ -259,9 +198,7 @@ export default {
     },
     exportCards() {
       if (this.$store.state.cardsLoaded) {
-        let cardTxt = this.cards
-          .map((x) => `${x.count} ${x.card.name}`)
-          .join("\n");
+        let cardTxt = this.cards.map((x) => `${x.count} ${x.card.name}`).join("\n");
         utility.saveText(cardTxt, "deck.txt");
       }
     },

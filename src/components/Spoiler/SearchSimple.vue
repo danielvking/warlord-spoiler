@@ -11,12 +11,7 @@
         />
       </b-col>
       <b-col cols="12" md="2" class="my-1">
-        <b-button
-          variant="primary"
-          class="w-100"
-          :disabled="!canSearch"
-          @click.prevent="onSearch"
-        >Search</b-button>
+        <b-button variant="primary" class="w-100" :disabled="!canSearch" @click.prevent="onSearch">Search</b-button>
       </b-col>
     </b-form-row>
     <b-form-row class="mb-4">
@@ -45,21 +40,23 @@ import utility from "@/utility.js";
 export default {
   name: "SearchSimple",
   props: {
-    pageSettings: Object
+    pageSettings: Object,
   },
   data() {
     return {
       searchText: null,
       byName: true,
       byText: false,
-      isBusy: false
+      isBusy: false,
     };
   },
   computed: {
-    cards() { return this.$store.state.cards; },
+    cards() {
+      return this.$store.state.cards;
+    },
     canSearch() {
       return this.cards && !this.isBusy;
-    }
+    },
   },
   methods: {
     onSearch() {
@@ -69,37 +66,35 @@ export default {
 
       let searchText = this.searchText || "";
       let searchResults = [];
-      let filter = x => {
+      let filter = (x) => {
         // Include 4Ex
         if (!this.pageSettings.include4ex) {
-          let sets = x.printInfos.map(y => y.set).filter(y => y);
-          let _4exSets = ["4EX", "AMH", "RttA", "4th Edition Expanded (4EX)", "Aftermath (AMH)", "Return to the Accordlands (RttA)"];
-          if (sets[0] && !sets.filter(s => !_4exSets.includes(s))[0])
-            return false;
+          let sets = x.printInfos.map((y) => y.set).filter((y) => y);
+          let _4exSets = [
+            "4EX",
+            "AMH",
+            "RttA",
+            "4th Edition Expanded (4EX)",
+            "Aftermath (AMH)",
+            "Return to the Accordlands (RttA)",
+          ];
+          if (sets[0] && !sets.filter((s) => !_4exSets.includes(s))[0]) return false;
         }
         // Include Challenge Lords
         if (!this.pageSettings.includeChallengeLords) {
           if (x.challengeLord) return false;
         }
-        if (
-          this.byName &&
-          x.name &&
-          utility.includesTokens(x.name, searchText)
-        ) {
+        if (this.byName && x.name && utility.includesTokens(x.name, searchText)) {
           return true;
         }
-        if (
-          this.byText &&
-          x.text &&
-          utility.includesTokens(x.text, searchText)
-        ) {
+        if (this.byText && x.text && utility.includesTokens(x.text, searchText)) {
           return true;
         }
         return false;
       };
 
       utility
-        .forEachAsync(this.cards, x => {
+        .forEachAsync(this.cards, (x) => {
           if (filter(x)) searchResults.push(x);
         })
         .then(() => {
@@ -112,7 +107,7 @@ export default {
           this.isBusy = false;
           this.$emit("search-completed", searchResults);
         });
-    }
-  }
+    },
+  },
 };
 </script>

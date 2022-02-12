@@ -1,12 +1,7 @@
 <template>
   <div class="image-holder">
     <div ref="imageHolder">
-      <img
-        v-if="cardImageUrl"
-        class="user-image"
-        :src="cardImageUrl"
-        @load="refreshImage()"
-      />
+      <img v-if="cardImageUrl" class="user-image" :src="cardImageUrl" @load="refreshImage()" />
       <template v-if="cardTemplateUrl">
         <img :src="cardTemplateUrl" @load="refreshImage()" />
         <div class="image-name card-title">
@@ -18,10 +13,7 @@
         <div class="image-ac card-title">
           {{ cardData.armorClass }}
         </div>
-        <div
-          class="image-lvl card-title"
-          :class="cardData.alignment === 'Evil' ? 'text-white' : ''"
-        >
+        <div class="image-lvl card-title" :class="cardData.alignment === 'Evil' ? 'text-white' : ''">
           {{ cardData.level }}
         </div>
         <div class="image-sk card-title">
@@ -56,10 +48,7 @@ import domtoimage from "dom-to-image";
 function rectifyScale(selector) {
   let element = document.querySelector(selector);
   if (!element) return;
-  if (
-    element.scrollWidth > element.clientWidth ||
-    element.scrollHeight > element.scrollHeight
-  ) {
+  if (element.scrollWidth > element.clientWidth || element.scrollHeight > element.scrollHeight) {
     let shiftX = (element.clientWidth - element.scrollWidth) / 2;
     let shiftY = (element.clientHeight - element.scrollHeight) / 2;
     let scaleX = element.clientWidth / element.scrollWidth;
@@ -81,10 +70,7 @@ function sanitizeHtml(html) {
 
 // Checks for shady tags
 function legalHtml(html) {
-  return (
-    !html.match(/<(?!\/?(p|b|i|br)>)/m) &&
-    !html.replace(/<[^<>]*>/gm).match(/[<>]/m)
-  );
+  return !html.match(/<(?!\/?(p|b|i|br)>)/m) && !html.replace(/<[^<>]*>/gm).match(/[<>]/m);
 }
 
 export default {
@@ -149,16 +135,9 @@ export default {
         if (headerText) headerText += " • ";
         headerText += bulletSplit(sanitizeHtml(this.cardData.misc), true);
       }
-      if (
-        this.cardData.printInfos &&
-        this.cardData.printInfos[0] &&
-        this.cardData.printInfos[0].flavorTraits
-      ) {
+      if (this.cardData.printInfos && this.cardData.printInfos[0] && this.cardData.printInfos[0].flavorTraits) {
         if (headerText) headerText += " • ";
-        headerText += bulletSplit(
-          sanitizeHtml(this.cardData.printInfos[0].flavorTraits),
-          false
-        );
+        headerText += bulletSplit(sanitizeHtml(this.cardData.printInfos[0].flavorTraits), false);
       }
       if (headerText) headerText = "<p>" + headerText + "</p>";
 
@@ -179,11 +158,7 @@ export default {
     },
     formattedFlavorText() {
       let flavorText = "";
-      if (
-        this.cardData.printInfos &&
-        this.cardData.printInfos[0] &&
-        this.cardData.printInfos[0].flavorText
-      ) {
+      if (this.cardData.printInfos && this.cardData.printInfos[0] && this.cardData.printInfos[0].flavorText) {
         flavorText = sanitizeHtml(this.cardData.printInfos[0].flavorText);
         flavorText = flavorText.replace(/(- )/gm, "-&nbsp;"); // Don't break the space after a dash
         flavorText = flavorText.replace(/\r\n/gm, "<br>"); // Line breaks same paragraph
@@ -260,10 +235,7 @@ export default {
               return;
             }
 
-            if (
-              element.scrollHeight &&
-              element.clientHeight >= element.scrollHeight
-            ) {
+            if (element.scrollHeight && element.clientHeight >= element.scrollHeight) {
               prevScale = scale;
               scale -= 1;
               element.style.height = `${scale}%`;
@@ -364,7 +336,7 @@ export default {
       // Need to allow the DOM to refresh before recomputing sizes
       setTimeout(async () => {
         if (token.cancel) return;
-        
+
         rectifyScale(".image-holder .image-name");
         rectifyScale(".image-holder .image-atk");
         rectifyScale(".image-holder .image-ac");

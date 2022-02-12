@@ -1,5 +1,5 @@
 <template>
-  <component :is="selectedComponent" :card="card"/>
+  <component :is="selectedComponent" :card="card" />
 </template>
 
 <script>
@@ -18,7 +18,7 @@ export default {
         return CardDetailEdit;
       }
       return CardDetail;
-    }
-  }
+    },
+  },
 };
 </script>

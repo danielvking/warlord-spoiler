@@ -3,16 +3,11 @@
     <div class="clearfix py-1">
       <div class="float-left">
         <router-link :to="{ name: 'searchPage' }"
-          ><span class="font-default">&larr;</span> Return to
-          search</router-link
+          ><span class="font-default">&larr;</span> Return to search</router-link
         >
       </div>
       <div class="float-right">
-        <a
-          v-if="showSidebar"
-          href="#"
-          @click.prevent="removeCard(card)"
-          aria-label="Cancel changes"
+        <a v-if="showSidebar" href="#" @click.prevent="removeCard(card)" aria-label="Cancel changes"
           ><font-awesome-icon icon="minus-square" /> Cancel changes</a
         >
       </div>
@@ -23,31 +18,17 @@
         <b-col cols="12" md="6" class="d-flex flex-column">
           <div
             class="card-view d-flex flex-column pb-2"
-            :class="
-              viewOption === 'JSON' ? 'bound-height' : 'align-items-center'
-            "
+            :class="viewOption === 'JSON' ? 'bound-height' : 'align-items-center'"
           >
-            <b-radio-group
-              v-model="viewOption"
-              :options="['Art', 'JSON']"
-              class="mb-2 w-100"
-              buttons
-            />
+            <b-radio-group v-model="viewOption" :options="['Art', 'JSON']" class="mb-2 w-100" buttons />
             <!-- Image -->
             <template v-if="viewOption === 'Art'">
-              <img
-                v-if="imageUrl"
-                :src="imageUrlOverride || imageUrl"
-                class="card-image"
-              />
+              <img v-if="imageUrl" :src="imageUrlOverride || imageUrl" class="card-image" />
             </template>
             <!-- JSON -->
             <template v-if="viewOption === 'JSON'">
               <b-textarea
-                :class="
-                  'text-monospace flex-fill' +
-                  (cardJsonWrapped ? '' : ' text-nowrap')
-                "
+                :class="'text-monospace flex-fill' + (cardJsonWrapped ? '' : ' text-nowrap')"
                 v-model="cardJson"
                 rows="10"
                 size="sm"
@@ -79,14 +60,9 @@
             <div class="clearfix">
               <div class="card-stat-label"><span>Alignment:</span></div>
               <div class="card-stat-value">
-                <b-form-select
-                  v-model="cardTemp.alignment"
-                  :options="alignmentList"
-                >
+                <b-form-select v-model="cardTemp.alignment" :options="alignmentList">
                   <template #first>
-                    <b-form-select-option
-                      :value="undefined"
-                    ></b-form-select-option>
+                    <b-form-select-option :value="undefined"></b-form-select-option>
                   </template>
                 </b-form-select>
               </div>
@@ -102,11 +78,7 @@
             <div class="clearfix">
               <div class="card-stat-label"><span>Class:</span></div>
               <div class="card-stat-value">
-                <v-select
-                  multiple
-                  v-model="cardTemp.classes"
-                  :options="classList"
-                />
+                <v-select multiple v-model="cardTemp.classes" :options="classList" />
               </div>
             </div>
             <!-- Attack -->
@@ -143,65 +115,41 @@
             <div class="clearfix">
               <div class="card-stat-label"><span>Faction:</span></div>
               <div class="card-stat-value">
-                <v-select
-                  multiple
-                  v-model="cardTemp.factions"
-                  :options="factionList"
-                />
+                <v-select multiple v-model="cardTemp.factions" :options="factionList" />
               </div>
             </div>
             <!-- Traits -->
             <div class="clearfix">
               <div class="card-stat-label"><span>Traits:</span></div>
               <div class="card-stat-value">
-                <v-select
-                  multiple
-                  v-model="cardTemp.traits"
-                  :options="traitList"
-                />
+                <v-select multiple v-model="cardTemp.traits" :options="traitList" />
               </div>
             </div>
             <!-- Feats -->
             <div class="clearfix">
               <div class="card-stat-label"><span>Feats:</span></div>
               <div class="card-stat-value">
-                <b-form-row
-                  v-for="i in cardTemp.selectedFeats.length +
-                  Math.min(1, featList.length)"
-                  :key="'Feat' + i"
-                >
+                <b-form-row v-for="i in cardTemp.selectedFeats.length + Math.min(1, featList.length)" :key="'Feat' + i">
                   <template v-if="cardTemp.selectedFeats[i - 1] == null">
                     <b-col cols="8">
-                      <b-select
-                        v-model="cardTemp.selectedFeats[i - 1]"
-                        :options="featList"
-                        @input="selectFeat(i - 1)"
-                      >
+                      <b-select v-model="cardTemp.selectedFeats[i - 1]" :options="featList" @input="selectFeat(i - 1)">
                         <template v-slot:first>
-                          <b-form-select-option :value="undefined"
-                            >- Select Feat -</b-form-select-option
-                          >
+                          <b-form-select-option :value="undefined">- Select Feat -</b-form-select-option>
                         </template>
                       </b-select>
                     </b-col>
                   </template>
                   <template v-else>
-                    <label class="col-7 col-form-label"
-                      >{{ cardTemp.selectedFeats[i - 1] }}:</label
-                    >
+                    <label class="col-7 col-form-label">{{ cardTemp.selectedFeats[i - 1] }}:</label>
                     <b-col cols="1">
-                      <a href="#" @click.prevent="deselectFeat(i - 1)"
-                        ><span class="font-default">✘</span></a
-                      >
+                      <a href="#" @click.prevent="deselectFeat(i - 1)"><span class="font-default">✘</span></a>
                     </b-col>
                     <b-col cols="4">
                       <b-input-group>
                         <b-form-input
                           :id="'txtFeat' + i"
                           type="number"
-                          v-model.number="
-                            cardTemp.featValues[cardTemp.selectedFeats[i - 1]]
-                          "
+                          v-model.number="cardTemp.featValues[cardTemp.selectedFeats[i - 1]]"
                         />
                       </b-input-group>
                     </b-col>
@@ -213,43 +161,27 @@
             <div class="clearfix">
               <div class="card-stat-label"><span>Misc:</span></div>
               <div class="card-stat-value">
-                <b-form-row
-                  v-for="i in cardTemp.selectedMisc.length +
-                  Math.min(1, miscList.length)"
-                  :key="'Misc' + i"
-                >
+                <b-form-row v-for="i in cardTemp.selectedMisc.length + Math.min(1, miscList.length)" :key="'Misc' + i">
                   <template v-if="cardTemp.selectedMisc[i - 1] == null">
                     <b-col cols="8">
-                      <b-select
-                        v-model="cardTemp.selectedMisc[i - 1]"
-                        :options="miscList"
-                        @input="selectMisc(i - 1)"
-                      >
+                      <b-select v-model="cardTemp.selectedMisc[i - 1]" :options="miscList" @input="selectMisc(i - 1)">
                         <template v-slot:first>
-                          <b-form-select-option :value="undefined"
-                            >- Select Misc -</b-form-select-option
-                          >
+                          <b-form-select-option :value="undefined">- Select Misc -</b-form-select-option>
                         </template>
                       </b-select>
                     </b-col>
                   </template>
                   <template v-else>
-                    <label class="col-7 col-form-label"
-                      >{{ cardTemp.selectedMisc[i - 1] }}:</label
-                    >
+                    <label class="col-7 col-form-label">{{ cardTemp.selectedMisc[i - 1] }}:</label>
                     <b-col cols="1">
-                      <a href="#" @click.prevent="deselectMisc(i - 1)"
-                        ><span class="font-default">✘</span></a
-                      >
+                      <a href="#" @click.prevent="deselectMisc(i - 1)"><span class="font-default">✘</span></a>
                     </b-col>
                     <b-col cols="4">
                       <b-input-group>
                         <b-form-input
                           :id="'txtMisc' + i"
                           type="number"
-                          v-model.number="
-                            cardTemp.miscValues[cardTemp.selectedMisc[i - 1]]
-                          "
+                          v-model.number="cardTemp.miscValues[cardTemp.selectedMisc[i - 1]]"
                         />
                       </b-input-group>
                     </b-col>
@@ -261,38 +193,24 @@
             <div class="clearfix my-2">
               <div class="card-stat-label"><span>Formats:</span></div>
               <div class="card-stat-value">
-                <v-select
-                  multiple
-                  v-model="cardTemp.editions"
-                  :options="editionList"
-                />
+                <v-select multiple v-model="cardTemp.editions" :options="editionList" />
               </div>
             </div>
             <!-- Challenge Lord -->
             <div class="clearfix">
               <div class="card-stat-label"></div>
               <div class="card-stat-value">
-                <b-checkbox v-model="cardTemp.challengeLord"
-                  >Is Challenge Lord</b-checkbox
-                >
+                <b-checkbox v-model="cardTemp.challengeLord">Is Challenge Lord</b-checkbox>
               </div>
             </div>
             <!-- Text -->
             <div class="my-3">
-              <b-form-textarea
-                rows="4"
-                v-model="cardTemp.text"
-                placeholder="[Card Text]"
-              />
+              <b-form-textarea rows="4" v-model="cardTemp.text" placeholder="[Card Text]" />
             </div>
             <!-- Print Infos -->
             <div class="clearfix py-1">
               <div class="float-right">
-                <a
-                  href="#"
-                  @click.prevent="addPrintInfo"
-                  aria-label="Add print info"
-                >
+                <a href="#" @click.prevent="addPrintInfo" aria-label="Add print info">
                   <font-awesome-icon icon="plus-square" /> Add print info</a
                 >
               </div>
@@ -304,15 +222,10 @@
                 <div class="card-stat-value">
                   <b-form-row>
                     <b-col cols="1">
-                      <a href="#" @click.prevent="removePrintInfo(i)"
-                        ><span class="font-default">✘</span></a
-                      >
+                      <a href="#" @click.prevent="removePrintInfo(i)"><span class="font-default">✘</span></a>
                     </b-col>
                     <b-col cols="11">
-                      <b-form-select
-                        v-model="printInfo.set"
-                        :options="setList"
-                      />
+                      <b-form-select v-model="printInfo.set" :options="setList" />
                     </b-col>
                   </b-form-row>
                 </div>
@@ -328,14 +241,9 @@
               <div class="clearfix">
                 <div class="card-stat-label"><span>Rarity:</span></div>
                 <div class="card-stat-value">
-                  <b-form-select
-                    v-model="printInfo.rarity"
-                    :options="rarityList"
-                  >
+                  <b-form-select v-model="printInfo.rarity" :options="rarityList">
                     <template #first>
-                      <b-form-select-option
-                        :value="undefined"
-                      ></b-form-select-option>
+                      <b-form-select-option :value="undefined"></b-form-select-option>
                     </template>
                   </b-form-select>
                 </div>
@@ -344,12 +252,7 @@
               <div class="clearfix">
                 <div class="card-stat-label"><span>Flavor Traits:</span></div>
                 <div class="card-stat-value">
-                  <v-select
-                    multiple
-                    taggable
-                    v-model="printInfo.flavorTraits"
-                    :options="flavorTraitList"
-                  />
+                  <v-select multiple taggable v-model="printInfo.flavorTraits" :options="flavorTraitList" />
                 </div>
               </div>
               <!-- Artist -->
@@ -365,9 +268,7 @@
                 <div class="card-stat-value">
                   <b-form-row>
                     <b-col cols="1" class="d-flex align-items-center">
-                      <a href="#" @click.prevent="setImage(printInfo.imageUrl)"
-                        ><font-awesome-icon icon="eye"
-                      /></a>
+                      <a href="#" @click.prevent="setImage(printInfo.imageUrl)"><font-awesome-icon icon="eye" /></a>
                     </b-col>
                     <b-col cols="11">
                       <b-input v-model="printInfo.imageUrl" />
@@ -377,11 +278,7 @@
               </div>
               <!-- Flavor Text -->
               <div class="my-2">
-                <b-form-textarea
-                  rows="2"
-                  v-model="printInfo.flavorText"
-                  placeholder="[Flavor Text]"
-                />
+                <b-form-textarea rows="2" v-model="printInfo.flavorText" placeholder="[Flavor Text]" />
               </div>
             </div>
           </div>
@@ -438,7 +335,7 @@ export default {
         printInfos: [],
         errata: "",
       },
-      mapper: null
+      mapper: null,
     };
   },
   computed: {
@@ -469,33 +366,23 @@ export default {
     },
     classList() {
       if (!this.referenceLists || !this.referenceLists.classList) return [];
-      return this.referenceLists.classList.filter(
-        (t) => !this.cardTemp.classes.includes(t)
-      );
+      return this.referenceLists.classList.filter((t) => !this.cardTemp.classes.includes(t));
     },
     factionList() {
       if (!this.referenceLists || !this.referenceLists.factionList) return [];
-      return this.referenceLists.factionList.filter(
-        (t) => !this.cardTemp.factions.includes(t)
-      );
+      return this.referenceLists.factionList.filter((t) => !this.cardTemp.factions.includes(t));
     },
     traitList() {
       if (!this.referenceLists || !this.referenceLists.traitList) return [];
-      return this.referenceLists.traitList.filter(
-        (t) => !this.cardTemp.traits.includes(t)
-      );
+      return this.referenceLists.traitList.filter((t) => !this.cardTemp.traits.includes(t));
     },
     featList() {
       if (!this.referenceLists || !this.referenceLists.featList) return [];
-      return this.referenceLists.featList.filter(
-        (f) => !this.cardTemp.selectedFeats.includes(f)
-      );
+      return this.referenceLists.featList.filter((f) => !this.cardTemp.selectedFeats.includes(f));
     },
     miscList() {
       // I admit this is inelegant
-      return ["Challenge Rating", "Charges", "GP"].filter(
-        (f) => !this.cardTemp.selectedMisc.includes(f)
-      );
+      return ["Challenge Rating", "Charges", "GP"].filter((f) => !this.cardTemp.selectedMisc.includes(f));
     },
     editionList() {
       return (this.referenceLists && this.referenceLists.editionList) || [];

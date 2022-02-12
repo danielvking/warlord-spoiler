@@ -3,17 +3,12 @@
     <div class="clearfix py-1">
       <div class="float-left">
         <router-link :to="{ name: 'searchPage' }"
-          ><span class="font-default">&larr;</span> Return to
-          search</router-link
+          ><span class="font-default">&larr;</span> Return to search</router-link
         >
       </div>
       <div class="float-right">
-        <a
-          v-if="showSidebar"
-          href="#"
-          @click.prevent="addCard(card)"
-          :aria-label="addCardText"
-        ><font-awesome-icon icon="plus-square" /> {{ addCardText }}</a
+        <a v-if="showSidebar" href="#" @click.prevent="addCard(card)" :aria-label="addCardText"
+          ><font-awesome-icon icon="plus-square" /> {{ addCardText }}</a
         >
       </div>
     </div>
@@ -22,11 +17,7 @@
       <b-row>
         <!-- Image -->
         <b-col cols="12" md="6" class="d-flex justify-content-center mb-2">
-          <img
-            v-if="imageUrl"
-            :src="imageUrlOverride || imageUrl"
-            class="card-image"
-          />
+          <img v-if="imageUrl" :src="imageUrlOverride || imageUrl" class="card-image" />
         </b-col>
 
         <b-col cols="12" md="6">
@@ -127,28 +118,17 @@
             <!-- Editions -->
             <div class="clearfix my-2">
               <div class="card-stat-label"><span>Formats:</span></div>
-              <div
-                v-if="cardData.editions && cardData.editions[0]"
-                class="card-stat-value"
-              >
-                <span v-for="edition in cardData.editions" :key="edition">{{
-                  edition + " "
-                }}</span>
+              <div v-if="cardData.editions && cardData.editions[0]" class="card-stat-value">
+                <span v-for="edition in cardData.editions" :key="edition">{{ edition + " " }}</span>
               </div>
               <div v-else class="card-stat-value"><span>Open</span></div>
             </div>
             <!-- Text -->
-            <div
-              class="my-3"
-              v-html="$options.filters.formatCardText(cardData.text)"
-            ></div>
+            <div class="my-3" v-html="$options.filters.formatCardText(cardData.text)"></div>
             <!-- Print Info -->
             <div v-for="(printInfo, i) in cardData.printInfos" :key="i">
               <!-- Image Link (Set, Set Number) -->
-              <div
-                class="card-print-link"
-                @click="setImage(printInfo.imageUrl)"
-              >
+              <div class="card-print-link" @click="setImage(printInfo.imageUrl)">
                 <span>{{ printInfo | formatSetName }}</span>
               </div>
               <div class="mx-2">
@@ -255,7 +235,7 @@ export default {
   watch: {
     card() {
       this.imageUrlOverride = null;
-    }
+    },
   },
   mounted() {
     this.$nextTick(() => {
