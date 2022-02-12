@@ -289,6 +289,7 @@ const standardConfig = {
             flavorTraits: fromSlashesToArray(x.flavorTraits),
             artist: x.artist,
             flavorText: x.flavorText,
+            flavorTextFormat: x.flavorTextFormat,
             imageUrl: x.imageUrl,
           };
         });

@@ -31,7 +31,7 @@
               <template v-if="viewOption === 'JSON'">
                 <b-button class="mb-2 w-100" variant="outline-primary" @click="uploadJson">Upload JSON</b-button>
                 <b-textarea
-                  :class="'text-monospace flex-fill' + (cardJsonWrapped ? '' : ' text-nowrap')"
+                  :class="'text-monospace flex-fill' + (cardJsonWrapped ? ' editor' : ' editor-wrap')"
                   v-model="cardJson"
                   rows="10"
                   size="sm"
@@ -274,7 +274,7 @@ const mapperConfig = {
       },
     },
     challengeLord: {},
-    printinfos: {
+    printInfos: {
       initialize(vm, cardDataProp, cardMappedProp, config) {
         let { setProp, fromArrayToSlashes, fromEmptyToUndefined, fixCarriageReturns, cardKeyOrder, printKeyOrder } =
           config.utils;
@@ -303,9 +303,11 @@ const mapperConfig = {
           return {
             flavorTraits: fromSlashesToArray(x.flavorTraits),
             flavorText: x.flavorText,
+            flavorTextFormat: x.flavorTextFormat,
           };
         })[0] || {
           flavorText: "",
+          flavorTextFormat: "",
           flavorTraits: [],
         };
       },
@@ -314,9 +316,13 @@ const mapperConfig = {
 };
 
 function dehtml(html) {
-  html = html.replace(/\s+/gm, " ");
+  html = html.replace(/&nbsp;/gm, " ");
   html = html.replace(/<br>|<\/p><p>/gm, "\r\n");
   html = html.replace(/<[^<>]*>/gm, "");
+  let txt = document.createElement("textarea");
+  txt.innerHTML = html;
+  html = txt.value; // Decode characters
+  html = html.replace(/\s+/gm, " ");
   return html;
 }
 
@@ -353,6 +359,7 @@ export default {
         miscValues: {},
         printInfo: {
           flavorText: "",
+          flavorTextFormat: "",
           flavorTraits: [],
         },
       },
@@ -360,12 +367,10 @@ export default {
         main: {
           isAuto: true,
           text: "",
-          editor: "",
         },
         flavor: {
           isAuto: true,
           text: "",
-          editor: "",
         },
       },
       mapper: null,
@@ -466,24 +471,24 @@ export default {
       if (newValue) {
         this.formatText.flavor.text = "";
       }
-      this.cardTemp.printinfo.flavorTextFormat = this.formatText.flavor.text;
+      this.cardTemp.printInfo.flavorTextFormat = this.formatText.flavor.text;
     },
     "formatText.flavor.text"() {
       if (!this.formatText.flavor.isAuto) {
         // Coerce
-        this.formatText.flavor.text = this.cardTemp.printinfo.flavorTextFormat;
+        this.formatText.flavor.text = this.cardTemp.printInfo.flavorTextFormat;
       }
     },
-    "cardTemp.printinfo.flavorText"() {
+    "cardTemp.printInfo.flavorText"() {
       if (!this.formatText.flavor.isAuto) {
         // Coerce
-        this.cardTemp.printinfo.flavorText = dehtml(this.cardTemp.printinfo.flavorTextFormat);
+        this.cardTemp.printInfo.flavorText = dehtml(this.cardTemp.printInfo.flavorTextFormat);
       }
     },
-    "cardTemp.printinfo.flavorTextFormat"(newValue) {
+    "cardTemp.printInfo.flavorTextFormat"(newValue) {
       if (!this.formatText.flavor.isAuto) {
         this.formatText.flavor.text = newValue;
-        this.cardTemp.printinfo.flavorText = dehtml(newValue);
+        this.cardTemp.printInfo.flavorText = dehtml(newValue);
       }
     },
   },
@@ -538,10 +543,10 @@ export default {
     },
     updateFlavorTextEditor(newValue) {
       if (this.formatText.flavor.isAuto) {
-        this.cardTemp.printinfo.flavorText = newValue;
-        this.cardTemp.printinfo.flavorTextFormat = "";
+        this.cardTemp.printInfo.flavorText = newValue;
+        this.cardTemp.printInfo.flavorTextFormat = "";
       } else {
-        this.cardTemp.printinfo.flavorTextFormat = newValue;
+        this.cardTemp.printInfo.flavorTextFormat = newValue;
       }
     },
 
@@ -579,6 +584,7 @@ export default {
       utility.readText().then((response) => {
         try {
           this.cardData = JSON.parse(response);
+          this.mapper.sync();
         } catch (error) {
           alert("An error occurred reading the card data: " + error);
         }
@@ -593,6 +599,14 @@ export default {
 </script>
 
 <style scoped>
+.editor {
+  white-space: pre;
+}
+
+.editor-wrap {
+  white-space: pre-wrap;
+}
+
 .card-image {
   max-height: 400px;
   max-width: 350px;
