@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import utility from "@/utility.js";
+import utility from "@/scripts/utility.js";
 import routeMixin from "@/mixins/routeMixin.js";
 import addRemoveCardMixin from "@/mixins/addRemoveCardMixin.js";
 

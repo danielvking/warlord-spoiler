@@ -121,7 +121,7 @@ import EditCards from "@/components/editor/EditCards.vue";
 import SearchSimple from "@/components/spoiler/SearchSimple.vue";
 import SearchAdvanced from "@/components/spoiler/SearchAdvanced.vue";
 import CardCompact from "@/components/spoiler/CardCompact.vue";
-import utility from "@/utility.js";
+import utility from "@/scripts/utility.js";
 import addRemoveCardMixin from "@/mixins/addRemoveCardMixin.js";
 import routeMixin from "@/mixins/routeMixin.js";
 

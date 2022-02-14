@@ -40,8 +40,8 @@
 </template>
 
 <script>
-import utility from "@/utility.js";
-import cardTemplates from "@/cardTemplates.js";
+import utility from "@/scripts/utility.js";
+import cardTemplates from "@/scripts/cardTemplates.js";
 import domtoimage from "dom-to-image";
 
 // Visually transforms elements to fit

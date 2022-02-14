@@ -20,7 +20,7 @@
             class="card-view d-flex flex-column pb-2"
             :class="viewOption === 'JSON' ? 'bound-height' : 'align-items-center'"
           >
-            <b-radio-group v-model="viewOption" :options="['Art', 'JSON']" class="mb-2 w-100" buttons />
+            <b-radio-group v-model="viewOption" :options="['Art', 'JSON']" class="mb-2 w-100 view-switch" buttons />
             <!-- Image -->
             <template v-if="viewOption === 'Art'">
               <img v-if="imageUrl" :src="imageUrlOverride || imageUrl" class="card-image" />
@@ -298,7 +298,7 @@
 <script>
 import Vue from "vue";
 import addRemoveCardMixin from "@/mixins/addRemoveCardMixin.js";
-import { createMapper } from "@/cardMapper.js";
+import { createMapper } from "@/scripts/cardMapper.js";
 
 export default {
   name: "CardDetailEdit",
@@ -501,6 +501,10 @@ export default {
 </script>
 
 <style scoped>
+.view-switch >>> * {
+  flex: 1;
+}
+
 .editor {
   white-space: pre;
 }
