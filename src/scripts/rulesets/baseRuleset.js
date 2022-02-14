@@ -209,7 +209,7 @@ export default {
       if (val) {
         let fTraits = val.split("/");
         for (let i = 0; i < fTraits.length; i++) {
-          if (referenceLists.traitList.includes(fTraits[i])) {
+          if (referenceLists && referenceLists.traitList.includes(fTraits[i])) {
             return "Flavor traits must not be real traits."
           }
         }

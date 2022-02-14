@@ -65,35 +65,26 @@
               <!-- Name -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Card Name:</span></div>
-                <div class="card-stat-value" @focusout="refreshCache('name')">
-                  <b-form-group
-                    :state="infoCache.validationState['name']"
-                    :invalid-feedback="infoCache.validationText['name']"
-                  >
+                <div class="card-stat-value">
+                  <info-helper :info-cache="infoCache" property="name" @focusout="refreshCache('name')">
                     <b-form-input v-model="cardTemp.name" @input="refreshCache('name')" />
-                  </b-form-group>
+                  </info-helper>
                 </div>
               </div>
               <!-- Level -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Level:</span></div>
-                <div class="card-stat-value" @focusout="refreshCache('level')">
-                  <b-form-group
-                    :state="infoCache.validationState['level']"
-                    :invalid-feedback="infoCache.validationText['level']"
-                  >
+                <div class="card-stat-value">
+                  <info-helper :info-cache="infoCache" property="level" @focusout="refreshCache('level')">
                     <b-form-input v-model="cardTemp.level" @input="refreshCache('level')" />
-                  </b-form-group>
+                  </info-helper>
                 </div>
               </div>
               <!-- Alignment -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Alignment:</span></div>
-                <div class="card-stat-value" @focusout="refreshCache('alignment')">
-                  <b-form-group
-                    :state="infoCache.validationState['alignment']"
-                    :invalid-feedback="infoCache.validationText['alignment']"
-                  >
+                <div class="card-stat-value">
+                  <info-helper :info-cache="infoCache" property="alignment" @focusout="refreshCache('alignment')">
                     <b-form-select
                       v-model="cardTemp.alignment"
                       :options="alignmentList"
@@ -103,29 +94,23 @@
                         <b-form-select-option :value="undefined"></b-form-select-option>
                       </template>
                     </b-form-select>
-                  </b-form-group>
+                  </info-helper>
                 </div>
               </div>
               <!-- Type -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Type:</span></div>
-                <div class="card-stat-value" @focusout="refreshCache('type')">
-                  <b-form-group
-                    :state="infoCache.validationState['type']"
-                    :invalid-feedback="infoCache.validationText['type']"
-                  >
+                <div class="card-stat-value">
+                  <info-helper :info-cache="infoCache" property="type" @focusout="refreshCache('type')">
                     <b-form-select v-model="cardTemp.type" :options="typeList" @input="refreshCache('type')" />
-                  </b-form-group>
+                  </info-helper>
                 </div>
               </div>
               <!-- Class -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Class:</span></div>
-                <div class="card-stat-value" @focusout="refreshCache('class')">
-                  <b-form-group
-                    :state="infoCache.validationState['class']"
-                    :invalid-feedback="infoCache.validationText['class']"
-                  >
+                <div class="card-stat-value">
+                  <info-helper :info-cache="infoCache" property="class" @focusout="refreshCache('class')">
                     <v-select
                       multiple
                       v-model="cardTemp.classes"
@@ -133,43 +118,34 @@
                       placeholder="(Classless)"
                       @input="refreshCache('class')"
                     />
-                  </b-form-group>
+                  </info-helper>
                 </div>
               </div>
               <!-- Attack -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Attack:</span></div>
-                <div class="card-stat-value" @focusout="refreshCache('attack')">
-                  <b-form-group
-                    :state="infoCache.validationState['attack']"
-                    :invalid-feedback="infoCache.validationText['attack']"
-                  >
+                <div class="card-stat-value">
+                  <info-helper :info-cache="infoCache" property="attack" @focusout="refreshCache('attack')">
                     <b-form-input v-model="cardTemp.attack" @input="refreshCache('attack')" />
-                  </b-form-group>
+                  </info-helper>
                 </div>
               </div>
               <!-- Armor Class -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Armor Class:</span></div>
-                <div class="card-stat-value" @focusout="refreshCache('armorClass')">
-                  <b-form-group
-                    :state="infoCache.validationState['armorClass']"
-                    :invalid-feedback="infoCache.validationText['armorClass']"
-                  >
+                <div class="card-stat-value">
+                  <info-helper :info-cache="infoCache" property="armorClass" @focusout="refreshCache('armorClass')">
                     <b-form-input v-model="cardTemp.armorClass" @input="refreshCache('armorClass')" />
-                  </b-form-group>
+                  </info-helper>
                 </div>
               </div>
               <!-- Skill -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Skill:</span></div>
-                <div class="card-stat-value" @focusout="refreshCache('skill')">
-                  <b-form-group
-                    :state="infoCache.validationState['skill']"
-                    :invalid-feedback="infoCache.validationText['skill']"
-                  >
+                <div class="card-stat-value">
+                  <info-helper :info-cache="infoCache" property="skill" @focusout="refreshCache('skill')">
                     <b-form-input v-model="cardTemp.skill" @input="refreshCache('skill')" />
-                  </b-form-group>
+                  </info-helper>
                 </div>
               </div>
               <!-- Hit Points -->
@@ -177,52 +153,40 @@
                 <div class="card-stat-label">
                   <span>Hit Points:</span>
                 </div>
-                <div class="card-stat-value" @focusout="refreshCache('hitPoints')">
-                  <b-form-group
-                    :state="infoCache.validationState['hitPoints']"
-                    :invalid-feedback="infoCache.validationText['hitPoints']"
-                  >
+                <div class="card-stat-value">
+                  <info-helper :info-cache="infoCache" property="hitPoints" @focusout="refreshCache('hitPoints')">
                     <b-form-input v-model="cardTemp.hitPoints" @input="refreshCache('hitPoints')" />
-                  </b-form-group>
+                  </info-helper>
                 </div>
               </div>
               <!-- Faction -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Faction:</span></div>
-                <div class="card-stat-value" @focusout="refreshCache('faction')">
-                  <b-form-group
-                    :state="infoCache.validationState['faction']"
-                    :invalid-feedback="infoCache.validationText['faction']"
-                  >
+                <div class="card-stat-value">
+                  <info-helper :info-cache="infoCache" property="faction" @focusout="refreshCache('faction')">
                     <v-select
                       multiple
                       v-model="cardTemp.factions"
                       :options="factionList"
                       @input="refreshCache('faction')"
                     />
-                  </b-form-group>
+                  </info-helper>
                 </div>
               </div>
               <!-- Traits -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Traits:</span></div>
-                <div class="card-stat-value" @focusout="refreshCache('traits')">
-                  <b-form-group
-                    :state="infoCache.validationState['traits']"
-                    :invalid-feedback="infoCache.validationText['traits']"
-                  >
+                <div class="card-stat-value">
+                  <info-helper :info-cache="infoCache" property="traits" @focusout="refreshCache('traits')">
                     <v-select multiple v-model="cardTemp.traits" :options="traitList" @input="refreshCache('traits')" />
-                  </b-form-group>
+                  </info-helper>
                 </div>
               </div>
               <!-- Feats -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Feats:</span></div>
-                <div class="card-stat-value" @focusout="refreshCache('feats')">
-                  <b-form-group
-                    :state="infoCache.validationState['feats']"
-                    :invalid-feedback="infoCache.validationText['feats']"
-                  >
+                <div class="card-stat-value">
+                  <info-helper :info-cache="infoCache" property="feats" @focusout="refreshCache('feats')">
                     <b-form-row
                       v-for="i in cardTemp.selectedFeats.length + Math.min(1, featList.length)"
                       :key="'Feat' + i"
@@ -257,17 +221,14 @@
                         </b-col>
                       </template>
                     </b-form-row>
-                  </b-form-group>
+                  </info-helper>
                 </div>
               </div>
               <!-- Misc -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Misc:</span></div>
-                <div class="card-stat-value" @focusout="refreshCache('misc')">
-                  <b-form-group
-                    :state="infoCache.validationState['misc']"
-                    :invalid-feedback="infoCache.validationText['misc']"
-                  >
+                <div class="card-stat-value">
+                  <info-helper :info-cache="infoCache" property="misc" @focusout="refreshCache('misc')">
                     <b-form-row
                       v-for="i in cardTemp.selectedMisc.length + Math.min(1, miscList.length)"
                       :key="'Misc' + i"
@@ -302,15 +263,12 @@
                         </b-col>
                       </template>
                     </b-form-row>
-                  </b-form-group>
+                  </info-helper>
                 </div>
               </div>
               <!-- Text -->
-              <div class="my-3" @focusout="refreshCache('text')">
-                <b-form-group
-                  :state="infoCache.validationState['text']"
-                  :invalid-feedback="infoCache.validationText['text']"
-                >
+              <div class="my-3">
+                <info-helper :info-cache="infoCache" property="text" @focusout="refreshCache('text')">
                   <b-form-textarea
                     rows="4"
                     :value="formatText.main.isAuto ? cardTemp.text : cardTemp.textFormat"
@@ -318,18 +276,16 @@
                     placeholder="[Card Text]"
                   />
                   <b-checkbox v-model="formatText.main.isAuto">Auto-format</b-checkbox>
-                </b-form-group>
+                </info-helper>
               </div>
               <!-- Flavor Traits -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Flavor Traits:</span></div>
-                <div
-                  class="card-stat-value"
-                  @focusout="refreshCache('flavorTraits', cardTemp.printInfo.flavorTraits.join('/'))"
-                >
-                  <b-form-group
-                    :state="infoCache.validationState['flavorTraits']"
-                    :invalid-feedback="infoCache.validationText['flavorTraits']"
+                <div class="card-stat-value">
+                  <info-helper
+                    :info-cache="infoCache"
+                    property="flavorTraits"
+                    @focusout="refreshCache('flavorTraits', cardTemp.printInfo.flavorTraits.join('/'))"
                   >
                     <v-select
                       multiple
@@ -338,15 +294,12 @@
                       :options="flavorTraitList"
                       @input="refreshCache('flavorTraits', cardTemp.printInfo.flavorTraits.join('/'))"
                     />
-                  </b-form-group>
+                  </info-helper>
                 </div>
               </div>
               <!-- Flavor Text -->
-              <div class="my-2" @focusout="refreshCache('flavorText', cardTemp.printInfo.flavorText)">
-                <b-form-group
-                  :state="infoCache.validationState['flavorText']"
-                  :invalid-feedback="infoCache.validationText['flavorText']"
-                >
+              <div class="my-2">
+                <info-helper :info-cache="infoCache" property="flavorText" @focusout="refreshCache('flavorText')">
                   <b-form-textarea
                     rows="2"
                     :value="
@@ -356,9 +309,13 @@
                     placeholder="[Flavor Text]"
                   />
                   <b-checkbox v-model="formatText.flavor.isAuto">Auto-format</b-checkbox>
-                </b-form-group>
+                </info-helper>
               </div>
             </div>
+          </b-col>
+
+          <b-col v-if="pointTotal" cols="12">
+            <h3 class="my-2 text-center">{{ pointTotal }} Points</h3>
           </b-col>
 
           <b-col cols="12">
@@ -375,6 +332,7 @@
 <script>
 import Vue from "vue";
 import HeaderFooter from "@/components/shared/HeaderFooter.vue";
+import InfoHelper from "@/components/builder/InfoHelper.vue";
 import utility from "@/scripts/utility.js";
 import rulesets from "@/scripts/rulesets/cardRules.js";
 import CardImageCreator from "@/components/builder/CardImageCreator.vue";
@@ -472,6 +430,7 @@ export default {
   components: {
     HeaderFooter,
     CardImageCreator,
+    InfoHelper,
   },
   data() {
     return {
@@ -529,6 +488,9 @@ export default {
     hasValidationErrors() {
       return Object.values(this.infoCache.validationText).some((x) => x);
     },
+    pointTotal() {
+      return Object.values(this.infoCache.points).reduce((x, y) => x + (y || 0), 0);
+    },
     cardsLoaded() {
       return this.$store.state.cardsLoaded;
     },
@@ -568,6 +530,7 @@ export default {
   watch: {
     selectedRulesetOption() {
       this.infoCache = defaultInfoCache();
+      this.refreshCacheAll();
     },
     cardData: {
       handler() {
@@ -650,6 +613,7 @@ export default {
     this.$store.dispatch("loadCardData");
     this.mapper = createMapper(this, "cardData", "cardTemp", mapperConfig);
     this.loadSaved();
+    this.refreshCacheAll();
     this.updateJson();
     this.updateTemp();
   },
@@ -731,6 +695,9 @@ export default {
           let pointInfo = propConfig && propConfig.pointInfo;
           Vue.set(this.infoCache.points, prop, points);
           Vue.set(this.infoCache.pointInfo, prop, pointInfo);
+        } else {
+          Vue.set(this.infoCache.points, prop, null);
+          Vue.set(this.infoCache.pointInfo, prop, null);
         }
       });
     },

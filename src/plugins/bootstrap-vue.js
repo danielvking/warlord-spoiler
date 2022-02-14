@@ -12,6 +12,7 @@ import {
   InputGroupPlugin,
   LayoutPlugin,
   PaginationPlugin,
+  PopoverPlugin,
   SpinnerPlugin,
   TablePlugin
 } from 'bootstrap-vue'
@@ -29,5 +30,6 @@ Vue.use(FormTextareaPlugin)
 Vue.use(InputGroupPlugin)
 Vue.use(LayoutPlugin)
 Vue.use(PaginationPlugin)
+Vue.use(PopoverPlugin)
 Vue.use(SpinnerPlugin)
 Vue.use(TablePlugin)
