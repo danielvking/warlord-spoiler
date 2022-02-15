@@ -1,43 +1,48 @@
 <template>
   <div class="image-holder">
     <div ref="imageHolder">
-      <img v-if="cardImageUrl" class="user-image" :src="cardImageUrl" @load="refreshImage()" />
-      <template v-if="cardTemplateUrl">
-        <img :src="cardTemplateUrl" @load="refreshImage()" />
-        <div class="image-name card-title">
-          {{ cardData.name }}
-        </div>
-        <div class="image-atk card-title">
-          {{ cardData.attack }}
-        </div>
-        <div class="image-ac card-title">
-          {{ cardData.armorClass }}
-        </div>
-        <div class="image-lvl card-title" :class="cardData.alignment === 'Evil' ? 'text-white' : ''">
-          {{ cardData.level }}
-        </div>
-        <div class="image-sk card-title text-white">
-          {{ cardData.skill }}
-        </div>
-        <div class="image-hp card-title text-white">
-          {{ cardData.hitPoints }}
-        </div>
-        <div v-if="points" class="image-set card-title">
-          {{ points }}
-        </div>
-        <div class="image-text card-text">
-          <div ref="imageTextWrapper" class="image-text-wrapper">
-            <div class="image-text-edge float-left"></div>
-            <div class="image-text-edge float-right"></div>
-            <div class="image-text-corner-top float-left"></div>
-            <div class="image-text-corner-top float-right"></div>
-            <div class="image-text-corner-bottom float-left"></div>
-            <div class="image-text-corner-bottom float-right"></div>
-            <span ref="imageTextSpan" v-html="formattedCardText"></span>
+      <template v-if="!renderingError">
+        <img v-if="cardImageUrl" class="user-image" :src="cardImageUrl" @load="refreshImage()" />
+        <template v-if="cardTemplateUrl">
+          <img :src="cardTemplateUrl" @load="refreshImage()" />
+          <div class="image-name card-title">
+            {{ cardData.name }}
           </div>
-        </div>
+          <div class="image-atk card-title">
+            {{ cardData.attack }}
+          </div>
+          <div class="image-ac card-title">
+            {{ cardData.armorClass }}
+          </div>
+          <div class="image-lvl card-title" :class="cardData.alignment === 'Evil' ? 'text-white' : ''">
+            {{ cardData.level }}
+          </div>
+          <div class="image-sk card-title text-white">
+            {{ cardData.skill }}
+          </div>
+          <div class="image-hp card-title text-white">
+            {{ cardData.hitPoints }}
+          </div>
+          <div v-if="points" class="image-set card-title">
+            {{ points }}
+          </div>
+          <div class="image-text card-text">
+            <div ref="imageTextWrapper" class="image-text-wrapper">
+              <div class="image-text-edge float-left"></div>
+              <div class="image-text-edge float-right"></div>
+              <div class="image-text-corner-top float-left"></div>
+              <div class="image-text-corner-top float-right"></div>
+              <div class="image-text-corner-bottom float-left"></div>
+              <div class="image-text-corner-bottom float-right"></div>
+              <span ref="imageTextSpan" v-html="formattedCardText"></span>
+            </div>
+          </div>
+        </template>
+        <img v-else :src="noTemplateUrl" @load="refreshImage()" />
       </template>
-      <img v-else :src="noTemplateUrl" @load="refreshImage()" />
+      <template v-else>
+        <span>An error is occurring retreiving images from the server.</span>
+      </template>
     </div>
   </div>
 </template>
@@ -89,6 +94,7 @@ export default {
     return {
       formattedCardText: "",
       cancelToken: { cancel: false },
+      renderingError: false
     };
   },
   computed: {
@@ -365,7 +371,10 @@ export default {
           try {
             this.$emit("input", await domtoimage.toPng(holder));
           } catch (error) {
-            alert("An error occurred rendering the card image");
+            this.renderingError = true;
+            this.$nextTick(async () => {
+              this.$emit("input", await domtoimage.toPng(holder));
+            })
             throw error;
           }
         }
