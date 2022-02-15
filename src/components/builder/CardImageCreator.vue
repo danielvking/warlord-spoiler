@@ -22,6 +22,9 @@
         <div class="image-hp card-title text-white">
           {{ cardData.hitPoints }}
         </div>
+        <div v-if="points" class="image-set card-title">
+          {{ points }}
+        </div>
         <div class="image-text card-text">
           <div ref="imageTextWrapper" class="image-text-wrapper">
             <div class="image-text-edge float-left"></div>
@@ -77,6 +80,7 @@ export default {
   props: {
     cardData: Object,
     cardImageUrl: String,
+    points: Number,
     headerHtml: String,
     mainHtml: String,
     flavorHtml: String,
@@ -178,6 +182,9 @@ export default {
       deep: true,
     },
     cardImageUrl() {
+      this.refreshImage();
+    },
+    points() {
       this.refreshImage();
     },
     headerHtml() {
@@ -455,6 +462,16 @@ export default {
   font-size: 16pt;
   white-space: nowrap;
   text-shadow: 2px 1px 1px #ba4224;
+}
+
+.image-set {
+  left: 145px;
+  top: 475px;
+  width: 85px;
+  height: 16px;
+  line-height: 18px;
+  font-size: 8.5pt;
+  transform: scaleY(0.8);
 }
 
 .image-text {

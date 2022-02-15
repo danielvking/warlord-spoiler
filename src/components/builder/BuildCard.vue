@@ -22,6 +22,7 @@
               <card-image-creator
                 :card-data="cardData"
                 :card-image-url="cardUserImageDataUrl"
+                :points="infoCache.pointTotal"
                 @input="(x) => (cardImageDataUrl = x)"
                 :main-html.sync="formatText.main.text"
                 :flavor-html.sync="formatText.flavor.text"

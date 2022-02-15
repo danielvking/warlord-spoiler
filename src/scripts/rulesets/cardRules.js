@@ -54,7 +54,7 @@ const rulesets = [
     description: "Tournament",
     ruleset: withBase(tournamentRuleset)
   }
-].filter(x => x.description === "No Ruleset")
+]//.filter(x => x.description === "No Ruleset")
 
 deepFreeze(rulesets);
 
