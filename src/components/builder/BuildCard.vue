@@ -315,7 +315,7 @@
           </b-col>
 
           <b-col v-if="pointTotal" cols="12">
-            <h3 class="my-2 text-center">{{ pointTotal }} Points</h3>
+            <h3 class="my-2 text-center">{{ infoCache.pointTotal }} Points</h3>
           </b-col>
 
           <b-col cols="12">
@@ -422,6 +422,7 @@ function defaultInfoCache() {
     validationState: {},
     points: {},
     pointInfo: {},
+    pointTotal: 0,
   };
 }
 
@@ -699,6 +700,7 @@ export default {
           Vue.set(this.infoCache.points, prop, null);
           Vue.set(this.infoCache.pointInfo, prop, null);
         }
+        this.infoCache.pointTotal = Object.values(this.infoCache.points).reduce((x, y) => x + (y || 0), 0);
       });
     },
     refreshCacheAll() {

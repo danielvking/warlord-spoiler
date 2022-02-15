@@ -15,9 +15,9 @@ function combineRuleset(source, target) {
       // If the properties are functions, merge them (return truthy results from the target before executing the source)
       if (typeof sConfigSetting === "function" && typeof tConfigSetting === "function") {
         tConfig[x] = function (...args) {
-          let result = tConfigSetting.appy(null, args);
+          let result = tConfigSetting.apply(null, args);
           if (result) return result;
-          return sConfigSetting.appy(null, args);
+          return sConfigSetting.apply(null, args);
         }
       } else {
         // Override non-function settings
