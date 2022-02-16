@@ -1,6 +1,6 @@
 <template>
   <header-footer>
-    <b-container fluid @focusout="saveChanges">
+    <b-container fluid @focusout="saveChanges" >
       <div class="my-2 text-center">
         <p>Welcome to the card builder!<br />Select a ruleset to get started. The page will save your changes.</p>
       </div>
