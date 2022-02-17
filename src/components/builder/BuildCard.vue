@@ -1,6 +1,6 @@
 <template>
   <header-footer>
-    <b-container fluid @focusout="saveChanges" >
+    <b-container fluid @focusout="saveChanges">
       <div class="my-2 text-center">
         <p>Welcome to the card builder!<br />Select a ruleset to get started. The page will save your changes.</p>
       </div>
@@ -14,11 +14,8 @@
         <b-row>
           <b-col cols="12" md="6" class="d-flex flex-column">
             <div
-              class="card-view d-flex flex-column pb-2"
-              :class="viewOption === 'JSON' ? 'bound-height' : 'align-items-center'"
+              class="card-view d-flex flex-column pb-2 align-items-center"
             >
-              <b-radio-group v-model="viewOption" :options="['Art', 'JSON']" class="mb-2 w-100 view-switch" buttons />
-
               <card-image-creator
                 :card-data="cardData"
                 :card-image-url="cardUserImageDataUrl"
@@ -29,32 +26,18 @@
               />
 
               <!-- Image -->
-              <template v-if="viewOption === 'Art'">
-                <b-button class="mb-2" variant="outline-primary" block @click="uploadImage">Upload Image</b-button>
-                <img ref="imageActual" class="card-image" :src="cardImageDataUrl" />
-              </template>
-              <!-- JSON -->
-              <template v-if="viewOption === 'JSON'">
+              <b-button class="mb-2" variant="outline-primary" block @click="uploadImage">Upload Image</b-button>
+              <img ref="imageActual" class="card-image" :src="cardImageDataUrl" />
+              <div class="w-100 mt-2">
                 <b-row>
                   <b-col cols="6">
-                    <b-button class="mb-2" block variant="outline-primary" @click="uploadJson">Upload JSON</b-button>
+                    <b-button block variant="outline-primary" @click="importCard">Import Card</b-button>
                   </b-col>
                   <b-col cols="6">
-                    <b-button class="mb-2" block variant="outline-primary" @click="downloadJson"
-                      >Download JSON</b-button
-                    >
+                    <b-button block variant="outline-primary" @click="exportCard">Export&nbsp;Card</b-button>
                   </b-col>
                 </b-row>
-                <b-textarea
-                  :class="'text-monospace flex-fill' + (cardJsonWrapped ? ' editor-wrap' : ' editor')"
-                  v-model="cardJson"
-                  rows="10"
-                  size="sm"
-                  @focus="cardJsonSelected = true"
-                  @blur="cardJsonSelected = false"
-                ></b-textarea>
-                <b-checkbox v-model="cardJsonWrapped">Wrap Text</b-checkbox>
-              </template>
+              </div>
             </div>
           </b-col>
 
@@ -439,10 +422,6 @@ export default {
       rulesetOptions: rulesets.map((x) => x.description),
       selectedRulesetOption: rulesets[0].description,
       infoCache: defaultInfoCache(),
-      viewOption: "Art",
-      cardJson: "",
-      cardJsonWrapped: false,
-      cardJsonSelected: false,
       cardData: {},
       cardTemp: {
         name: "",
@@ -534,32 +513,6 @@ export default {
       this.infoCache = defaultInfoCache();
       this.refreshCacheAll();
     },
-    cardData: {
-      handler() {
-        this.updateJson();
-      },
-      deep: true,
-    },
-    cardJsonWrapped(newValue) {
-      this.$store.commit("saveSettings", { isEditTextWrapped: newValue });
-    },
-    viewOption(newValue) {
-      this.$store.commit("saveSettings", { editViewOption: newValue });
-    },
-    cardJson() {
-      try {
-        if (this.cardJsonSelected) {
-          this.cardData = JSON.parse(this.cardJson);
-          this.updateTemp();
-        }
-      } catch {
-        // We honestly don't care if you want to make invalid javascript
-      }
-    },
-    cardJsonSelected() {
-      this.refreshCacheAll();
-      this.updateJson();
-    },
 
     // These all just sync formatting
     "formatText.main.isAuto"(newValue) {
@@ -616,7 +569,6 @@ export default {
     this.mapper = createMapper(this, "cardData", "cardTemp", mapperConfig);
     this.loadSaved();
     this.refreshCacheAll();
-    this.updateJson();
     this.updateTemp();
   },
   methods: {
@@ -624,16 +576,6 @@ export default {
     // - Card Editing UI - //
     // ------------------- //
 
-    updateJson() {
-      if (this.cardJsonSelected) return;
-      this.cardJson = JSON.stringify(
-        this.cardData,
-        (key, value) => {
-          if (key !== "index") return value;
-        },
-        2
-      );
-    },
     updateTemp() {
       this.mapper.sync();
     },
@@ -770,26 +712,32 @@ export default {
         })
       );
     },
-    uploadJson() {
+    importCard() {
       utility.readText().then((response) => {
         try {
-          this.cardData = JSON.parse(response);
-          this.mapper.sync();
+          let allCard = JSON.parse(response);
+          this.cardUserImageDataUrl = allCard.image;
+          this.cardData = allCard.cardData;
+          this.updateTemp();
           this.refreshCacheAll();
         } catch (error) {
           alert("An error occurred reading the card data: " + error);
         }
       });
     },
-    downloadJson() {
-      let filename = (this.cardData.name || "Untitled").replace(/[^a-z0-9]/gi, "_") + ".json";
-      utility.saveText(this.cardJson, filename);
+    exportCard() {
+      let filename = (this.cardData.name || "Untitled").replace(/[^a-z0-9]/gi, "_") + ".card";
+      let allCard = {
+        cardData: this.cardData,
+        image: this.cardUserImageDataUrl
+      }
+      utility.saveText(JSON.stringify(allCard), filename);
     },
     reset() {
       if (confirm("Are you sure you want to reset everything?")) {
         this.cardData = {};
         this.cardUserImageDataUrl = null;
-        this.mapper.sync();
+        this.updateTemp();
       }
       // Clear validation (validation occurs next tick)
       this.$nextTick(() => this.$nextTick(() => (this.infoCache = defaultInfoCache())));
@@ -799,18 +747,6 @@ export default {
 </script>
 
 <style scoped>
-.view-switch >>> * {
-  flex: 1;
-}
-
-.editor {
-  white-space: pre;
-}
-
-.editor-wrap {
-  white-space: pre-wrap;
-}
-
 .card-image {
   max-height: 400px;
   max-width: 350px;
@@ -819,10 +755,6 @@ export default {
 .card-view {
   position: sticky;
   top: 0px;
-}
-
-.bound-height {
-  height: min(100%, 100vh);
 }
 
 .card-stat-label {
