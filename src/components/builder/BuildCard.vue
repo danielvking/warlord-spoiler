@@ -13,9 +13,7 @@
         <h3 class="my-2">{{ cardTemp.name || "Untitled" }}</h3>
         <b-row>
           <b-col cols="12" md="6" class="d-flex flex-column">
-            <div
-              class="card-view d-flex flex-column pb-2 align-items-center"
-            >
+            <div class="card-view d-flex flex-column pb-2 align-items-center">
               <card-image-creator
                 :card-data="cardData"
                 :card-image-url="cardUserImageDataUrl"
@@ -31,17 +29,24 @@
               <div class="w-100 mt-2">
                 <b-row>
                   <b-col cols="6">
-                    <b-button block variant="outline-primary" @click="importCard">Import Card</b-button>
+                    <b-button variant="outline-primary" block @click="importCard">Import Card</b-button>
                   </b-col>
                   <b-col cols="6">
-                    <b-button block variant="outline-primary" @click="exportCard">Export&nbsp;Card</b-button>
+                    <b-button variant="outline-primary" block @click="exportCard">Export Card</b-button>
                   </b-col>
                 </b-row>
+                <div class="point-display d-none d-md-block border-secondary mt-2">
+                  <h3 class="my-0 text-center">{{ infoCache.pointTotal }} Points</h3>
+                </div>
               </div>
             </div>
           </b-col>
 
           <b-col cols="12" md="6">
+            <div class="point-display d-block d-md-none border-secondary mb-2">
+              <h3 class="my-0 text-center">{{ infoCache.pointTotal }} Points</h3>
+            </div>
+
             <!-- Reset -->
             <b-btn class="mb-2" block variant="outline-secondary" @click="reset">Reset</b-btn>
 
@@ -296,10 +301,6 @@
                 </info-helper>
               </div>
             </div>
-          </b-col>
-
-          <b-col v-if="pointTotal" cols="12">
-            <h3 class="my-2 text-center">{{ infoCache.pointTotal }} Points</h3>
           </b-col>
 
           <b-col cols="12">
@@ -695,9 +696,14 @@ export default {
       );
     },
     uploadImage() {
-      utility.readImage().then((response) => {
-        this.cardUserImageDataUrl = response;
-      });
+      utility
+        .readImage()
+        .then((response) => {
+          this.cardUserImageDataUrl = response;
+        })
+        .catch((error) => {
+          alert(error);
+        });
     },
     downloadImage() {
       this.refreshCacheAll();
@@ -729,8 +735,8 @@ export default {
       let filename = (this.cardData.name || "Untitled").replace(/[^a-z0-9]/gi, "_") + ".card";
       let allCard = {
         cardData: this.cardData,
-        image: this.cardUserImageDataUrl
-      }
+        image: this.cardUserImageDataUrl,
+      };
       utility.saveText(JSON.stringify(allCard), filename);
     },
     reset() {
@@ -755,6 +761,15 @@ export default {
 .card-view {
   position: sticky;
   top: 0px;
+}
+
+.point-display {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  border-width: 1px 0px;
+  border-style: solid;
+  background-color: white;
 }
 
 .card-stat-label {
