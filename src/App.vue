@@ -27,6 +27,7 @@
   font-family: "Vhatis Warlord Text";
   src: url(/fonts/vhatis_warlord_text.ttf) format("truetype");
   unicode-range: U+20-22,U+27-29,U+2B-3B,U+3D,U+41-5A,U+61-7F;
+  fallback: "Georgia";
 }
 
 @font-face {
@@ -36,11 +37,11 @@
 }
 
 #app {
-  font-family: "Vhatis Warlord Text";
+  font-family: "Vhatis Warlord Text", "Georgia", "serif";
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Vhatis Warlord Title";
+  font-family: "Vhatis Warlord Title", "Georgia", "serif";
 }
 
 .shrink {

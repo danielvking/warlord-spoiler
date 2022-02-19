@@ -76,7 +76,7 @@ export default new Vuex.Store({
       keywords = keywords.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
 
       // Matches any keyword not embedded inside another word
-      return new RegExp(`(?<!\\w)(${keywords.join("|")})(?!\\w)`, "gm");
+      return new RegExp(`(^|\\W)(${keywords.join("|")})(?!\\w)`, "gm");
     }
   },
   mutations: {

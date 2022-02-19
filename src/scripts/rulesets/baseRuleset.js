@@ -33,7 +33,7 @@ export default {
           case "Dungeon":
           case "Epic Class":
           case "Item":
-            if (val) return "Alignment is invalid for this card type."
+            if (val) return "Alignment is invalid for this card type.";
             break;
         }
       }
@@ -68,7 +68,7 @@ export default {
           case "Dungeon":
           case "Epic Class":
           case "Item":
-            if (val) return "Faction is invalid for this card type."
+            if (val) return "Faction is invalid for this card type.";
             break;
         }
       }
@@ -91,15 +91,27 @@ export default {
           case "Action":
           case "Battlefield":
           case "Dungeon":
-            if (val) return "Attack is invalid for this card type."
+            if (val) return "Attack is invalid for this card type.";
             break;
         }
       }
       if (val) {
         let attacks = val.split("/");
+        let coerce = false;
+        let notNumeric = false;
         for (let i = 0; i < attacks.length; i++) {
-          if (!/^([+-]\d+|[+-]?\*|[+-]?X)$/.test(attacks[i])) return "Attack must be a slash-separated signed number."
+          if (/^[+-]?(\d+|\*|X)$/.test(attacks[i])) {
+            // Always signed
+            if (/^\d+$/.test(attacks[i])) {
+              coerce = true;
+              attacks[i] = "+" + attacks[i]; // coerce
+            }
+          } else {
+            notNumeric = true;
+          }
         }
+        if (coerce) cardData.attack = attacks.join("/");
+        if (notNumeric) return "Attack must be a number.";
       }
     }
   },
@@ -114,12 +126,21 @@ export default {
           case "Action":
           case "Battlefield":
           case "Dungeon":
-            if (val) return "AC is invalid for this card type."
+            if (val) return "AC is invalid for this card type.";
             break;
         }
       }
       if (val) {
-        if (!/^[+-]?(\d+|\*|X)$/.test(val)) return "AC must be a number."
+        if (/^[+-]?(\d+|\*|X)$/.test(val)) {
+          // Signed for non-characters
+          if (/^\d+$/.test(val) && cardData.type !== "Character") {
+            cardData.armorClass = "+" + val; // coerce
+          } else if (/^\+.*$/.test(val) && cardData.type === "Character") {
+            cardData.armorClass = val.substring(1); // coerce
+          }
+        } else {
+          return "AC must be a number.";
+        }
       }
     }
   },
@@ -135,12 +156,19 @@ export default {
           case "Battlefield":
           case "Dungeon":
           case "Item":
-            if (val) return "Skill is invalid for this card type."
+            if (val) return "Skill is invalid for this card type.";
             break;
         }
       }
       if (val) {
-        if (!/^[+-](\d+|\*|X)$/.test(val)) return "Skill must be a signed number."
+        if (/^[+-]?(\d+|\*|X)$/.test(val)) {
+          // Always signed
+          if (/^\d+$/.test(val)) {
+            cardData.skill = "+" + val; // coerce
+          }
+        } else {
+          return "Skill must be a number.";
+        }
       }
     }
   },
@@ -156,12 +184,21 @@ export default {
           case "Battlefield":
           case "Dungeon":
           case "Item":
-            if (val) return "HP is invalid for this card type."
+            if (val) return "HP is invalid for this card type.";
             break;
         }
       }
       if (val) {
-        if (!/^[+-]?(\d+|\*|X)$/.test(val)) return "HP must be a number."
+        if (/^[+-]?(\d+|\*|X)$/.test(val)) {
+          // Signed for non-characters
+          if (/^\d+$/.test(val) && cardData.type !== "Character") {
+            cardData.hitPoints = "+" + val; // coerce
+          } else if (/^\+.*$/.test(val) && cardData.type === "Character") {
+            cardData.hitPoints = val.substring(1); // coerce
+          }
+        } else {
+          return "HP must be a number.";
+        }
       }
     }
   },
@@ -177,13 +214,22 @@ export default {
             break;
           case "Battlefield":
           case "Dungeon":
-            if (val) return "Level is invalid for this card type."
+            if (val) return "Level is invalid for this card type.";
             break;
         }
       }
       if (val) {
-        if (!/^[+-]?(\d+|\*|X)$/.test(val)) return "Level must be a number."
-        if (val < 1) return "Level must be positive."
+        if (/^[+-]?(\d+|\*|X)$/.test(val)) {
+          // Unsigned for non-epic-classes
+          if (/^\d+$/.test(val) && cardData.type === "Epic Class") {
+            cardData.level = "+" + val; // coerce
+          } else if (/^\+.*$/.test(val) && cardData.type !== "Epic Class") {
+            cardData.level = val.substring(1); // coerce
+          }
+        } else {
+          return "Level must be a number.";
+        }
+        if (val < 1) return "Level must be positive.";
       }
     }
   },
@@ -193,7 +239,7 @@ export default {
         switch (cardData.type) {
           case "Battlefield":
           case "Dungeon":
-            if (val) return "Traits are invalid for this card type."
+            if (val) return "Traits are invalid for this card type.";
             break;
         }
       }
@@ -213,7 +259,7 @@ export default {
           case "Battlefield":
           case "Dungeon":
           case "Item":
-            if (val) return "Feats are invalid for this card type."
+            if (val) return "Feats are invalid for this card type.";
             break;
         }
       }
@@ -232,13 +278,13 @@ export default {
     validate(val, cardData) {
       if (cardData.type) {
         if ((!val || !val.includes("Challenge Rating")) && cardData.type === "Dungeon") {
-          return "Challenge Rating is required for this card type."
+          return "Challenge Rating is required for this card type.";
         }
         if (val && val.includes("Challenge Rating") && cardData.type !== "Dungeon") {
-          return "Challenge Rating is invalid for this card type."
+          return "Challenge Rating is invalid for this card type.";
         }
         if (val && val.includes("gp") && cardData.type !== "Item") {
-          return "GP is invalid for this card type."
+          return "GP is invalid for this card type.";
         }
       }
     }
@@ -249,7 +295,7 @@ export default {
         let fTraits = val.split("/");
         for (let i = 0; i < fTraits.length; i++) {
           if (referenceLists.traitList.includes(fTraits[i])) {
-            return "Flavor traits must not be real traits."
+            return "Flavor traits must not be real traits.";
           }
         }
       }

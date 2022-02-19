@@ -158,7 +158,7 @@ export default {
       let mainText = "";
       if (this.cardData.text) {
         mainText = sanitizeHtml(this.cardData.text);
-        mainText = mainText.replace(this.keywordRegex, "<b>$&</b>"); // Bold keywords
+        mainText = mainText.replace(this.keywordRegex, "$1<b>$2</b>"); // Bold keywords
         mainText = mainText.replace(/\r\n/gm, "</p><p>"); // Line breaks separate paragraphs
         mainText = "<p>" + mainText + "</p>";
       }

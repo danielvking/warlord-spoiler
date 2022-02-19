@@ -130,14 +130,19 @@ export default {
   readImage() {
     let input = document.createElement('input');
     input.setAttribute('type', 'file');
-    input.setAttribute('accept', 'image/*');
+    input.setAttribute('accept', '.png, .jpg, .jpeg');
     input.setAttribute('style', 'display:none');
     document.body.append(input);
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       let fr = new FileReader();
       input.onchange = () => {
         fr.onload = x => resolve(x.target.result);
-        fr.readAsDataURL(input.files[0]);
+        let filename = input.files[0].name.toLowerCase();
+        if (!filename.endsWith(".png") && !filename.endsWith(".jpg") && !filename.endsWith(".jpeg")) {
+          reject("Only PNG, and JPG files types are supported.");
+        } else {
+          fr.readAsDataURL(input.files[0]);
+        }
       }
       input.click();
       input.remove();
