@@ -35,7 +35,8 @@
                     <b-button variant="outline-primary" block @click="exportCard">Export Card</b-button>
                   </b-col>
                 </b-row>
-                <div class="point-display d-none d-md-block border-secondary mt-2">
+                <!-- Points Desktop -->
+                <div v-if="infoCache.pointTotal" class="point-display d-none d-md-block border-secondary mt-2">
                   <h3 class="my-0 text-center">{{ infoCache.pointTotal }} Points</h3>
                 </div>
               </div>
@@ -43,7 +44,8 @@
           </b-col>
 
           <b-col cols="12" md="6">
-            <div class="point-display d-block d-md-none border-secondary mb-2">
+            <!-- Points Mobile -->
+            <div v-if="infoCache.pointTotal" class="point-display d-block d-md-none border-secondary mb-2">
               <h3 class="my-0 text-center">{{ infoCache.pointTotal }} Points</h3>
             </div>
 
