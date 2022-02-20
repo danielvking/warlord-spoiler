@@ -114,9 +114,9 @@ export default {
       input.onchange = () => {
         fr.onload = x => resolve(x.target.result);
         fr.readAsText(input.files[0]);
+        input.remove();
       }
       input.click();
-      input.remove();
     });
   },
   saveText(text, filename) {
@@ -143,9 +143,9 @@ export default {
         } else {
           fr.readAsDataURL(input.files[0]);
         }
+        input.remove();
       }
       input.click();
-      input.remove();
     });
   },
   saveImage(dataUrl, filename) {

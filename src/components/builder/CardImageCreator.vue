@@ -2,7 +2,7 @@
   <div class="image-holder">
     <div ref="imageHolder">
       <template v-if="!renderingError">
-        <img v-if="cardImageUrl" class="user-image" :src="cardImageUrl" @load="refreshImage()" />
+        <img v-if="cardImageResizedUrl" class="user-image" :src="cardImageResizedUrl" @load="refreshImage()" />
         <template v-if="cardTemplateUrl">
           <img :src="cardTemplateUrl" @load="refreshImage()" />
           <div class="image-name card-title">
@@ -52,6 +52,8 @@ import utility from "@/scripts/utility.js";
 import cardTemplates from "@/scripts/cardTemplates.js";
 import domtoimage from "dom-to-image";
 
+const isSafari = navigator.userAgent.indexOf("Safari") != -1;
+
 // Visually transforms elements to fit
 function rectifyScale(selector) {
   let element = document.querySelector(selector);
@@ -81,6 +83,30 @@ function legalHtml(html) {
   return !html.match(/<(?!\/?(p|b|i|br)>)/m) && !html.replace(/<[^<>]*>/gm).match(/[<>]/m);
 }
 
+// Resize an image to help the browser not crawl as much
+function resizeDataUrl(dataUrl, width, height) {
+  let img = document.createElement("img");
+  img.setAttribute("src", dataUrl);
+  img.setAttribute("style", "display:none");
+  //document.appendChild(img);
+  return new Promise(resolve => {
+    img.onload = () => {
+        let scaleX = width / img.width;
+        let scaleY = height / img.height;
+        let scale = scaleX > scaleY ? scaleX : scaleY;
+        let realWidth = scale * img.width;
+        let realHeight = scale * img.height;
+        let canvas = document.createElement("canvas");
+        canvas.width = realWidth;
+        canvas.height = realHeight
+        let context = canvas.getContext("2d");
+        context.scale(scale, scale);
+        context.drawImage(img, 0, 0); 
+        resolve(canvas.toDataURL());
+    };
+  });
+}
+
 export default {
   props: {
     cardData: Object,
@@ -94,7 +120,8 @@ export default {
     return {
       formattedCardText: "",
       cancelToken: { cancel: false },
-      renderingError: false
+      renderingError: false,
+      cardImageResizedUrl: null
     };
   },
   computed: {
@@ -188,7 +215,10 @@ export default {
       deep: true,
     },
     cardImageUrl() {
-      this.refreshImage();
+      this.refreshUserImage();
+    },
+    cardImageResizedUrl() {
+      this.$emit("update:cardImageUrl", this.cardImageResizedUrl);
     },
     points() {
       this.refreshImage();
@@ -212,7 +242,15 @@ export default {
       this.refreshImage();
     },
   },
+  mounted() {
+    this.refreshUserImage();
+  },
   methods: {
+    async refreshUserImage() {
+      if (this.cardImageUrl !== this.cardImageResizedUrl) {
+        this.cardImageResizedUrl = await resizeDataUrl(this.cardImageUrl, 279, 230);
+      }
+    },
     computeFormattedCardText() {
       let header = this.formattedHeaderText;
       if (this.headerHtml && legalHtml(this.headerHtml)) {
@@ -369,7 +407,10 @@ export default {
         let holder = this.$refs.imageHolder;
         if (holder) {
           try {
-            this.$emit("input", await domtoimage.toPng(holder));
+            let result = await domtoimage.toPng(holder);
+            // Safari often fails the first load for some reason
+            if (isSafari) result = await domtoimage.toPng(holder);
+            this.$emit("input", result);
           } catch (error) {
             this.renderingError = true;
             this.$nextTick(async () => {

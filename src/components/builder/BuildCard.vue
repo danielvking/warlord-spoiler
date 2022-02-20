@@ -16,7 +16,7 @@
             <div class="card-view d-flex flex-column pb-2 align-items-center">
               <card-image-creator
                 :card-data="cardData"
-                :card-image-url="cardUserImageDataUrl"
+                :card-image-url.sync="cardUserImageDataUrl"
                 :points="infoCache.pointTotal"
                 @input="(x) => (cardImageDataUrl = x)"
                 :main-html.sync="formatText.main.text"
