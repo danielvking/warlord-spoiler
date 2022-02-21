@@ -1,5 +1,5 @@
 export default {
-  "Character|Classless|Evil|Deverenian": "https://images.theaccordlands.com/file/WarlordCards/Templates/Dev+E+Class+Half.png?test=1",
+  "Character|Classless|Evil|Deverenian": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/Templates/Dev+E+Class+Half.png?test=1",
   "Character|Classless|Evil|Dwarf": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/Templates/Dw+E+Class+Half.png?test=1",
   "Character|Classless|Evil|Elf": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/Templates/Elv+E+Class+Half.png?test=1",
   "Character|Classless|Evil|Free Kingdoms": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/Templates/Freek+E+Class+Half.png?test=1",
