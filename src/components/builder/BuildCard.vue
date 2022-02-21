@@ -36,7 +36,7 @@
                   </b-col>
                 </b-row>
                 <!-- Points Desktop -->
-                <div v-if="infoCache.pointTotal" class="point-display d-none d-md-block border-secondary mt-2">
+                <div v-if="infoCache.hasPoints" class="point-display d-none d-md-block border-secondary mt-2">
                   <h3 class="my-0 text-center">{{ infoCache.pointTotal }} Points</h3>
                 </div>
               </div>
@@ -45,7 +45,7 @@
 
           <b-col cols="12" md="6">
             <!-- Points Mobile -->
-            <div v-if="infoCache.pointTotal" class="point-display d-block d-md-none border-secondary mb-2">
+            <div v-if="infoCache.hasPoints" class="point-display d-block d-md-none border-secondary mb-2">
               <h3 class="my-0 text-center">{{ infoCache.pointTotal }} Points</h3>
             </div>
 
@@ -407,6 +407,7 @@ function defaultInfoCache() {
   return {
     validationText: {},
     validationState: {},
+    hasPoints: false,
     points: {},
     pointInfo: {},
     pointTotal: 0,
@@ -512,9 +513,9 @@ export default {
     },
   },
   watch: {
-    selectedRuleset(newVal, oldVal) {
+    selectedRuleset() {
       this.infoCache = defaultInfoCache();
-      this.setInitialValues(oldVal, newVal);
+      this.setInitialValues();
       this.refreshCacheAll();
       this.updateTemp();
     },
@@ -573,7 +574,7 @@ export default {
     this.$store.dispatch("loadCardData");
     this.mapper = createMapper(this, "cardData", "cardTemp", mapperConfig);
     this.loadSaved();
-    this.setInitialValues(null, this.selectedRuleset);
+    this.setInitialValues();
     this.refreshCacheAll();
     this.updateTemp();
   },
@@ -628,31 +629,31 @@ export default {
     // - Rulesets - //
     // ------------ //
 
-    setInitialValue(oldRuleset, newRuleset, prop) {
+    setInitialValue(prop) {
       let currVal = this.cardData[prop];
-      let oldConfig = oldRuleset && oldRuleset[prop];
-      let oldInit = oldConfig && oldConfig.initialValue;
-      if (currVal == oldInit) {
-        let newConfig = newRuleset && newRuleset[prop];
-        let newInit = newConfig && newConfig.initialValue;
-        this.cardData[prop] = newInit;
+      if (currVal == null) {
+        let config = this.selectedRuleset && this.selectedRuleset[prop];
+        let init = config && config.initialValue;
+        if (init != null) {
+          this.cardData[prop] = init;
+        }
       }
     },
-    setInitialValues(oldRuleset, newRuleset) {
-      this.setInitialValue(oldRuleset, newRuleset, "name");
-      this.setInitialValue(oldRuleset, newRuleset, "text");
-      this.setInitialValue(oldRuleset, newRuleset, "type");
-      this.setInitialValue(oldRuleset, newRuleset, "alignment");
-      this.setInitialValue(oldRuleset, newRuleset, "class");
-      this.setInitialValue(oldRuleset, newRuleset, "faction");
-      this.setInitialValue(oldRuleset, newRuleset, "attack");
-      this.setInitialValue(oldRuleset, newRuleset, "armorClass");
-      this.setInitialValue(oldRuleset, newRuleset, "skill");
-      this.setInitialValue(oldRuleset, newRuleset, "hitPoints");
-      this.setInitialValue(oldRuleset, newRuleset, "level");
-      this.setInitialValue(oldRuleset, newRuleset, "traits");
-      this.setInitialValue(oldRuleset, newRuleset, "feats");
-      this.setInitialValue(oldRuleset, newRuleset, "misc");
+    setInitialValues() {
+      this.setInitialValue("name");
+      this.setInitialValue("text");
+      this.setInitialValue("type");
+      this.setInitialValue("alignment");
+      this.setInitialValue("class");
+      this.setInitialValue("faction");
+      this.setInitialValue("attack");
+      this.setInitialValue("armorClass");
+      this.setInitialValue("skill");
+      this.setInitialValue("hitPoints");
+      this.setInitialValue("level");
+      this.setInitialValue("traits");
+      this.setInitialValue("feats");
+      this.setInitialValue("misc");
     },
     refreshCache(prop, val) {
       this.$nextTick(() => {
@@ -664,10 +665,9 @@ export default {
         Vue.set(this.infoCache.validationText, prop, validationText);
         Vue.set(this.infoCache.validationState, prop, validationText ? false : null);
         if (!validationText) {
-          let points =
-            propConfig &&
-            propConfig.computePoints &&
-            propConfig.computePoints(val || this.cardData[prop], this.cardData, this.referenceLists);
+          let computePoints = propConfig && propConfig.computePoints;
+          this.infoCache.hasPoints |= !!computePoints;
+          let points = computePoints && computePoints(val || this.cardData[prop], this.cardData, this.referenceLists);
           let pointInfo = propConfig && propConfig.pointInfo;
           Vue.set(this.infoCache.points, prop, points);
           Vue.set(this.infoCache.pointInfo, prop, pointInfo);
@@ -771,7 +771,7 @@ export default {
       if (confirm("Are you sure you want to reset everything?")) {
         this.cardData = {};
         this.cardUserImageDataUrl = null;
-        this.setInitialValues(null, this.selectedRuleset);
+        this.setInitialValues();
         this.refreshCacheAll();
         this.updateTemp();
       }
