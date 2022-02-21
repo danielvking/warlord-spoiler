@@ -248,7 +248,11 @@ export default {
   methods: {
     async refreshUserImage() {
       if (this.cardImageUrl !== this.cardImageResizedUrl) {
-        this.cardImageResizedUrl = await resizeDataUrl(this.cardImageUrl, 279, 230);
+        if (this.cardImageUrl != null) {
+          this.cardImageResizedUrl = await resizeDataUrl(this.cardImageUrl, 339, 489);
+        } else {
+          this.cardImageResizedUrl = null;
+        }
       }
     },
     computeFormattedCardText() {
@@ -410,6 +414,7 @@ export default {
             let result = await domtoimage.toPng(holder);
             // Safari often fails the first load for some reason
             if (isSafari) result = await domtoimage.toPng(holder);
+            if (token.cancel) return;
             this.$emit("input", result);
           } catch (error) {
             this.renderingError = true;

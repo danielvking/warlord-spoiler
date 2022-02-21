@@ -68,6 +68,7 @@ const featDesc = ["The cost of feats are..."]
 export default {
   "text": {}, // TODO
   "type": {
+    initialValue: "Character",
     validate(val) {
       if (val !== "Character") return "The card must be a character in this ruleset.";
     }
@@ -83,6 +84,7 @@ export default {
   },
   "faction": {
     validate(val) {
+      if (val == null) return null;
       let factions = val.split("/");
       if (factions.length > 2) return "More than 2 factions is not permitted in this ruleset.";
     },
@@ -160,6 +162,7 @@ export default {
     }
   },
   "traits": {
+    initialValue: "Warlord",
     validate(val) {
       let split = val && val.split("/");
       if (!val || !split.includes("Warlord")) return "Warlord is required in this ruleset.";
@@ -196,7 +199,7 @@ export default {
     }
   },
   "misc": {
-    printInfo: "Having charges costs 1 point, plus 3 points per charge.",
+    pointInfo: "Having charges costs 1 point, plus 3 points per charge.",
     computePoints(val) {
       if (val == null) return null;
       let sum = 0;

@@ -512,9 +512,11 @@ export default {
     },
   },
   watch: {
-    selectedRulesetOption() {
+    selectedRuleset(newVal, oldVal) {
       this.infoCache = defaultInfoCache();
+      this.setInitialValues(oldVal, newVal);
       this.refreshCacheAll();
+      this.updateTemp();
     },
 
     // These all just sync formatting
@@ -571,6 +573,7 @@ export default {
     this.$store.dispatch("loadCardData");
     this.mapper = createMapper(this, "cardData", "cardTemp", mapperConfig);
     this.loadSaved();
+    this.setInitialValues(null, this.selectedRuleset);
     this.refreshCacheAll();
     this.updateTemp();
   },
@@ -621,10 +624,36 @@ export default {
       this.refreshCache("flavorText", this.cardTemp.printInfo.flavorText);
     },
 
-    // -------------- //
-    // - Info Cache - //
-    // -------------- //
+    // ------------ //
+    // - Rulesets - //
+    // ------------ //
 
+    setInitialValue(oldRuleset, newRuleset, prop) {
+      let currVal = this.cardData[prop];
+      let oldConfig = oldRuleset && oldRuleset[prop];
+      let oldInit = oldConfig && oldConfig.initialValue;
+      if (currVal == oldInit) {
+        let newConfig = newRuleset && newRuleset[prop];
+        let newInit = newConfig && newConfig.initialValue;
+        this.cardData[prop] = newInit;
+      }
+    },
+    setInitialValues(oldRuleset, newRuleset) {
+      this.setInitialValue(oldRuleset, newRuleset, "name");
+      this.setInitialValue(oldRuleset, newRuleset, "text");
+      this.setInitialValue(oldRuleset, newRuleset, "type");
+      this.setInitialValue(oldRuleset, newRuleset, "alignment");
+      this.setInitialValue(oldRuleset, newRuleset, "class");
+      this.setInitialValue(oldRuleset, newRuleset, "faction");
+      this.setInitialValue(oldRuleset, newRuleset, "attack");
+      this.setInitialValue(oldRuleset, newRuleset, "armorClass");
+      this.setInitialValue(oldRuleset, newRuleset, "skill");
+      this.setInitialValue(oldRuleset, newRuleset, "hitPoints");
+      this.setInitialValue(oldRuleset, newRuleset, "level");
+      this.setInitialValue(oldRuleset, newRuleset, "traits");
+      this.setInitialValue(oldRuleset, newRuleset, "feats");
+      this.setInitialValue(oldRuleset, newRuleset, "misc");
+    },
     refreshCache(prop, val) {
       this.$nextTick(() => {
         let propConfig = this.selectedRuleset && this.selectedRuleset[prop];
@@ -664,9 +693,6 @@ export default {
       this.refreshCache("traits");
       this.refreshCache("feats");
       this.refreshCache("misc");
-      this.refreshCache("editions");
-      this.refreshCache("errata");
-      this.refreshCache("challengeLord");
       this.refreshCache("printInfos");
       this.refreshCache("flavorText", this.cardTemp.printInfo.flavorText);
       this.refreshCache("flavorTraits", this.cardTemp.printInfo.flavorTraits.join("/"));
@@ -745,10 +771,17 @@ export default {
       if (confirm("Are you sure you want to reset everything?")) {
         this.cardData = {};
         this.cardUserImageDataUrl = null;
+        this.setInitialValues(null, this.selectedRuleset);
+        this.refreshCacheAll();
         this.updateTemp();
       }
       // Clear validation (validation occurs next tick)
-      this.$nextTick(() => this.$nextTick(() => (this.infoCache = defaultInfoCache())));
+      this.$nextTick(() =>
+        this.$nextTick(() => {
+          this.infoCache.validationText = {};
+          this.infoCache.validationState = {};
+        })
+      );
     },
   },
 };
