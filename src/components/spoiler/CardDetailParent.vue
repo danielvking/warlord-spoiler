@@ -1,10 +1,10 @@
 <template>
-  <component :is="selectedComponent" :card="card"/>
+  <component :is="selectedComponent" :card="card" />
 </template>
 
 <script>
-import CardDetail from "@/components/CardDetail";
-import CardDetailEdit from "@/components/CardDetailEdit";
+import CardDetail from "@/components/spoiler/CardDetail";
+import CardDetailEdit from "@/components/editor/CardDetailEdit";
 
 export default {
   components: { CardDetail, CardDetailEdit },
@@ -18,7 +18,7 @@ export default {
         return CardDetailEdit;
       }
       return CardDetail;
-    }
-  }
+    },
+  },
 };
 </script>

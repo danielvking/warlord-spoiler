@@ -7,20 +7,13 @@
         </div>
         <div class="px-2 py-1">
           <div class="float-left">
-            <a href="#" @click.prevent="clear"
-              ><span class="font-default">✘</span> Clear</a
-            >
+            <a href="#" @click.prevent="clear"><span class="font-default">✘</span> Clear</a>
           </div>
           <div class="float-right">
             <a href="#" @click.prevent="newCard" title="New card" class="mr-1">
               <font-awesome-icon icon="plus-square" />
             </a>
-            <a
-              href="#"
-              @click.prevent="exportCards"
-              title="Save cards"
-              class="mr-1"
-            >
+            <a href="#" @click.prevent="exportCards" title="Save cards" class="mr-1">
               <font-awesome-icon icon="save" />
             </a>
             <a href="#" @click.prevent="exitEditing" title="Exit editing">
@@ -52,21 +45,14 @@
               </template>
 
               <template v-slot:cell(buttons)="data">
-                <a
-                  href="#"
-                  @click.prevent="removeCard(data.item.index)"
-                  title="Cancel changes"
-                >
+                <a href="#" @click.prevent="removeCard(data.item.index)" title="Cancel changes">
                   <font-awesome-icon icon="minus-square" />
                 </a>
               </template>
             </b-table>
             <b-table
               class="mb-0"
-              :fields="[
-                { label: 'Total' },
-                { key: 'buttons', class: 'text-right shrink' },
-              ]"
+              :fields="[{ label: 'Total' }, { key: 'buttons', class: 'text-right shrink' }]"
               small
               borderless
               striped
@@ -89,7 +75,7 @@
 </template>
 
 <script>
-import utility from "@/utility.js";
+import utility from "@/scripts/utility.js";
 import routeMixin from "@/mixins/routeMixin.js";
 import addRemoveCardMixin from "@/mixins/addRemoveCardMixin.js";
 

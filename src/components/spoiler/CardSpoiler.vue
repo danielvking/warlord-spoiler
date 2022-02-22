@@ -1,25 +1,15 @@
 <template>
-  <div
-    class="super-site-container d-flex flex-row justify-content-center mx-auto"
-  >
+  <div class="super-site-container d-flex flex-row justify-content-center mx-auto">
     <build-deck v-if="!isEditMode" class="align-self-start" />
-    <edit-cards v-else class="align-self-start"/>
+    <edit-cards v-else class="align-self-start" />
     <header-footer class="flex-grow-1 mx-0">
       <router-view />
       <b-container v-show="showSearch" class="mt-2" fluid>
         <div class="text-center">
-          <span
-            >Need to find some information on Warlord cards? You've come to the
-            right place:</span
-          >
+          <span>Need to find some information on Warlord cards? You've come to the right place:</span>
         </div>
 
-        <b-radio-group
-          v-model="searchType"
-          :options="['Simple', 'Advanced']"
-          class="my-2 w-100"
-          buttons
-        />
+        <b-radio-group v-model="searchType" :options="['Simple', 'Advanced']" class="my-2 w-100" buttons />
 
         <search-simple
           v-show="searchType === 'Simple'"
@@ -41,12 +31,8 @@
               <b-row>
                 <b-col cols="12" md="6">
                   <b-form-select v-model="resultStyle" class="my-2">
-                    <b-form-select-option value="table"
-                      >Table</b-form-select-option
-                    >
-                    <b-form-select-option value="detailed"
-                      >Detailed</b-form-select-option
-                    >
+                    <b-form-select-option value="table">Table</b-form-select-option>
+                    <b-form-select-option value="detailed">Detailed</b-form-select-option>
                   </b-form-select>
                 </b-col>
                 <b-col>
@@ -74,12 +60,7 @@
                   @row-clicked="(card) => viewCardDetail(card)"
                 >
                   <template v-slot:cell(buttons)="data">
-                    <a
-                      v-if="showSidebar"
-                      href="#"
-                      @click.prevent="addCard(data.item.index)"
-                      :title="addCardText"
-                    >
+                    <a v-if="showSidebar" href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
                       <font-awesome-icon icon="plus-square" />
                     </a>
                   </template>
@@ -89,10 +70,7 @@
               <template v-else-if="resultStyle === 'detailed'">
                 <b-table
                   :items="searchResults"
-                  :fields="[
-                    { key: 'buttons', class: 'shrink', label: '' },
-                    'details',
-                  ]"
+                  :fields="[{ key: 'buttons', class: 'shrink', label: '' }, 'details']"
                   small
                   borderless
                   striped
@@ -102,12 +80,7 @@
                   @row-clicked="(card) => viewCardDetail(card)"
                 >
                   <template v-slot:cell(buttons)="data">
-                    <a
-                      v-if="showSidebar"
-                      href="#"
-                      @click.prevent="addCard(data.item.index)"
-                      :title="addCardText"
-                    >
+                    <a v-if="showSidebar" href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
                       <font-awesome-icon icon="plus-square" />
                     </a>
                   </template>
@@ -142,13 +115,13 @@
 </template>
 
 <script>
-import HeaderFooter from "@/components/HeaderFooter.vue";
-import BuildDeck from "@/components/BuildDeck.vue";
-import EditCards from "@/components/EditCards.vue";
-import SearchSimple from "@/components/SearchSimple.vue";
-import SearchAdvanced from "@/components/SearchAdvanced.vue";
-import CardCompact from "@/components/CardCompact.vue";
-import utility from "@/utility.js";
+import HeaderFooter from "@/components/shared/HeaderFooter.vue";
+import BuildDeck from "@/components/spoiler/BuildDeck.vue";
+import EditCards from "@/components/editor/EditCards.vue";
+import SearchSimple from "@/components/spoiler/SearchSimple.vue";
+import SearchAdvanced from "@/components/spoiler/SearchAdvanced.vue";
+import CardCompact from "@/components/spoiler/CardCompact.vue";
+import utility from "@/scripts/utility.js";
 import addRemoveCardMixin from "@/mixins/addRemoveCardMixin.js";
 import routeMixin from "@/mixins/routeMixin.js";
 
@@ -176,13 +149,7 @@ export default {
       searchResults: [],
       perPage: 100,
       currentPage: 1,
-      resultFields: [
-        { key: "buttons", class: "shrink", label: "" },
-        "name",
-        "type",
-        "class",
-        "level",
-      ],
+      resultFields: [{ key: "buttons", class: "shrink", label: "" }, "name", "type", "class", "level"],
       lastScrollPostion: 0,
     };
   },
@@ -201,7 +168,7 @@ export default {
     },
     isEditMode() {
       return this.$store.state.settings.isEditMode;
-    }
+    },
   },
   methods: {
     computeShowSearch(route, oldRoute) {
@@ -212,11 +179,7 @@ export default {
           let scrollRegion = document.getElementById("scrollRegion");
           scrollRegion.scrollTop = this.lastScrollPostion;
         });
-      } else if (
-        route.name === "cardDetailPage" &&
-        oldRoute &&
-        oldRoute.name === "searchPage"
-      ) {
+      } else if (route.name === "cardDetailPage" && oldRoute && oldRoute.name === "searchPage") {
         let scrollRegion = document.getElementById("scrollRegion");
         this.lastScrollPostion = scrollRegion.scrollTop;
       }

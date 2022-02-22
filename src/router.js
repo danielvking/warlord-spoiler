@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import PrintDeck from '@/components/PrintDeck.vue'
-import CardSpoiler from '@/components/CardSpoiler.vue'
-import CardDetailParent from '@/components/CardDetailParent.vue'
-import PageNotFound from '@/components/PageNotFound.vue'
-import EnableEdit from '@/components/EnableEdit.vue'
+const PrintDeck = () => import('@/components/spoiler/PrintDeck.vue')
+const CardSpoiler = () => import('@/components/spoiler/CardSpoiler.vue')
+const CardDetailParent = () => import('@/components/spoiler/CardDetailParent.vue')
+const PageNotFound = () => import('@/components/PageNotFound.vue')
+const EnableEdit = () => import('@/components/editor/EnableEdit.vue')
+const BuildCard = () => import('@/components/builder/BuildCard.vue')
 
 Vue.use(Router)
 
@@ -20,6 +21,10 @@ export default new Router({
     {
       path: "/edit",
       component: EnableEdit
+    },
+    {
+      path: "/build-card",
+      component: BuildCard
     },
     {
       path: '*',
