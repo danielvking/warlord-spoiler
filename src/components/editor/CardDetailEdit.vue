@@ -439,7 +439,7 @@ export default {
     this.viewOption = this.$store.state.settings.editViewOption;
     this.$nextTick(() => {
       // Adjust scroll
-      let scrollRegion = document.getElementById("scrollRegion");
+      let scrollRegion = document.documentElement;
       scrollRegion.scrollTop = 0;
     });
   },

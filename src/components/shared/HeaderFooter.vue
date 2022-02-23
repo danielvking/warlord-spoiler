@@ -30,10 +30,10 @@
 
 <style>
 .site-container {
+  flex: 1;
   display: flex;
   flex-direction: column;
   max-width: 768px;
-  min-height: 100vh;
 }
 
 .site-header,
@@ -66,9 +66,5 @@
   width: 100%;
   margin: 3px;
   text-align: center;
-}
-
-.content-region {
-  background-color: rgba(255, 255, 255, 0.8);
 }
 </style>

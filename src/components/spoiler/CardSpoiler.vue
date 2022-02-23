@@ -1,5 +1,5 @@
 <template>
-  <div class="super-site-container d-flex flex-row justify-content-center mx-auto">
+  <div class="super-site-container">
     <build-deck v-if="!isEditMode" class="align-self-start" />
     <edit-cards v-else class="align-self-start" />
     <header-footer class="flex-grow-1 mx-0">
@@ -176,11 +176,11 @@ export default {
 
       if (this.showSearch) {
         this.$nextTick(() => {
-          let scrollRegion = document.getElementById("scrollRegion");
+          let scrollRegion = document.documentElement;
           scrollRegion.scrollTop = this.lastScrollPostion;
         });
       } else if (route.name === "cardDetailPage" && oldRoute && oldRoute.name === "searchPage") {
-        let scrollRegion = document.getElementById("scrollRegion");
+        let scrollRegion = document.documentElement;
         this.lastScrollPostion = scrollRegion.scrollTop;
       }
     },
@@ -193,8 +193,8 @@ export default {
       this.isBusy = false;
 
       this.$nextTick(() => {
-        let scrollRegion = document.getElementById("scrollRegion");
-        let searchResults = document.getElementById("searchResults");
+        let scrollRegion = document.documentElement;
+        let searchResults = document.documentElement;
 
         utility.smoothScrollTo(scrollRegion, searchResults.offsetTop, 300);
       });
@@ -217,6 +217,13 @@ export default {
 
 <style scoped>
 .super-site-container {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
   max-width: 1024px;
 }
 

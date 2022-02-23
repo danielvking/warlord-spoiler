@@ -233,6 +233,6 @@ export default {
   width: 250px;
   margin-right: 6px;
   flex-direction: column;
-  max-height: 100vh;
+  max-height: 100%;
 }
 </style>

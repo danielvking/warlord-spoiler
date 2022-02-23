@@ -31,6 +31,7 @@ export default new Vuex.Store({
     cardIndex: {},
     referenceLists: {},
     viewPortWidth: window.innerWidth,
+    screenHeight: window.screen.height,
     deck: {},
     editedCards: {},
     settings: {
@@ -97,6 +98,7 @@ export default new Vuex.Store({
       window.addEventListener("resize",
         utility.debounce(() => {
           state.viewPortWidth = window.innerWidth;
+          state.screenHeight = window.screen.height;
         })
       );
     },

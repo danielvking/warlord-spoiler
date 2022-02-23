@@ -279,6 +279,7 @@
                     @focusout="refreshCache('flavorTraits', cardTemp.printInfo.flavorTraits.join('/'))"
                   >
                     <v-select
+                      append-to-body
                       multiple
                       taggable
                       v-model="cardTemp.printInfo.flavorTraits"
@@ -801,10 +802,16 @@ export default {
 .point-display {
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 10000;
   border-width: 1px 0px;
   border-style: solid;
   background-color: white;
+}
+
+@media (min-aspect-ratio: 4/1) {
+  .point-display {
+    position: static;
+  }
 }
 
 .card-stat-label {

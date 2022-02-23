@@ -240,7 +240,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       // Adjust scroll
-      let scrollRegion = document.getElementById("scrollRegion");
+      let scrollRegion = document.documentElement;
       scrollRegion.scrollTop = 0;
     });
   },
