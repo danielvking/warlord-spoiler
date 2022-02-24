@@ -545,6 +545,13 @@ export default {
     },
   },
   watch: {
+    cardData: {
+      handler() {
+        this.saveChangesDebounced();
+      },
+      deep: true
+    },
+
     // These all just sync formatting
     "formatText.main.isAuto"(newValue) {
       if (newValue) {
@@ -627,6 +634,7 @@ export default {
     },
 
     selectedRuleset() {
+      this.saveChanges();
       this.infoCache = defaultInfoCache();
       this.formatText.main.isAuto = true;
       this.formatText.flavor.isAuto = true;
@@ -806,11 +814,15 @@ export default {
         })
       );
     },
+    saveChangesDebounced: utility.debounce(function () {
+      this.saveChanges();
+    }, 1000),
     uploadImage() {
       utility
         .readImage()
         .then((response) => {
           this.cardUserImageDataUrl = response;
+          this.saveChanges();
         })
         .catch((error) => {
           alert(error);
@@ -835,6 +847,7 @@ export default {
           let allCard = JSON.parse(response);
           this.cardUserImageDataUrl = allCard.image;
           this.cardData = allCard.cardData;
+          this.saveChanges();
           this.updateTemp();
           this.refreshCacheAll();
         } catch (error) {
@@ -854,6 +867,7 @@ export default {
       if (confirm("Are you sure you want to reset everything?")) {
         this.cardData = {};
         this.cardUserImageDataUrl = null;
+        this.saveChanges();
         this.setInitialValues();
         this.refreshCacheAll();
         this.updateTemp();
