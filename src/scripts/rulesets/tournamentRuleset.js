@@ -1916,7 +1916,7 @@ const traitMap = {
   "Cantor": 5,
   "Cohort": 1,
   "Construct": 1,
-  "Cursed ": -5,
+  "Cursed": -5,
   "Daemon": 3,
   "Direwolf": 3,
   "Djinn": 1,
