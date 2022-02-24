@@ -1914,17 +1914,24 @@ const traitMap = {
   "Bard": 5,
   "Beast": 1,
   "Cantor": 5,
+  "Cohort": 1,
   "Construct": 1,
   "Cursed ": -5,
   "Daemon": 3,
+  "Direwolf": 3,
   "Djinn": 1,
   "Dragon": 5,
   "Druid": 5,
+  "Efreet": 1,
   "Elemental": 1,
   "Fire Elemental": 1,
   "Gargoyle": 5,
   "Ghoul": 1,
+  "Giant": 1,
+  "Harpy": 3,
+  "Henchman": 1,
   "Hero": 1,
+  "Illusion": 1,
   "Illusionist": 5,
   "Kratchling": 1,
   "Lich": 5,
@@ -1933,8 +1940,10 @@ const traitMap = {
   "Monk": 5,
   "Monster": 5,
   "Necromancer": 5,
+  "Nymph": 3,
   "Paladin": 5,
   "Planar": 30,
+  "Poison": -5,
   "Ranger": 5,
   "Reaver": 5,
   "Reindeer": 3,
@@ -1944,14 +1953,16 @@ const traitMap = {
   "Siege": 5,
   "Stormwraith": 5,
   "Summoner": 5,
+  "Sutek": 3,
   "Thrall": 3,
   "Traitor": 1,
   "Troll": 1,
   "Undead": 5,
+  "Vampire": 3,
   "Warlord": 0,
 }
 
-const traitDesc = "The cost of individual traits varies. Having 3 or more traits (including Warlord) costs an additional 5 points per trait.\r\n" +
+const traitDesc = "The cost of individual traits varies. Warlord is free. Having 2 or more positive-cost traits is an additional 5 points per additional trait.\r\n" +
   Object.entries(traitMap).map(x => `(${x[0]}: ${x[1]})`).join(" ");
 
 const featMap = {
@@ -1987,6 +1998,7 @@ export default {
         if (options[i].points == null) return "This text is not permitted in this ruleset.";
       }
     },
+    pointInfo: "Each ability has an identifier and a point value. A complete list can be found on the guide page.",
     computePoints(val, cardData) {
       let sum = 0;
       let options = textSplit(val);
@@ -2106,11 +2118,14 @@ export default {
       if (val) {
         let split = val.split("/");
         let sum = 0;
+        let positiveTraits = 0;
         for (let i = 0; i < split.length; i++) {
           let trait = split[i];
-          sum += +traitMap[trait];
+          let points = +traitMap[trait];
+          sum += points;
+          if (points > 0) positiveTraits++;
         }
-        if (split.length > 2) sum += (split.length - 2) * 5;
+        if (positiveTraits > 1) sum += (positiveTraits - 1) * 5;
         return sum;
       }
     }
