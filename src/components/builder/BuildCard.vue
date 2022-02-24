@@ -260,13 +260,29 @@
               <!-- Text -->
               <div class="my-3">
                 <info-helper :info-cache="infoCache" property="text" @focusout="refreshCache('text')">
-                  <b-form-textarea
-                    rows="4"
-                    :value="formatText.main.isAuto ? cardTemp.text : cardTemp.textFormat"
-                    @input="updateTextEditor"
-                    placeholder="[Card Text]"
-                  />
-                  <b-checkbox v-model="formatText.main.isAuto">Auto-format</b-checkbox>
+                  <template v-if="textOptions[0]">
+                    <v-select
+                      multiple
+                      class="wrapped-select"
+                      v-model="cardTemp.abilities"
+                      :get-option-label="getOptionLabel"
+                      :options="textOptions"
+                      @input="refreshCache('text')"
+                    >
+                      <template #option="option">
+                        <span style="white-space: normal">{{ getOptionLabel(option) }}</span>
+                      </template>
+                    </v-select>
+                  </template>
+                  <template v-else>
+                    <b-form-textarea
+                      rows="4"
+                      :value="formatText.main.isAuto ? cardTemp.text : cardTemp.textFormat"
+                      @input="updateTextEditor"
+                      placeholder="[Card Text]"
+                    />
+                    <b-checkbox v-model="formatText.main.isAuto">Auto-format</b-checkbox>
+                  </template>
                 </info-helper>
               </div>
               <!-- Flavor Traits -->
@@ -279,7 +295,6 @@
                     @focusout="refreshCache('flavorTraits', cardTemp.printInfo.flavorTraits.join('/'))"
                   >
                     <v-select
-                      append-to-body
                       multiple
                       taggable
                       v-model="cardTemp.printInfo.flavorTraits"
@@ -300,7 +315,7 @@
                     @input="updateFlavorTextEditor"
                     placeholder="[Flavor Text]"
                   />
-                  <b-checkbox v-model="formatText.flavor.isAuto">Auto-format</b-checkbox>
+                  <b-checkbox v-if="!textOptions[0]" v-model="formatText.flavor.isAuto">Auto-format</b-checkbox>
                 </info-helper>
               </div>
             </div>
@@ -395,12 +410,12 @@ const mapperConfig = {
 
 function dehtml(html) {
   html = html.replace(/&nbsp;/gm, " ");
-  html = html.replace(/<br>|<\/p><p>/gm, "\r\n");
-  html = html.replace(/<[^<>]*>/gm, "");
   let txt = document.createElement("textarea");
   txt.innerHTML = html;
   html = txt.value; // Decode characters
   html = html.replace(/\s+/gm, " ");
+  html = html.replace(/(<br>|<\/p><p>)/gm, "\r\n");
+  html = html.replace(/<[^<>]*>/gm, "");
   return html;
 }
 
@@ -431,6 +446,8 @@ export default {
       cardTemp: {
         name: "",
         text: "",
+        multiclass: null,
+        abilities: [],
         textFormat: "",
         type: "",
         alignment: "",
@@ -468,15 +485,6 @@ export default {
     };
   },
   computed: {
-    selectedRuleset() {
-      return rulesetMap[this.selectedRulesetOption];
-    },
-    hasValidationErrors() {
-      return Object.values(this.infoCache.validationText).some((x) => x);
-    },
-    pointTotal() {
-      return Object.values(this.infoCache.points).reduce((x, y) => x + (y || 0), 0);
-    },
     cardsLoaded() {
       return this.$store.state.cardsLoaded;
     },
@@ -512,15 +520,31 @@ export default {
     flavorTraitList() {
       return (this.referenceLists && this.referenceLists.flavorTraitList) || [];
     },
-  },
-  watch: {
-    selectedRuleset() {
-      this.infoCache = defaultInfoCache();
-      this.setInitialValues();
-      this.refreshCacheAll();
-      this.updateTemp();
+
+    multiclassRegex() {
+      let classList = (this.referenceLists && this.referenceLists.classList) || [];
+      return new RegExp(`^[^.:]*is[^.:]*(${classList.join("|")})[^.:]*\\.\\W*`, "i");
     },
 
+    // ------------ //
+    // - Rulesets - //
+    // ------------ //
+    selectedRuleset() {
+      return rulesetMap[this.selectedRulesetOption];
+    },
+    hasValidationErrors() {
+      return Object.values(this.infoCache.validationText).some((x) => x);
+    },
+    pointTotal() {
+      return Object.values(this.infoCache.points).reduce((x, y) => x + (y || 0), 0);
+    },
+    textOptions() {
+      let textOptions = this.selectedRuleset && this.selectedRuleset.text && this.selectedRuleset.text.options;
+      if (!textOptions) return [];
+      return textOptions.filter((x) => !this.cardTemp.abilities.map((y) => y.id).includes(x.id));
+    },
+  },
+  watch: {
     // These all just sync formatting
     "formatText.main.isAuto"(newValue) {
       if (newValue) {
@@ -539,6 +563,7 @@ export default {
         // Coerce
         this.cardTemp.text = dehtml(this.cardTemp.textFormat);
       }
+      this.syncAbilities();
     },
     "cardTemp.textFormat"(newValue) {
       if (!this.formatText.main.isAuto) {
@@ -568,6 +593,51 @@ export default {
       if (!this.formatText.flavor.isAuto) {
         this.formatText.flavor.text = newValue;
         this.cardTemp.printInfo.flavorText = dehtml(newValue);
+      }
+    },
+
+    "cardTemp.classes"(newVal) {
+      if (!this.formatText.main.isAuto) return;
+      let isMulticlass = newVal.length > 1;
+      let match = this.cardTemp.text && this.cardTemp.text.match(this.multiclassRegex);
+
+      if (match) {
+        let sameClass = new RegExp(`is(?=.*${newVal.join(")(?=.*")})`, "i");
+        let otherClass = new RegExp(`(${this.classList.join("|")})`, "i");
+        if (match[0].match(otherClass) || !match[0].match(sameClass)) {
+          this.cardTemp.text = this.cardTemp.text.replace(this.multiclassRegex, "");
+          match = null;
+        }
+      }
+      if (isMulticlass) {
+        if (!match) {
+          let ending = this.cardTemp.classes
+            .map((x, i) => {
+              if (i < this.cardTemp.classes.length - 2) {
+                return x.toLowerCase() + ",";
+              } else if (i === this.cardTemp.classes.length - 1) {
+                return "and " + x.toLowerCase();
+              }
+              return x.toLowerCase();
+            })
+            .join(" ");
+          this.cardTemp.text = "This character is a " + ending + ".\r\n" + (this.cardTemp.text || "");
+        }
+      }
+    },
+
+    selectedRuleset() {
+      this.infoCache = defaultInfoCache();
+      this.formatText.main.isAuto = true;
+      this.formatText.flavor.isAuto = true;
+      this.syncAbilities();
+      this.setInitialValues();
+      this.refreshCacheAll();
+      this.updateTemp();
+    },
+    "cardTemp.abilities"(newVal) {
+      if (this.textOptions[0]) {
+        this.cardTemp.text = newVal.map((x) => x.value).join("\r\n");
       }
     },
   },
@@ -698,6 +768,18 @@ export default {
       this.refreshCache("flavorText", this.cardTemp.printInfo.flavorText);
       this.refreshCache("flavorTraits", this.cardTemp.printInfo.flavorTraits.join("/"));
     },
+    getOptionLabel(option) {
+      if (option.points == null) return option.value;
+      return `${option.id} - ${option.value} (${option.points} Points)`;
+    },
+    syncAbilities() {
+      if (this.textOptions[0]) {
+        let abilities = this.selectedRuleset.text.split(this.cardTemp.text);
+        this.cardTemp.abilities = abilities;
+      } else {
+        this.cardTemp.abilities = [];
+      }
+    },
 
     // ------------------- //
     // - Card Management - //
@@ -825,5 +907,9 @@ export default {
 .card-stat-value {
   float: right;
   width: 64%;
+}
+
+.wrapped-select >>> .vs__dropdown-menu {
+  white-space: normal;
 }
 </style>
