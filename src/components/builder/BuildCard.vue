@@ -7,6 +7,14 @@
       <b-row>
         <b-col cols="12">
           <b-select v-model="selectedRulesetOption" :options="rulesetOptions"></b-select>
+          <router-link
+            v-if="hasGuide"
+            class="float-right m-1"
+            :to="{ name: 'rulesetGuide', query: { id: selectedRulesetOption } }"
+            target="_blank"
+          >
+            <span><font-awesome-icon icon="external-link-alt" /> View Ruleset Guide</span>
+          </router-link>
         </b-col>
       </b-row>
       <template v-if="cardsLoaded">
@@ -37,7 +45,15 @@
                 </b-row>
                 <!-- Points Desktop -->
                 <div v-if="infoCache.hasPoints" class="point-display d-none d-md-block border-secondary mt-2">
-                  <h3 class="my-0 text-center">{{ infoCache.pointTotal }} Points</h3>
+                  <h3 class="my-0 text-center">
+                    {{ infoCache.pointTotal }} Points
+                    <font-awesome-icon
+                      v-if="infoCache.pointTotal > infoCache.pointMaximum"
+                      class="text-danger"
+                      size="sm"
+                      icon="exclamation-triangle"
+                    />
+                  </h3>
                 </div>
               </div>
             </div>
@@ -46,7 +62,15 @@
           <b-col cols="12" md="6">
             <!-- Points Mobile -->
             <div v-if="infoCache.hasPoints" class="point-display d-block d-md-none border-secondary mb-2">
-              <h3 class="my-0 text-center">{{ infoCache.pointTotal }} Points</h3>
+              <h3 class="my-0 text-center">
+                {{ infoCache.pointTotal }} Points
+                <font-awesome-icon
+                  v-if="infoCache.pointTotal > infoCache.pointMaximum"
+                  class="text-danger"
+                  size="sm"
+                  icon="exclamation-triangle"
+                />
+              </h3>
             </div>
 
             <!-- Reset -->
@@ -260,10 +284,11 @@
               <!-- Text -->
               <div class="my-3">
                 <info-helper :info-cache="infoCache" property="text" @focusout="refreshCache('text')">
-                  <template v-if="textOptions[0]">
+                  <template v-if="restrictText">
                     <v-select
                       multiple
                       class="wrapped-select"
+                      placeholder="[Card Text]"
                       v-model="cardTemp.abilities"
                       :get-option-label="getOptionLabel"
                       :options="textOptions"
@@ -315,7 +340,7 @@
                     @input="updateFlavorTextEditor"
                     placeholder="[Flavor Text]"
                   />
-                  <b-checkbox v-if="!textOptions[0]" v-model="formatText.flavor.isAuto">Auto-format</b-checkbox>
+                  <b-checkbox v-if="!restrictText" v-model="formatText.flavor.isAuto">Auto-format</b-checkbox>
                 </info-helper>
               </div>
             </div>
@@ -427,6 +452,14 @@ function defaultInfoCache() {
     points: {},
     pointInfo: {},
     pointTotal: 0,
+    pointMaximum: 0,
+  };
+}
+
+function computeSetting(setting) {
+  return function () {
+    let general = this.selectedRuleset && this.selectedRuleset.general;
+    return general && general[setting];
   };
 }
 
@@ -535,21 +568,21 @@ export default {
     hasValidationErrors() {
       return Object.values(this.infoCache.validationText).some((x) => x);
     },
-    pointTotal() {
-      return Object.values(this.infoCache.points).reduce((x, y) => x + (y || 0), 0);
-    },
     textOptions() {
       let textOptions = this.selectedRuleset && this.selectedRuleset.text && this.selectedRuleset.text.options;
       if (!textOptions) return [];
       return textOptions.filter((x) => !this.cardTemp.abilities.map((y) => y.id).includes(x.id));
     },
+    hasGuide: computeSetting("hasGuide"),
+    restrictText: computeSetting("restrictText"),
+    pointMaximum: computeSetting("pointMaximum"),
   },
   watch: {
     cardData: {
       handler() {
         this.saveChangesDebounced();
       },
-      deep: true
+      deep: true,
     },
 
     // These all just sync formatting
@@ -644,7 +677,7 @@ export default {
       this.updateTemp();
     },
     "cardTemp.abilities"(newVal) {
-      if (this.textOptions[0]) {
+      if (this.restrictText) {
         this.cardTemp.text = newVal.map((x) => x.value).join("\r\n");
       }
     },
@@ -755,6 +788,7 @@ export default {
           Vue.set(this.infoCache.pointInfo, prop, null);
         }
         this.infoCache.pointTotal = Object.values(this.infoCache.points).reduce((x, y) => x + (y || 0), 0);
+        this.infoCache.pointMaximum = this.pointMaximum;
       });
     },
     refreshCacheAll() {
@@ -781,7 +815,7 @@ export default {
       return `${option.id} - ${option.value} (${option.points} Points)`;
     },
     syncAbilities() {
-      if (this.textOptions[0]) {
+      if (this.restrictText) {
         let abilities = this.selectedRuleset.text.split(this.cardTemp.text);
         this.cardTemp.abilities = abilities;
       } else {
@@ -834,6 +868,10 @@ export default {
         this.$nextTick(() => {
           if (this.hasValidationErrors) {
             alert("Whoops! Looks like this card isn't valid.");
+            return;
+          }
+          if (this.infoCache.pointTotal > this.infoCache.pointMaximum) {
+            alert("Whoops! Looks like you've gone over the point maximum.");
             return;
           }
           let filename = (this.cardData.name || "Untitled").replace(/[^a-z0-9]/gi, "_") + ".png";

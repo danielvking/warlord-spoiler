@@ -7,6 +7,7 @@ const CardDetailParent = () => import('@/components/spoiler/CardDetailParent.vue
 const PageNotFound = () => import('@/components/PageNotFound.vue')
 const EnableEdit = () => import('@/components/editor/EnableEdit.vue')
 const BuildCard = () => import('@/components/builder/BuildCard.vue')
+const RulesetGuide = () => import('@/components/builder/RulesetGuide.vue')
 
 Vue.use(Router)
 
@@ -25,6 +26,12 @@ export default new Router({
     {
       path: "/build-card",
       component: BuildCard
+    },
+    {
+      path: "/ruleset-guide",
+      name: "rulesetGuide",
+      component: RulesetGuide,
+      props: (route) => ({ id: route.query.id })
     },
     {
       path: '*',

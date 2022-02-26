@@ -1988,6 +1988,16 @@ const featDesc = ["The cost of feats are..."]
 // ------------------ //
 
 export default {
+  "general": {
+    hasGuide: true,
+    restrictText: true,
+    pointMaximum: 140
+  },
+  "name": {
+    validate(val) {
+      if (val && val.length > 30) return "A name longer than 30 characters is not permitted in this ruleset.";
+    }
+  },
   "text": {
     options: textOptions,
     split: textSplit,
