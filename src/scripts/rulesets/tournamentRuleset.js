@@ -1,3 +1,51 @@
+const toTable = function(arr, titleMap, dataMap) {
+  titleMap = titleMap || {};
+  dataMap = dataMap || {};
+
+  // Gather columns
+  let allKeys = {};
+  Object.keys(titleMap).forEach(x => allKeys[x] = true);
+  for (let i = 0; i < arr.length; i++) {
+    Object.keys(arr[i]).forEach(x => allKeys[x] = true);
+  }
+
+  let html = '<table class="table table-sm table-striped table-borderless">';
+  
+  // Build header row
+  html += "<thead>";
+  html += "<tr>";
+  Object.keys(allKeys).forEach(x => {
+    if (titleMap[x]) {
+      x = titleMap[x];
+    } else {
+      x = x.replace(/([A-Z])/g, " $&");
+      x = x.charAt(0).toUpperCase() + x.slice(1);
+    }
+    html += "<th>" + x + "</th>";
+  });
+  html += "</tr>";
+  html += "</thead>";
+
+  // Build data rows
+  html += "<tbody>";
+  for (let i = 0; i < arr.length; i++) {
+    let data = arr[i];
+    html += "<tr>";
+    Object.keys(allKeys).forEach(x => {
+      if (data[x] != null) {
+        let val = dataMap[x] ? dataMap[x](data[x]) : data[x];
+        html += "<td>" + val + "</td>";
+      } else {
+        html += "<td></td>";
+      }
+    });
+    html += "</tr>";
+  }
+  html += "</tbody>";
+
+  return html;
+}
+
 const textOptions = [{
   id: 1,
   value: "Order: Once per turn, remove an Elf in your discard pile from the game: Perform a ranged strike equal to the removed Elf's level.",
@@ -1904,6 +1952,8 @@ const textSplit = function(val) {
   return total;
 }
 
+const textDetail = "<p>Each ability has an identifier (to easily find it), a description, and a point value. A card may have multiple abilities, and the cost is the sum of their point values.</p>" + toTable(textOptions, { id: "ID", value: "Ability Text" })
+
 const traitMap = {
   "Abyssal": 3,
   "Apprentice": 1,
@@ -2009,6 +2059,7 @@ export default {
       }
     },
     pointInfo: "Each ability has an identifier and a point value. A complete list can be found on the guide page.",
+    pointInfoDetail: textDetail,
     computePoints(val, cardData) {
       let sum = 0;
       let options = textSplit(val);
