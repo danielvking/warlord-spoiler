@@ -7,7 +7,7 @@
         >
       </div>
       <div class="float-right">
-        <a v-if="showSidebar" href="#" @click.prevent="addCard(card)" :aria-label="addCardText"
+        <a v-if="showSideMenus" href="#" @click.prevent="addCard(card)" :aria-label="addCardText"
           ><font-awesome-icon icon="plus-square" /> {{ addCardText }}</a
         >
       </div>
@@ -194,8 +194,8 @@ export default {
     cardData() {
       return this.cardIndex[this.card] || {};
     },
-    showSidebar() {
-      return this.$store.getters.showSidebar;
+    showSideMenus() {
+      return this.$store.getters.showSideMenus;
     },
     imageUrl() {
       if (!this.cardData) return null;

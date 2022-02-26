@@ -10,8 +10,7 @@
           <router-link
             v-if="hasGuide"
             class="float-right m-1"
-            :to="{ name: 'rulesetGuide', query: { id: selectedRulesetOption } }"
-            target="_blank"
+            :to="{ name: 'rulesetGuide', params: { id: selectedRulesetOption } }"
           >
             <span><font-awesome-icon icon="external-link-alt" /> View Ruleset Guide</span>
           </router-link>
@@ -936,7 +935,7 @@ export default {
 .point-display {
   position: sticky;
   top: 0;
-  z-index: 10000;
+  z-index: 1030;
   border-width: 1px 0px;
   border-style: solid;
   background-color: white;

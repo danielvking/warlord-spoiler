@@ -1,6 +1,7 @@
 // Variable overrides
 $primary: rgb(61, 105, 153);
 $light: rgb(255, 255, 255);
+$dark: rgb(25, 25, 25);
 
 $font-size-base: 1.1rem;
 $line-height-base: 1.1;
@@ -10,7 +11,7 @@ $input-btn-padding-y: 0.1rem;
 $form-group-margin-bottom: 0.4rem;
 
 // Bootstrap defaults
-@import "node_modules/bootstrap/scss/bootstrap";
+@import "bootstrap/scss/bootstrap";
 
 .font-default {
     font-family: $font-family-sans-serif;

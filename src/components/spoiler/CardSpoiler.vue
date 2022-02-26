@@ -60,7 +60,7 @@
                   @row-clicked="(card) => viewCardDetail(card)"
                 >
                   <template v-slot:cell(buttons)="data">
-                    <a v-if="showSidebar" href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
+                    <a v-if="showSideMenus" href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
                       <font-awesome-icon icon="plus-square" />
                     </a>
                   </template>
@@ -80,7 +80,7 @@
                   @row-clicked="(card) => viewCardDetail(card)"
                 >
                   <template v-slot:cell(buttons)="data">
-                    <a v-if="showSidebar" href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
+                    <a v-if="showSideMenus" href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
                       <font-awesome-icon icon="plus-square" />
                     </a>
                   </template>
@@ -163,8 +163,8 @@ export default {
     referenceLists() {
       return this.$store.state.referenceLists;
     },
-    showSidebar() {
-      return this.$store.getters.showSidebar;
+    showSideMenus() {
+      return this.$store.getters.showSideMenus;
     },
     isEditMode() {
       return this.$store.state.settings.isEditMode;

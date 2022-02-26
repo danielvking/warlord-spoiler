@@ -1,5 +1,5 @@
 <template>
-  <div v-if="showSidebar" class="deck-container-outer">
+  <div v-if="showSideMenus" class="deck-container-outer">
     <div class="deck-container-middle">
       <div class="deck-container-inner content-region">
         <div class="site-subheader">
@@ -89,8 +89,8 @@ export default {
     editedCards() {
       return this.$store.state.editedCards;
     },
-    showSidebar() {
-      return this.$store.getters.showSidebar;
+    showSideMenus() {
+      return this.$store.getters.showSideMenus;
     },
     cards() {
       return Object.keys(this.editedCards)

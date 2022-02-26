@@ -28,10 +28,10 @@ export default new Router({
       component: BuildCard
     },
     {
-      path: "/ruleset-guide",
+      path: "/ruleset-guide/:id",
       name: "rulesetGuide",
       component: RulesetGuide,
-      props: (route) => ({ id: route.query.id })
+      props: true
     },
     {
       path: '*',
@@ -53,5 +53,18 @@ export default new Router({
         }
       ]
     }
-  ]
+  ],
+  scrollBehavior(to) {
+    if (to.hash) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            selector: to.hash,
+            offset: { x: 0, y: 63 }, // Probably a more elegant solution to this
+            behavior: "smooth"
+          })
+        }, 300)
+      });
+    }
+  }
 })

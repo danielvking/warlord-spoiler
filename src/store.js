@@ -34,6 +34,7 @@ export default new Vuex.Store({
     screenHeight: window.screen.height,
     deck: {},
     editedCards: {},
+    localRoutes: [],
     settings: {
       isEditMode: false,
       isEditTextWrapped: false,
@@ -41,7 +42,7 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    showSidebar(state) {
+    showSideMenus(state) {
       return state.viewPortWidth >= 992; // Bootstrap "large" breakpoint;
     },
     keywordRegex(state) {
@@ -156,6 +157,9 @@ export default new Vuex.Store({
     clearEditedCards(state) {
       state.editedCards = {};
       localStorage.removeItem("editedCards", JSON.stringify(state.editedCards))
+    },
+    setLocalRoutes(state, localRoutes) {
+      state.localRoutes = localRoutes;
     },
     saveSettings(state, settings) {
       Object.keys(settings).forEach(key => {

@@ -2,7 +2,6 @@ import Vue from 'vue'
 
 import {
   ButtonPlugin,
-  DropdownPlugin,
   FormCheckboxPlugin,
   FormInputPlugin,
   FormGroupPlugin,
@@ -13,14 +12,14 @@ import {
   LayoutPlugin,
   PaginationPlugin,
   PopoverPlugin,
+  SidebarPlugin,
   SpinnerPlugin,
   TablePlugin
 } from 'bootstrap-vue'
-import 'bootstrap/dist/css/bootstrap.min.css'
+import '@/scss/bootstrapConfig.scss'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(ButtonPlugin)
-Vue.use(DropdownPlugin)
 Vue.use(FormCheckboxPlugin)
 Vue.use(FormInputPlugin)
 Vue.use(FormGroupPlugin)
@@ -31,5 +30,6 @@ Vue.use(InputGroupPlugin)
 Vue.use(LayoutPlugin)
 Vue.use(PaginationPlugin)
 Vue.use(PopoverPlugin)
+Vue.use(SidebarPlugin)
 Vue.use(SpinnerPlugin)
 Vue.use(TablePlugin)

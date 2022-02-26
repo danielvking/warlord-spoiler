@@ -1,19 +1,71 @@
 <template>
   <div id="app">
+    <!-- Background -->
     <div ref="backgroundAnchor" id="backgroundAnchor"></div>
+
+    <!-- Sidebar -->
+    <b-sidebar v-model="showSidebar" id="sidebar" text-variant="light" bg-variant="dark" backdrop lazy>
+      <template #title>
+        <h3 class="m-0">The Accordlands</h3>
+      </template>
+      <div>
+        <b-button
+          v-for="link in links"
+          :key="link.display"
+          class="text-left border-0 rounded-0 my-1 px-4 py-1"
+          block
+          variant="outline-light"
+          :to="link.to"
+          @click="showSidebar = false"
+          >{{ link.display }}</b-button
+        >
+
+        <template v-if="localRoutes[0]">
+          <hr class="m-2 border-light" />
+          <h4 class="mx-3 my-1">This Page</h4>
+
+          <b-button
+            v-for="link in localRoutes"
+            :key="link.display"
+            class="text-left border-0 rounded-0 my-1 px-4 py-1"
+            block
+            variant="outline-light"
+            :to="link.to"
+            @click="showSidebar = false"
+            >{{ link.display }}</b-button
+          >
+        </template>
+      </div>
+    </b-sidebar>
+
+    <!-- View -->
     <router-view />
   </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      showSidebar: false,
+      links: [
+        { display: "Home", to: "/" },
+        { display: "Card Builder", to: "/build-card" },
+      ],
+    };
+  },
+  computed: {
+    localRoutes() {
+      return this.$store.state.localRoutes;
+    },
+  },
   watch: {
-    '$store.state.screenHeight'() {
+    "$store.state.screenHeight"() {
       this.fixBackgroundHeight();
-    }
+    },
   },
   mounted() {
-    this.fixBackgroundHeight()
+    this.fixBackgroundHeight();
   },
   methods: {
     fixBackgroundHeight() {
@@ -23,9 +75,9 @@ export default {
         height = this.$store.state.screenHeight;
       }
       this.$refs.backgroundAnchor.style.height = `max(100vh, ${height}px)`;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style>
@@ -66,7 +118,7 @@ body > * {
   background-size: cover;
 }
 
-@media (min-width: 576px) { 
+@media (min-width: 576px) {
   #backgroundAnchor {
     top: unset;
     bottom: 0;

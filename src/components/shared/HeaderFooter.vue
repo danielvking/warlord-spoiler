@@ -1,15 +1,11 @@
 <template>
   <b-container class="site-container">
-    <b-row class="site-header d-flex">
+    <b-row class="site-header d-flex" :class="$store.state.localRoutes[0] ? 'position-sticky' : ''">
       <div class="site-header-margin">
         <div class="p-2 h-100">
-          <b-dropdown variant="outline-light" class="h-100" toggle-class="border-0 px-2" no-caret>
-            <template #button-content>
-              <font-awesome-icon icon="bars" />
-            </template>
-            <b-dropdown-item to="/">Home</b-dropdown-item>
-            <b-dropdown-item to="/build-card">Card Builder</b-dropdown-item>
-          </b-dropdown>
+          <b-button variant="outline-light" class="h-100 border-0 px-2" v-b-toggle.sidebar>
+            <font-awesome-icon icon="bars" />
+          </b-button>
         </div>
       </div>
       <h1>The Accordlands</h1>
@@ -49,6 +45,11 @@
 
 .site-header {
   text-align: center;
+}
+
+.position-sticky {
+  position: sticky;
+  top: 0;
 }
 
 .site-header h1 {
