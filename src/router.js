@@ -65,6 +65,8 @@ export default new Router({
           })
         }, 300)
       });
+    } else {
+      return { x: 0, y: 0 }
     }
   }
 })
