@@ -349,6 +349,7 @@
             <b-button class="mb-2" block variant="primary" size="lg" @click="downloadImage"
               >Download Card Image</b-button
             >
+            <b-checkbox class="mb-2" v-model="extendBleed">Format for Printing</b-checkbox>
           </b-col>
         </b-row>
       </template>
@@ -536,6 +537,7 @@ export default {
       mapper: null,
       cardUserImageDataUrl: null,
       cardImageDataUrl: null,
+      extendBleed: false
     };
   },
   computed: {
@@ -898,8 +900,29 @@ export default {
             alert("Whoops! Looks like you've gone over the point maximum.");
             return;
           }
-          let filename = (this.cardData.name || "Untitled").replace(/[^a-z0-9]/gi, "_") + ".png";
-          utility.saveImage(this.cardImageDataUrl, filename);
+          new Promise(resolve => {
+            if (this.extendBleed) {
+              // Renders the image size as 300 DPI and adds a standard print margin of 36 pixels on each side
+              let img = document.createElement("img");
+              img.setAttribute("src", this.cardImageDataUrl);
+              img.setAttribute("style", "display:none");
+              img.onload = () => {
+                let canvas = document.createElement("canvas");
+                canvas.width = 822;
+                canvas.height = 1122;
+                let context = canvas.getContext("2d");
+                context.fillStyle = "black";
+                context.fillRect(0, 0, canvas.width, canvas.height);
+                context.drawImage(img, 36, 36, 750, 1050); 
+                resolve(canvas.toDataURL());
+              }
+            } else {
+              resolve(this.cardImageDataUrl);
+            }
+          }).then(dataUrl => {
+            let filename = (this.cardData.name || "Untitled").replace(/[^a-z0-9]/gi, "_") + ".png";
+            utility.saveImage(dataUrl, filename);
+          });
         })
       );
     },

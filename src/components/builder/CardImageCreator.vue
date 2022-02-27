@@ -189,9 +189,6 @@ export default {
       },
       deep: true,
     },
-    cardImageUrl() {
-      this.refreshUserImage();
-    },
     points() {
       this.refreshImage();
     },
