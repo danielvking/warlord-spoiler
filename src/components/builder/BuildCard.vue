@@ -23,7 +23,7 @@
             <div class="card-view d-flex flex-column pb-2 align-items-center">
               <card-image-creator
                 :card-data="cardData"
-                :card-image-url.sync="cardUserImageDataUrl"
+                :card-image-url="cardUserImageDataUrl"
                 :points="infoCache.pointTotal"
                 @input="(x) => (cardImageDataUrl = x)"
                 :main-html.sync="formatText.main.text"
@@ -431,6 +431,28 @@ const mapperConfig = {
     },
   },
 };
+
+function resizeDataUrl(dataUrl, width, height) {
+  let img = document.createElement("img");
+  img.setAttribute("src", dataUrl);
+  img.setAttribute("style", "display:none");
+  return new Promise(resolve => {
+    img.onload = () => {
+        let scaleX = width / img.width;
+        let scaleY = height / img.height;
+        let scale = scaleX > scaleY ? scaleX : scaleY;
+        let realWidth = scale * img.width;
+        let realHeight = scale * img.height;
+        let canvas = document.createElement("canvas");
+        canvas.width = realWidth;
+        canvas.height = realHeight
+        let context = canvas.getContext("2d");
+        context.scale(scale, scale);
+        context.drawImage(img, 0, 0); 
+        resolve(canvas.toDataURL());
+    };
+  });
+}
 
 function dehtml(html) {
   html = html.replace(/&nbsp;/gm, " ");
@@ -854,8 +876,11 @@ export default {
       utility
         .readImage()
         .then((response) => {
-          this.cardUserImageDataUrl = response;
-          this.saveChanges();
+          resizeDataUrl(response, 339, 489)
+            .then(resized => {
+              this.cardUserImageDataUrl = resized;
+              this.saveChanges();
+            });
         })
         .catch((error) => {
           alert(error);
