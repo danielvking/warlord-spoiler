@@ -2070,6 +2070,7 @@ export default {
   "general": {
     hasGuide: true,
     restrictText: true,
+    disallowFlavor: true,
     pointMaximum: 140,
     genInfo: 'This ruleset allows you to build your own Warlord. Every attribute of the card has a certain "point" cost, and you must keep your card within the allowable limit.'
   },
@@ -2251,4 +2252,24 @@ export default {
       return sum;
     }
   },
+  "flavorText": {
+    validate(_val, cardData) {
+      // Coerce
+      if (cardData.printInfos) {
+        cardData.printInfos.forEach(x => {
+          x.flavorText = null;
+        })
+      }
+    }
+  },
+  "flavorTraits": {
+    validate(_val, cardData) {
+      // Coerce
+      if (cardData.printInfos) {
+        cardData.printInfos.forEach(x => {
+          x.flavorTraits = null;
+        })
+      }
+    }
+  }
 }

@@ -309,39 +309,41 @@
                   </template>
                 </info-helper>
               </div>
-              <!-- Flavor Traits -->
-              <div class="clearfix">
-                <div class="card-stat-label"><span>Flavor Traits:</span></div>
-                <div class="card-stat-value">
-                  <info-helper
-                    :info-cache="infoCache"
-                    property="flavorTraits"
-                    @focusout="refreshCache('flavorTraits', cardTemp.printInfo.flavorTraits.join('/'))"
-                  >
-                    <v-select
-                      multiple
-                      taggable
-                      v-model="cardTemp.printInfo.flavorTraits"
-                      :options="flavorTraitList"
-                      @input="refreshCache('flavorTraits', cardTemp.printInfo.flavorTraits.join('/'))"
+              <template v-if="!disallowFlavor">
+                <!-- Flavor Traits -->
+                <div class="clearfix">
+                  <div class="card-stat-label"><span>Flavor Traits:</span></div>
+                  <div class="card-stat-value">
+                    <info-helper
+                      :info-cache="infoCache"
+                      property="flavorTraits"
+                      @focusout="refreshCache('flavorTraits', cardTemp.printInfo.flavorTraits.join('/'))"
+                    >
+                      <v-select
+                        multiple
+                        taggable
+                        v-model="cardTemp.printInfo.flavorTraits"
+                        :options="flavorTraitList"
+                        @input="refreshCache('flavorTraits', cardTemp.printInfo.flavorTraits.join('/'))"
+                      />
+                    </info-helper>
+                  </div>
+                </div>
+                <!-- Flavor Text -->
+                <div class="my-2">
+                  <info-helper :info-cache="infoCache" property="flavorText" @focusout="refreshCache('flavorText')">
+                    <b-form-textarea
+                      rows="2"
+                      :value="
+                        formatText.flavor.isAuto ? cardTemp.printInfo.flavorText : cardTemp.printInfo.flavorTextFormat
+                      "
+                      @input="updateFlavorTextEditor"
+                      placeholder="[Flavor Text]"
                     />
+                    <b-checkbox v-if="!restrictText" v-model="formatText.flavor.isAuto">Auto-format</b-checkbox>
                   </info-helper>
                 </div>
-              </div>
-              <!-- Flavor Text -->
-              <div class="my-2">
-                <info-helper :info-cache="infoCache" property="flavorText" @focusout="refreshCache('flavorText')">
-                  <b-form-textarea
-                    rows="2"
-                    :value="
-                      formatText.flavor.isAuto ? cardTemp.printInfo.flavorText : cardTemp.printInfo.flavorTextFormat
-                    "
-                    @input="updateFlavorTextEditor"
-                    placeholder="[Flavor Text]"
-                  />
-                  <b-checkbox v-if="!restrictText" v-model="formatText.flavor.isAuto">Auto-format</b-checkbox>
-                </info-helper>
-              </div>
+              </template>
             </div>
           </b-col>
 
@@ -599,6 +601,7 @@ export default {
     },
     hasGuide: computeSetting("hasGuide"),
     restrictText: computeSetting("restrictText"),
+    disallowFlavor: computeSetting("disallowFlavor"),
     pointMaximum: computeSetting("pointMaximum"),
   },
   watch: {
