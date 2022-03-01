@@ -1,4 +1,5 @@
 let tokenStrCache = []
+let input = null;
 
 export default {
   includesTokens(str, tokenStr) {
@@ -105,16 +106,19 @@ export default {
     }
   },
   readText() {
-    let input = document.createElement('input');
+    if (input) input.remove();
+    input = document.createElement('input');
     input.setAttribute('type', 'file');
     input.setAttribute('style', 'display:none');
     document.body.append(input);
+    // Kind of a crummy promise; it might not return
     return new Promise(resolve => {
       let fr = new FileReader();
       input.onchange = () => {
         fr.onload = x => resolve(x.target.result);
         fr.readAsText(input.files[0]);
         input.remove();
+        input = null;
       }
       input.click();
     });
@@ -128,11 +132,13 @@ export default {
     a.remove();
   },
   readImage() {
-    let input = document.createElement('input');
+    if (input) input.remove();
+    input = document.createElement('input');
     input.setAttribute('type', 'file');
     input.setAttribute('accept', '.png, .jpg, .jpeg');
     input.setAttribute('style', 'display:none');
     document.body.append(input);
+    // Kind of a crummy promise; it might not return
     return new Promise((resolve, reject) => {
       let fr = new FileReader();
       input.onchange = () => {
@@ -144,6 +150,7 @@ export default {
           fr.readAsDataURL(input.files[0]);
         }
         input.remove();
+        input = null;
       }
       input.click();
     });

@@ -1,6 +1,6 @@
 <template>
   <header-footer>
-    <b-container fluid @focusout="saveChanges">
+    <b-container fluid @focusout="onFocusout">
       <div class="my-2 text-center">
         <p>Welcome to the card builder!<br />Select a ruleset to get started. The page will save your changes.</p>
       </div>
@@ -468,6 +468,7 @@ function dehtml(html) {
 
 function defaultInfoCache() {
   return {
+    touched: {},
     validationText: {},
     validationState: {},
     hasPoints: false,
@@ -790,48 +791,57 @@ export default {
       this.setInitialValue("feats");
       this.setInitialValue("misc");
     },
-    refreshCache(prop, val) {
-      this.$nextTick(() => {
-        let propConfig = this.selectedRuleset && this.selectedRuleset[prop];
-        let validationText =
-          propConfig &&
-          propConfig.validate &&
-          propConfig.validate(val || this.cardData[prop], this.cardData, this.referenceLists);
-        Vue.set(this.infoCache.validationText, prop, validationText);
-        Vue.set(this.infoCache.validationState, prop, validationText ? false : null);
-        if (!validationText) {
-          let computePoints = propConfig && propConfig.computePoints;
-          this.infoCache.hasPoints |= !!computePoints;
-          let points = computePoints && computePoints(val || this.cardData[prop], this.cardData, this.referenceLists);
-          let pointInfo = propConfig && propConfig.pointInfo;
-          Vue.set(this.infoCache.points, prop, points);
-          Vue.set(this.infoCache.pointInfo, prop, pointInfo);
-        } else {
-          Vue.set(this.infoCache.points, prop, null);
-          Vue.set(this.infoCache.pointInfo, prop, null);
-        }
-        this.infoCache.pointTotal = Object.values(this.infoCache.points).reduce((x, y) => x + (y || 0), 0);
-        this.infoCache.pointMaximum = this.pointMaximum;
+    refreshCache(prop, val, suppressValidation) {
+      return new Promise(resolve => {
+        this.$nextTick(() => {
+          let propConfig = this.selectedRuleset && this.selectedRuleset[prop];
+          let validationText =
+            propConfig &&
+            propConfig.validate &&
+            propConfig.validate(val || this.cardData[prop], this.cardData, this.referenceLists);
+          if (!suppressValidation || this.infoCache.touched[prop]) {
+            this.infoCache.touched[prop] = true;
+            Vue.set(this.infoCache.validationText, prop, validationText);
+            Vue.set(this.infoCache.validationState, prop, validationText ? false : null);
+          }
+          if (!validationText) {
+            let computePoints = propConfig && propConfig.computePoints;
+            this.infoCache.hasPoints |= !!computePoints;
+            let points = computePoints && computePoints(val || this.cardData[prop], this.cardData, this.referenceLists);
+            let pointInfo = propConfig && propConfig.pointInfo;
+            Vue.set(this.infoCache.points, prop, points);
+            Vue.set(this.infoCache.pointInfo, prop, pointInfo);
+          } else {
+            Vue.set(this.infoCache.points, prop, null);
+            Vue.set(this.infoCache.pointInfo, prop, null);
+          }
+          this.infoCache.pointTotal = Object.values(this.infoCache.points).reduce((x, y) => x + (y || 0), 0);
+          this.infoCache.pointMaximum = this.pointMaximum;
+          resolve();
+        });
       });
     },
-    refreshCacheAll() {
-      this.refreshCache("name");
-      this.refreshCache("text");
-      this.refreshCache("type");
-      this.refreshCache("alignment");
-      this.refreshCache("class");
-      this.refreshCache("faction");
-      this.refreshCache("attack");
-      this.refreshCache("armorClass");
-      this.refreshCache("skill");
-      this.refreshCache("hitPoints");
-      this.refreshCache("level");
-      this.refreshCache("traits");
-      this.refreshCache("feats");
-      this.refreshCache("misc");
-      this.refreshCache("printInfos");
-      this.refreshCache("flavorText", this.cardTemp.printInfo.flavorText);
-      this.refreshCache("flavorTraits", this.cardTemp.printInfo.flavorTraits.join("/"));
+    async refreshCacheAll(forceValidate) {
+      let refresh = [
+        this.refreshCache("name", null, !forceValidate),
+        this.refreshCache("text", null, !forceValidate),
+        this.refreshCache("type", null, !forceValidate),
+        this.refreshCache("alignment", null, !forceValidate),
+        this.refreshCache("class", null, !forceValidate),
+        this.refreshCache("faction", null, !forceValidate),
+        this.refreshCache("attack", null, !forceValidate),
+        this.refreshCache("armorClass", null, !forceValidate),
+        this.refreshCache("skill", null, !forceValidate),
+        this.refreshCache("hitPoints", null, !forceValidate),
+        this.refreshCache("level", null, !forceValidate),
+        this.refreshCache("traits", null, !forceValidate),
+        this.refreshCache("feats", null, !forceValidate),
+        this.refreshCache("misc", null, !forceValidate),
+        this.refreshCache("printInfos", null, !forceValidate),
+        this.refreshCache("flavorText", this.cardTemp.printInfo.flavorText, !forceValidate),
+        this.refreshCache("flavorTraits", this.cardTemp.printInfo.flavorTraits.join("/"), !forceValidate),
+      ];
+      for (let i = 0; i < refresh.length; i++) await refresh[i];
     },
     getOptionLabel(option) {
       if (option.points == null) return option.value;
@@ -850,6 +860,10 @@ export default {
     // - Card Management - //
     // ------------------- //
 
+    onFocusout() {
+      this.saveChanges();
+      this.refreshCacheAll();
+    },
     loadSaved() {
       let settings = localStorage.getItem("cardBuilderSettings");
       if (settings) {
@@ -874,71 +888,60 @@ export default {
     saveChangesDebounced: utility.debounce(function () {
       this.saveChanges();
     }, 1000),
-    uploadImage() {
-      utility
-        .readImage()
-        .then((response) => {
-          resizeDataUrl(response, 339, 489)
-            .then(resized => {
-              this.cardUserImageDataUrl = resized;
-              this.saveChanges();
-            });
-        })
-        .catch((error) => {
-          alert(error);
-        });
+    async uploadImage() {
+      try {
+        let img = await utility.readImage();
+        img = await resizeDataUrl(img, 339, 489);
+        this.cardUserImageDataUrl = img;
+        this.saveChanges();
+      } catch (error) {
+        alert(error);
+      }
     },
-    downloadImage() {
-      this.refreshCacheAll();
-      this.$nextTick(() =>
-        this.$nextTick(() => {
-          if (this.hasValidationErrors) {
-            alert("Whoops! Looks like this card isn't valid.");
-            return;
+    async downloadImage() {
+      await this.refreshCacheAll(true);
+      if (this.hasValidationErrors) {
+        alert("Whoops! Looks like this card isn't valid.");
+        return;
+      }
+      if (this.infoCache.pointTotal > this.infoCache.pointMaximum) {
+        alert("Whoops! Looks like you've gone over the point maximum.");
+        return;
+      }
+      let dataUrl = await new Promise(resolve => {
+        if (this.extendBleed) {
+          // Renders the image size as 300 DPI and adds a standard print margin of 36 pixels on each side
+          let img = document.createElement("img");
+          img.setAttribute("src", this.cardImageDataUrl);
+          img.setAttribute("style", "display:none");
+          img.onload = () => {
+            let canvas = document.createElement("canvas");
+            canvas.width = 822;
+            canvas.height = 1122;
+            let context = canvas.getContext("2d");
+            context.fillStyle = "black";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(img, 36, 36, 750, 1050); 
+            resolve(canvas.toDataURL());
           }
-          if (this.infoCache.pointTotal > this.infoCache.pointMaximum) {
-            alert("Whoops! Looks like you've gone over the point maximum.");
-            return;
-          }
-          new Promise(resolve => {
-            if (this.extendBleed) {
-              // Renders the image size as 300 DPI and adds a standard print margin of 36 pixels on each side
-              let img = document.createElement("img");
-              img.setAttribute("src", this.cardImageDataUrl);
-              img.setAttribute("style", "display:none");
-              img.onload = () => {
-                let canvas = document.createElement("canvas");
-                canvas.width = 822;
-                canvas.height = 1122;
-                let context = canvas.getContext("2d");
-                context.fillStyle = "black";
-                context.fillRect(0, 0, canvas.width, canvas.height);
-                context.drawImage(img, 36, 36, 750, 1050); 
-                resolve(canvas.toDataURL());
-              }
-            } else {
-              resolve(this.cardImageDataUrl);
-            }
-          }).then(dataUrl => {
-            let filename = (this.cardData.name || "Untitled").replace(/[^a-z0-9]/gi, "_") + ".png";
-            utility.saveImage(dataUrl, filename);
-          });
-        })
-      );
-    },
-    importCard() {
-      utility.readText().then((response) => {
-        try {
-          let allCard = JSON.parse(response);
-          this.cardUserImageDataUrl = allCard.image;
-          this.cardData = allCard.cardData;
-          this.saveChanges();
-          this.updateTemp();
-          this.refreshCacheAll();
-        } catch (error) {
-          alert("An error occurred reading the card data: " + error);
+        } else {
+          resolve(this.cardImageDataUrl);
         }
       });
+      let filename = (this.cardData.name || "Untitled").replace(/[^a-z0-9]/gi, "_") + ".png";
+      utility.saveImage(dataUrl, filename);
+    },
+    async importCard() {
+      try {
+        let allCard = JSON.parse(await utility.readText());
+        this.cardUserImageDataUrl = allCard.image;
+        this.cardData = allCard.cardData;
+        this.saveChanges();
+        this.updateTemp();
+        this.refreshCacheAll();
+      } catch (error) {
+        alert("An error occurred reading the card data: " + error);
+      }
     },
     exportCard() {
       let filename = (this.cardData.name || "Untitled").replace(/[^a-z0-9]/gi, "_") + ".card";
@@ -948,22 +951,19 @@ export default {
       };
       utility.saveText(JSON.stringify(allCard), filename);
     },
-    reset() {
+    async reset() {
       if (confirm("Are you sure you want to reset everything?")) {
         this.cardData = {};
         this.cardUserImageDataUrl = null;
         this.saveChanges();
         this.setInitialValues();
-        this.refreshCacheAll();
         this.updateTemp();
+        await this.refreshCacheAll();
+        // Hide validation text until user messes with it
+        this.infoCache.touched = {};
+        this.infoCache.validationText = {};
+        this.infoCache.validationState = {};
       }
-      // Clear validation (validation occurs next tick)
-      this.$nextTick(() =>
-        this.$nextTick(() => {
-          this.infoCache.validationText = {};
-          this.infoCache.validationState = {};
-        })
-      );
     },
   },
 };
