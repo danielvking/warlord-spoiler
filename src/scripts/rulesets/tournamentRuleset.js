@@ -2037,7 +2037,7 @@ const textSplit = function (val) {
 // - Computed Constants - //
 // ---------------------- //
 
-const textDetail = "<p>Each ability has an identifier (to easily find it), a description, and a point value. A card may have multiple abilities, and the cost is the sum of their point values.</p>" +
+const textDetail = "<p>A card may have up to two of the predefined abilities. Each ability has an identifier (to easily find it), a description, and a point value. A card may have multiple abilities, and the cost is the sum of their point values.</p>" +
   toTable(textOptions, {
     id: "ID",
     value: "Ability Text"
@@ -2048,10 +2048,10 @@ const textDetail = "<p>Each ability has an identifier (to easily find it), a des
     }
   });
 
-const traitDesc = "The cost of individual traits varies. Warlord is free. Having 2 or more positive-cost traits is an additional 5 points per additional trait.\r\n" +
+const traitDesc = "The cost of individual traits varies. Warlord is free. Having 2 or more positive-cost traits is an additional 15 points per additional trait.\r\n" +
   Object.entries(traitMap).map(x => `(${x[0]}: ${x[1]})`).join(" ");
 
-const traitDetail = "<p>The cost of individual traits varies. Warlord is free. Having 2 or more positive-cost traits is an additional 5 points per additional trait.</p>" +
+const traitDetail = "<p>The cost of individual traits varies. Warlord is free. Having 2 or more positive-cost traits is an additional 15 points per additional trait.</p>" +
   toTable(Object.keys(traitMap).map(x => { return { trait: x, points: traitMap[x] }}));
 
 const featDesc = ["The cost of feats are..."]
@@ -2084,17 +2084,18 @@ export default {
     split: textSplit,
     validate(val, cardData) {
       let options = textSplit(val);
-      let i = cardData.class && cardData.class.includes("/") ? 1 : 0;
+      let i = cardData.class && cardData.class.includes("/") ? 1 : 0; // Multiclass
+      if (options.length - i > 2) return "Only two abilities are permitted in this ruleset."
       for (; i < options.length; i++) {
         if (options[i].points == null) return "This text is not permitted in this ruleset.";
       }
     },
-    pointInfo: "Each ability has an identifier and a point value. A complete list can be found on the guide page.",
+    pointInfo: "A card may have up to two of the predefined abilities. Each ability has an identifier and a point value. A complete list can be found on the guide page.",
     pointInfoDetail: textDetail,
     computePoints(val, cardData) {
       let sum = 0;
       let options = textSplit(val);
-      let i = cardData.class && cardData.class.includes("/") ? 1 : 0;
+      let i = cardData.class && cardData.class.includes("/") ? 1 : 0; // Multiclass
       for (; i < options.length; i++) {
         sum += options[i].points;
       }
@@ -2108,12 +2109,13 @@ export default {
     }
   },
   "class": {
-    pointInfo: "Classless is -10 points. Any single class is free. Additional classes are 40 points each.",
-    computePoints(val) {
+    pointInfo: "Classless is -10 points. Any single class is free. Additional classes are 40 points each.\r\nBeing both multiclass and at least level 5 costs an additional 30 points.",
+    computePoints(val, cardData) {
       if (val == null) return null;
       let classes = val.split("/").filter(x => x !== "Classless");
       if (classes.length === 0) return -10;
-      return (classes.length - 1) * 40;
+      if (classes.length === 1) return 0;
+      return (classes.length - 1) * 40 + (cardData.level >= 5 ? 30 : 0);
     }
   },
   "faction": {
@@ -2132,13 +2134,15 @@ export default {
   "attack": {
     pointInfo: "Attack of 0 is free. Each additional value of attack is: 1 point up to 5 and 2 points beyond that." +
       "\r\nA second strike is 5 points in addition to the points for its value." +
-      "\r\nSubsequent additional strikes are 10 points in addition to the points for their value.",
+      "\r\nA third strike strikes is 10 points in addition to the points for its value." +
+      "\r\nSubsequent additional strikes are 20 points in addition to the points for their value.",
     computePoints(val) {
       if (val == null) return null;
       function numAttacksPoints(num) {
         if (num <= 1) return 0;
         if (num <= 2) return 5;
-        return (num - 2) * 10 + 5;
+        if (num <= 3) return 15;
+        return (num - 3) * 20 + 15;
       }
       function strikePoints(attack) {
         if (attack <= 0) return 0;
@@ -2155,33 +2159,39 @@ export default {
     }
   },
   "armorClass": {
-    pointInfo: "AC of 8 is free. Each additional value of AC is: 2 points up to 12, 3 points up to 17, and 10 points beyond that.",
+    pointInfo: "AC of 8 is free. Each additional value of AC is: 2 points up to 12, 3 points up to 17, and 15 points beyond that.\r\nCards with the Planar trait may not have more than 14 AC.",
+    validate(val, cardData) {
+      if (val && cardData.traits) {
+        if (val > 14 && cardData.traits.split("/").includes("Planar")) return "Cards with the Planar trait are not permitted to have more than 14 AC in this ruleset."
+      }
+    },
     computePoints(val) {
       if (val == null) return null;
       if (val <= 8) return 0;
       if (val <= 12) return (val - 8) * 2;
       if (val <= 17) return (val - 12) * 3 + 8;
-      return (val - 17) * 10 + 23;
+      return (val - 17) * 15 + 23;
     }
   },
   "skill": {
-    pointInfo: "Skill of 0 is free. Each additional value of skill is: 1 points up to 5, 2 points up to 10, and 5 points beyond that.",
+    pointInfo: "Skill of 0 is free. Each additional value of skill is: 1 points up to 5, 2 points up to 10, 5 point up to 15, and 10 points beyond that.",
     computePoints(val) {
       if (val == null) return null;
       if (val <= 0) return 0;
       if (val <= 5) return val * 1;
       if (val <= 10) return (val - 5) * 2 + 5;
-      return (val - 10) * 5 + 15;
+      if (val <= 15) return (val - 10) * 5 + 15;
+      return (val - 15) * 10 + 40;
     }
   },
   "hitPoints": {
-    pointInfo: "HP of 1 is free. Each additional value of HP is: 5 points up to 3, 10 points up to 4, and 15 points beyond that.",
+    pointInfo: "HP of 1 is free. Each additional value of HP is: 5 points up to 3, 10 points up to 4, and 25 points beyond that.",
     computePoints(val) {
       if (val == null) return null;
       if (val <= 1) return 0;
       if (val <= 3) return (val - 1) * 5;
       if (val <= 4) return (val - 3) * 10 + 10;
-      return (val - 4) * 15 + 20;
+      return (val - 4) * 25 + 20;
     }
   },
   "level": {
@@ -2218,7 +2228,7 @@ export default {
           sum += points;
           if (points > 0) positiveTraits++;
         }
-        if (positiveTraits > 1) sum += (positiveTraits - 1) * 5;
+        if (positiveTraits > 1) sum += (positiveTraits - 1) * 15;
         return sum;
       }
     }
