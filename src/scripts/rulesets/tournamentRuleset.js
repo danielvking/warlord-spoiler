@@ -2037,30 +2037,23 @@ const textSplit = function (val) {
 // - Computed Constants - //
 // ---------------------- //
 
-const textDetail = "<p>A card may have up to two of the predefined abilities. Each ability has an identifier (to easily find it), a description, and a point value. A card may have multiple abilities, and the cost is the sum of their point values.</p>" +
-  toTable(textOptions, {
-    id: "ID",
-    value: "Ability Text"
-  }, {
-    value: x => {
-      let hashReg = /(Spend Order:|Order:|Spend React:|React:)/gm;
-      return x.replace(hashReg, "<b>$&</b>");
-    }
-  });
+const textDetailTable = toTable(textOptions, {
+  id: "ID",
+  value: "Ability Text"
+}, {
+  value: x => {
+    let hashReg = /(Spend Order:|Order:|Spend React:|React:)/gm;
+    return x.replace(hashReg, "<b>$&</b>");
+  }
+});
 
-const traitDesc = "The cost of individual traits varies. Warlord is free. Having 2 or more positive-cost traits is an additional 15 points per additional trait.\r\n" +
-  Object.entries(traitMap).map(x => `(${x[0]}: ${x[1]})`).join(" ");
+const traitDescList = Object.entries(traitMap).map(x => `(${x[0]}: ${x[1]})`).join(" ");
 
-const traitDetail = "<p>The cost of individual traits varies. Warlord is free. Having 2 or more positive-cost traits is an additional 15 points per additional trait.</p>" +
-  toTable(Object.keys(traitMap).map(x => { return { trait: x, points: traitMap[x] }}));
+const traitDetailTable = toTable(Object.keys(traitMap).map(x => ({ trait: x, points: traitMap[x] })));
 
-const featDesc = ["The cost of feats are..."]
-  .concat(Object.entries(featMap).map(x => `${x[0]} is ${x[1]} points, plus 3 for each level`))
-  .join("\r\n");
+const featDescList = Object.entries(featMap).map(x => `${x[0]} is ${x[1]} points, plus 3 for each level`).join("\r\n");
 
-const featDetail = "<p>Each feat has a base point cost, plus an additional cost for each level of the feat.</p>" +
-  toTable(Object.keys(featMap).map(x => { return { feat: x, basePoints: featMap[x], pointsPerLevel: 3 }}));
-
+const featDetailTable = toTable(Object.keys(featMap).map(x => ({ feat: x, basePoints: featMap[x], pointsPerLevel: 3 })));
 
 // ------------------ //
 // - Export Ruleset - //
@@ -2091,7 +2084,8 @@ export default {
       }
     },
     pointInfo: "A card may have up to two of the predefined abilities. Each ability has an identifier and a point value. A complete list can be found on the guide page.",
-    pointInfoDetail: textDetail,
+    pointInfoDetail: "<p>A card may have up to two of the predefined abilities. Each ability has an identifier (to easily find it), a description, and a point value. A card may have multiple abilities, and the cost is the sum of their point values.</p>" +
+      textDetailTable,
     computePoints(val, cardData) {
       let sum = 0;
       let options = textSplit(val);
@@ -2109,7 +2103,8 @@ export default {
     }
   },
   "class": {
-    pointInfo: "Classless is -10 points. Any single class is free. Additional classes are 40 points each.\r\nBeing both multiclass and at least level 5 costs an additional 30 points.",
+    pointInfo: "Classless is -10 points. Any single class is free. Additional classes are 40 points each." +
+      "\r\nBeing both multiclass and at least level 5 costs an additional 30 points.",
     computePoints(val, cardData) {
       if (val == null) return null;
       let classes = val.split("/").filter(x => x !== "Classless");
@@ -2159,7 +2154,8 @@ export default {
     }
   },
   "armorClass": {
-    pointInfo: "AC of 8 is free. Each additional value of AC is: 2 points up to 12, 3 points up to 17, and 15 points beyond that.\r\nCards with the Planar trait may not have more than 14 AC.",
+    pointInfo: "AC of 8 is free. Each additional value of AC is: 2 points up to 12, 3 points up to 17, and 15 points beyond that." +
+      "\r\nCards with the Planar trait may not have more than 14 AC.",
     validate(val, cardData) {
       if (val && cardData.traits) {
         if (val > 14 && cardData.traits.split("/").includes("Planar")) return "Cards with the Planar trait are not permitted to have more than 14 AC in this ruleset."
@@ -2215,8 +2211,10 @@ export default {
         if (traitMap[trait] == null) return `${trait} is not permitted in this ruleset.`;
       }
     },
-    pointInfo: traitDesc,
-    pointInfoDetail: traitDetail,
+    pointInfo: "The cost of individual traits varies. Warlord is free. Having 2 or more positive-cost traits is an additional 15 points per additional trait.\r\n" +
+      traitDescList,
+    pointInfoDetail: "<p>The cost of individual traits varies. Warlord is free. Having 2 or more positive-cost traits is an additional 15 points per additional trait.</p>" +
+      traitDetailTable,
     computePoints(val) {
       if (val) {
         let split = val.split("/");
@@ -2234,8 +2232,10 @@ export default {
     }
   },
   "feats": {
-    pointInfo: featDesc,
-    pointInfoDetail: featDetail,
+    pointInfo: "The cost of feats are...\r\n" +
+      featDescList,
+    pointInfoDetail: "<p>Each feat has a base point cost, plus an additional cost for each level of the feat.</p>" +
+      featDetailTable,
     computePoints(val) {
       if (val == null) return null;
       let featValues = val.split("/");
