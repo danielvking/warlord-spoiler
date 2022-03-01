@@ -13,9 +13,11 @@ VSelect.props.calculatePosition.default = function (dropdownList, component, {wi
 
   let topNum = +top.substring(0, top.length - 2);
 
+  let origRect = component.$refs.toggle.getBoundingClientRect();
+
   // Adjust when it resizes
-  let height = component.$refs.toggle.getBoundingClientRect().height;
-  let listener = function () {
+  let height = origRect.height;
+  let inputListener = function () {
     component.$nextTick(() => {
       let newHeight = component.$refs.toggle.getBoundingClientRect().height;
       if (newHeight !== height) {
@@ -23,8 +25,23 @@ VSelect.props.calculatePosition.default = function (dropdownList, component, {wi
       }
     })
   }
-  component.$on("input", listener);
-  return () => component.$off("input", listener);
+  component.$on("input", inputListener);
+  // Blur element on window resize
+  let x = origRect.x;
+  let windowListener = function () {
+    if (component.searchEl === document.activeElement) {
+      let newX = component.$refs.toggle.getBoundingClientRect().x;
+      if (Math.abs(newX - x) > 1) {
+        component.searchEl.blur();
+      }
+    }
+  }
+  window.addEventListener("resize", windowListener);
+
+  return () => {
+    component.$off("input", inputListener);
+    window.removeEventListener("resize", windowListener);
+  }
 }
 
 Vue.component('v-select', VSelect)
