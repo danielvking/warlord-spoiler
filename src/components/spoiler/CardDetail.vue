@@ -238,10 +238,10 @@ export default {
     },
   },
   mounted() {
-    this.$nextTick(() => {
-      // Adjust scroll
-      let scrollRegion = document.documentElement;
-      scrollRegion.scrollTop = 0;
+    this.$store.dispatch("loadCardData").then(() => {
+      if (!this.cardIndex[this.card]) {
+        this.$store.commit("setShow404", true);
+      }
     });
   },
   methods: {

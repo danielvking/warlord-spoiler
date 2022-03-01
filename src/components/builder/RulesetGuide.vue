@@ -31,9 +31,11 @@ export default {
     id: String,
   },
   computed: {
+    rulesetDesc() {
+      return rulesets.filter((x) => x.description === this.id)[0];
+    },
     rs() {
-      let rulesetDesc = rulesets.filter((x) => x.description === this.id)[0];
-      return rulesetDesc.ruleset;
+      return (this.rulesetDesc && this.rulesetDesc.ruleset) || {};
     },
     localRoutes() {
       return Object.keys(this.rs).filter(x => this.showSection(x)).map(x => {
@@ -46,6 +48,9 @@ export default {
   },
   mounted() {
     this.$store.commit("setLocalRoutes", this.localRoutes);
+    if (!this.rulesetDesc) {
+      this.$store.commit("setShow404", true);
+    }
   },
   methods: {
     humanify(val) {

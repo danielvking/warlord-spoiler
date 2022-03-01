@@ -437,10 +437,10 @@ export default {
     }
     this.cardJsonWrapped = this.$store.state.settings.isEditTextWrapped;
     this.viewOption = this.$store.state.settings.editViewOption;
-    this.$nextTick(() => {
-      // Adjust scroll
-      let scrollRegion = document.documentElement;
-      scrollRegion.scrollTop = 0;
+    this.$store.dispatch("loadCardData").then(() => {
+      if (!this.cardIndex[this.card]) {
+        this.$store.commit("setShow404", true);
+      }
     });
   },
   methods: {

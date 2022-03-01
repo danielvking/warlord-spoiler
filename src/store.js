@@ -26,6 +26,7 @@ let cardPromise;
 
 export default new Vuex.Store({
   state: {
+    show404: false,
     cardsLoaded: false,
     cards: [],
     cardIndex: {},
@@ -82,6 +83,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    setShow404(state, val) {
+      state.show404 = val;
+    },
     initialize(state) {
       let deck = localStorage.getItem("deck");
       if (deck) {

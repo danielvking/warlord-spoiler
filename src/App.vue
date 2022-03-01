@@ -37,14 +37,20 @@
         </template>
       </div>
     </b-sidebar>
+    
+    <!-- 404 -->
+    <page-not-found v-if="show404"/>
 
     <!-- View -->
-    <router-view />
+    <router-view v-else/>
   </div>
 </template>
 
 <script>
+import PageNotFound from "@/components/PageNotFound.vue";
+
 export default {
+  components: { PageNotFound },
   data() {
     return {
       showSidebar: false,
@@ -55,6 +61,9 @@ export default {
     };
   },
   computed: {
+    show404() {
+      return this.$store.state.show404;
+    },
     localRoutes() {
       return this.$store.state.localRoutes;
     },
@@ -66,6 +75,13 @@ export default {
   },
   mounted() {
     this.fixBackgroundHeight();
+
+    this.$router.afterEach((to, from) => {
+      if (to.path !== from.path) {
+        this.$store.commit("setShow404", false);
+        this.$store.commit("setLocalRoutes", []);
+      }
+    })
   },
   methods: {
     fixBackgroundHeight() {

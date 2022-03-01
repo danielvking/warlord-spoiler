@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+const Show404 = () => import('@/components/Show404.vue')
 const PrintDeck = () => import('@/components/spoiler/PrintDeck.vue')
 const CardSpoiler = () => import('@/components/spoiler/CardSpoiler.vue')
 const CardDetailParent = () => import('@/components/spoiler/CardDetailParent.vue')
-const PageNotFound = () => import('@/components/PageNotFound.vue')
 const EnableEdit = () => import('@/components/editor/EnableEdit.vue')
 const BuildCard = () => import('@/components/builder/BuildCard.vue')
 const RulesetGuide = () => import('@/components/builder/RulesetGuide.vue')
@@ -35,7 +35,7 @@ export default new Router({
     },
     {
       path: '*',
-      component: PageNotFound
+      component: Show404
     },
     {
       path: '/',
