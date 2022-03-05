@@ -842,6 +842,7 @@ export default {
     disallowFlavor: true,
     pointMaximum: 140,
     genInfo: "This ruleset allows you to build your own Warlord. Every attribute of the card has a certain \"point\" cost, and you must keep your card within the allowable limit." +
+      "\r\n " +
       "\r\nFor this ruleset, in order to help reduce text box clutter, we are adding some wording rules. Please be aware of the following:" +
       "\r\nThe word \"Your\" in rules text refers to a card(s) that you control." +
       "\r\n\"This Turn\" in rules text means the effect in question lasts \"Until end of turn\"" +
@@ -867,7 +868,7 @@ export default {
       }
     },
     pointInfo: "A card may have up to two of the predefined abilities. Each ability has an identifier and a point value. A complete list can be found on the guide page.",
-    pointInfoDetail: "<p>A card may have up to two of the predefined abilities. Each ability has an identifier (to easily find it), a description, and a point value. A card may have multiple abilities, and the cost is the sum of their point values.</p>" +
+    pointInfoDetail: "<p>A card may have up to two of the predefined abilities. Each ability has an identifier (to easily find it), a description, and a point value. A card may have multiple abilities, and the cost is the sum of their point values. [NAME] is replaced with the name of the card,[FACTION] is replaced with their faction(s), and [FACTION_TRAIT] is replaced with the subrace of their faction(s).</p>" +
       textDetailTable,
     computePoints(val, cardData) {
       let sum = 0;
