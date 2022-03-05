@@ -961,7 +961,7 @@ export default {
       if (val <= 0) return 0;
       if (val <= 5) return val * 1;
       if (val <= 10) return (val - 5) * 3 + 5;
-      if (val <= 15) return (val - 10) * 10 + 15;
+      if (val <= 15) return (val - 10) * 10 + 20;
       return (val - 15) * 15 + 70;
     }
   },
