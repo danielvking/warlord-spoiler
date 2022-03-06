@@ -28,6 +28,7 @@
                 @input="(x) => (cardImageDataUrl = x)"
                 :main-html.sync="formatText.main.text"
                 :flavor-html.sync="formatText.flavor.text"
+                :keyword-regex="keywordRegex"
               />
 
               <!-- Image -->
@@ -603,6 +604,13 @@ export default {
     restrictText: computeSetting("restrictText"),
     disallowFlavor: computeSetting("disallowFlavor"),
     pointMaximum: computeSetting("pointMaximum"),
+    additionalKeywords: computeSetting("additionalKeywords"),
+    keywordRegex() {
+      if (this.additionalKeywords) {
+        return this.$store.getters.keywordRegexExtended(this.additionalKeywords);
+      }
+      return this.$store.getters.keywordRegex;
+    }
   },
   watch: {
     cardData: {

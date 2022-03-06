@@ -818,7 +818,7 @@ const textDetailTable = toTable(textOptions, {
   value: "Ability Text"
 }, {
   value: x => {
-    let hashReg = /(Spend Order:|Order:|Spend React:|React:)/gm;
+    let hashReg = /(Limited Order:|Spend Order:|Order:|Limited React:|Spend React:|React:)/gm;
     return x.replace(hashReg, "<b>$&</b>");
   }
 });
@@ -848,7 +848,8 @@ export default {
       "\r\nIf you have \"advantage\" on a roll then you roll two dice for the roll and keep the higher result." +
       "\r\nIf you have \"disadvantage\" on a roll then you roll two dice for the roll and keep the lower result." +
       "\r\nIf you would have both \"advantage\" and \"disadvantage\" on a roll you are cnsidered to have neither of them." +
-      "\r\n\"Limited\" refers to something that can be preformed Once Per Turn. so \"Limited Order\" would be the same as saying \"Order: Once per turn:\", \"Limited React\" would be the same as saying \"React: Once Per Turn:\", etc."
+      "\r\n\"Limited\" refers to something that can be preformed Once Per Turn. so \"Limited Order\" would be the same as saying \"Order: Once per turn:\", \"Limited React\" would be the same as saying \"React: Once Per Turn:\", etc.",
+    additionalKeywords: ["Limited Order:", "Limited React:"]
   },
   "name": {
     validate(val) {

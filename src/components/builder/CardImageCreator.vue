@@ -91,6 +91,7 @@ export default {
     headerHtml: String,
     mainHtml: String,
     flavorHtml: String,
+    keywordRegex: RegExp
   },
   data() {
     return {
@@ -100,8 +101,8 @@ export default {
     };
   },
   computed: {
-    keywordRegex() {
-      return this.$store.getters.keywordRegex;
+    internalKeywordRegex() {
+      return this.keywordRegex || this.$store.getters.keywordRegex;
     },
     cardTemplateUrl() {
       let type = this.cardData.type || "";
@@ -160,7 +161,7 @@ export default {
       let mainText = "";
       if (this.cardData.text) {
         mainText = sanitizeHtml(this.cardData.text);
-        mainText = mainText.replace(this.keywordRegex, "$1<b>$2</b>"); // Bold keywords
+        mainText = mainText.replace(this.internalKeywordRegex, "$1<b>$2</b>"); // Bold keywords
         mainText = mainText.replace(/\r\n/gm, "</p><p>"); // Line breaks separate paragraphs
         mainText = "<p>" + mainText + "</p>";
       }
