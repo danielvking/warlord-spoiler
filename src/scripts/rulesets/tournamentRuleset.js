@@ -792,7 +792,11 @@ const toTable = function (arr, titleMap, dataMap) {
   return html;
 }
 
-const textSplit = function (val) {
+const textMapTo = function (val, _cardData) {
+  return val.map((x) => x.value).join("\r\n");
+}
+
+const textMapFrom = function (val, _cardData) {
   if (!val) return [];
   let pieces = val.split("\r\n");
   let total = [];
@@ -859,9 +863,10 @@ export default {
   },
   "text": {
     options: textOptions,
-    split: textSplit,
+    mapTo: textMapTo,
+    mapFrom: textMapFrom,
     validate(val, cardData) {
-      let options = textSplit(val);
+      let options = textMapFrom(val);
       let i = cardData.class && cardData.class.includes("/") ? 1 : 0; // Multiclass
       if (options.length - i > 2) return "Only two abilities are permitted in this ruleset."
       for (; i < options.length; i++) {
@@ -873,7 +878,7 @@ export default {
       textDetailTable,
     computePoints(val, cardData) {
       let sum = 0;
-      let options = textSplit(val);
+      let options = textMapFrom(val);
       let i = cardData.class && cardData.class.includes("/") ? 1 : 0; // Multiclass
       for (; i < options.length; i++) {
         sum += options[i].points;

@@ -713,7 +713,7 @@ export default {
     },
     "cardTemp.abilities"(newVal) {
       if (this.restrictText) {
-        this.cardTemp.text = newVal.map((x) => x.value).join("\r\n");
+        this.cardTemp.text = this.selectedRuleset.text.mapTo(newVal, this.cardData);
       }
     },
   },
@@ -860,8 +860,7 @@ export default {
     },
     syncAbilities() {
       if (this.restrictText) {
-        let abilities = this.selectedRuleset.text.split(this.cardTemp.text);
-        this.cardTemp.abilities = abilities;
+        this.cardTemp.abilities = this.selectedRuleset.text.mapFrom(this.cardTemp.text, this.cardData);
       } else {
         this.cardTemp.abilities = [];
       }
