@@ -638,7 +638,7 @@ export default {
         // Coerce
         this.cardTemp.text = dehtml(this.cardTemp.textFormat);
       }
-      this.syncAbilities();
+      this.mapToAbilities();
     },
     "cardTemp.textFormat"(newValue) {
       if (!this.formatText.main.isAuto) {
@@ -706,15 +706,18 @@ export default {
       this.infoCache = defaultInfoCache();
       this.formatText.main.isAuto = true;
       this.formatText.flavor.isAuto = true;
-      this.syncAbilities();
       this.setInitialValues();
       this.refreshCacheAll();
       this.updateTemp();
     },
-    "cardTemp.abilities"(newVal) {
-      if (this.restrictText) {
-        this.cardTemp.text = this.selectedRuleset.text.mapTo(newVal, this.cardData);
-      }
+    "cardTemp.abilities"() {
+      this.mapFromAbilities()
+    },
+    "cardData.name"() {
+      this.mapFromAbilities()
+    },
+    "cardData.faction"() {
+      this.mapFromAbilities()
     },
   },
   mounted() {
@@ -858,11 +861,16 @@ export default {
       if (option.points == null) return option.value;
       return `${option.id} - ${option.value} (${option.points} Points)`;
     },
-    syncAbilities() {
+    mapToAbilities() {
       if (this.restrictText) {
         this.cardTemp.abilities = this.selectedRuleset.text.mapFrom(this.cardTemp.text, this.cardData);
       } else {
         this.cardTemp.abilities = [];
+      }
+    },
+    mapFromAbilities() {
+      if (this.restrictText) {
+        this.cardTemp.text = this.selectedRuleset.text.mapTo(this.cardTemp.abilities, this.cardData);
       }
     },
 
@@ -871,6 +879,7 @@ export default {
     // ------------------- //
 
     onFocusout() {
+      this.mapFromAbilities();
       this.saveChanges();
       this.refreshCacheAll();
     },

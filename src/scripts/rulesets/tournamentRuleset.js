@@ -792,18 +792,52 @@ const toTable = function (arr, titleMap, dataMap) {
   return html;
 }
 
-const textMapTo = function (val, _cardData) {
-  return val.map((x) => x.value).join("\r\n");
+textOptions.forEach(x => {
+  // Sanitize regex
+  let regex = x.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  // These are somewhat permissive; we need the text to look mostly the same
+  regex = regex.replace(/\\\[NAME\\\]/g, ".*");
+  regex = regex.replace(/\\\[FACTION\\\]/g, ".*");
+  regex = regex.replace(/\\\[FACTION_TRAIT\\\]/g, ".*");
+
+  x.regex = new RegExp(`^${regex}$`);
+})
+
+const factionTrait = {
+  "Elf": "Undead",
+  "Free Kingdoms": "Lycanthrope",
+  "Deverenian": "Stormwraith",
+  "Dwarf": "Gargoyle",
+  "Mercenary": "Monster",
+  "The Chosen": "Thrall",
+  "Nothrog": "Siege"
 }
 
-const textMapFrom = function (val, _cardData) {
+function orJoin(arr) {
+  if (arr.length === 1) return arr[0];
+  const firsts = arr.slice(0, arr.length - 1);
+  const last = arr[arr.length - 1];
+  return firsts.join(', ') + ' or ' + last;
+}
+
+const textMapTo = function (val, cardData) {
+  return val.map((x) => {
+    let text = x.value;
+    text = text.replace(/\[NAME\]/g, cardData.name || "");
+    text = text.replace(/\[FACTION\]/g, orJoin((cardData.faction || "").split("/")));
+    text = text.replace(/\[FACTION_TRAIT\]/g, orJoin((cardData.faction || "").split("/").map(x => factionTrait[x])));
+    return text;
+  }).join("\r\n");
+}
+
+const textMapFrom = function (val) {
   if (!val) return [];
   let pieces = val.split("\r\n");
   let total = [];
   for (let i = 0; i < pieces.length; i++) {
     let piece = pieces[i];
     if (!piece) continue;
-    let option = textOptions.filter(x => x.value === piece)[0];
+    let option = textOptions.filter(x => x.regex.test(piece))[0];
     if (option == null) {
       option = { id: i + "?", value: piece };
     }
