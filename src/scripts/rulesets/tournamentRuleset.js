@@ -12,7 +12,7 @@ const textOptions = [{
   points: 15
 }, {
   id: 3,
-  value: "Your deck may contain any number of Shade Harpy. ",
+  value: "Your deck may contain any number of Shade Harpy.",
   points: 30
 }, {
   id: 4,
@@ -48,7 +48,7 @@ const textOptions = [{
   points: 15
 }, {
   id: 12,
-  value: "Limited Order: Put target item or Construct from your discard pile into play. ",
+  value: "Limited Order: Put target item or Construct from your discard pile into play.",
   points: 45
 }, {
   id: 13,
@@ -80,7 +80,7 @@ const textOptions = [{
   points: 30
 }, {
   id: 20,
-  value: "Limited Order: Destroy an equipped Familiar: [ANME] may play an action card from your discard pile, then banish it.",
+  value: "Limited Order: Destroy an equipped Familiar: [NAME] may play an action card from your discard pile, then banish it.",
   points: 30
 }, {
   id: 21,
@@ -104,7 +104,7 @@ const textOptions = [{
   points: 30
 }, {
   id: 26,
-  value: "Your Mentalists gain [NAME]’s faction and subclass(s).",
+  value: "Your Mentalists gain [NAME]'s faction and subclass(s).",
   points: 30
 }, {
   id: 27,
@@ -128,15 +128,15 @@ const textOptions = [{
   points: 30
 }, {
   id: 32,
-  value: "[NAME]’s spells gain +1 to ranged strikes and DC’s for each equipped ‘Eyestalk’.",
+  value: "[NAME]'s spells gain +1 to ranged strikes and DC's for each equipped 'Eyestalk'.",
   points: 15
 }, {
   id: 33,
-  value: "Limited Order: Search your deck for an ‘Eyestalk’ and equip it to your target Reaver.",
+  value: "Limited Order: Search your deck for an 'Eyestalk' and equip it to your target Reaver.",
   points: 45
 }, {
   id: 34,
-  value: "Spend Order: Ready each ‘Eyestalk’ you control.",
+  value: "Spend Order: Ready each 'Eyestalk' you control.",
   points: 30
 }, {
   id: 35,
@@ -200,7 +200,7 @@ const textOptions = [{
   points: 15
 }, {
   id: 50,
-  value: "Limited React: After initiative, choose your target character’s Daybreak or Nightfall ability: This character has that ability this turn.",
+  value: "Limited React: After initiative, choose your target character's Daybreak or Nightfall ability: This character has that ability this turn.",
   points: 30
 }, {
   id: 51,
@@ -252,7 +252,7 @@ const textOptions = [{
   points: 45
 }, {
   id: 63,
-  value: "Order: Once per game, if [NAME] played a separate Air, Earth, Fire, and Water action this turn: [NAME] permanently gains +6 ATK,  +6 AC, +6 Skill, and +2 HP.",
+  value: "Order: Once per game, if [NAME] played a separate Air, Earth, Fire, and Water action this turn: [NAME] permanently gains +6 ATK, +6 AC, +6 Skill, and +2 HP.",
   points: 15
 }, {
   id: 64,
@@ -332,7 +332,7 @@ const textOptions = [{
   points: 30
 }, {
   id: 83,
-  value: "[NAME] may use Charisma regardless of rank, on opposing character’s die rolls, and twice per turn.",
+  value: "[NAME] may use Charisma regardless of rank, on opposing character's die rolls, and twice per turn.",
   points: 30
 }, {
   id: 84,
@@ -380,7 +380,7 @@ const textOptions = [{
   points: 45
 }, {
   id: 95,
-  value: "Limited Order: Kill a non-monster character: All of your Evil monsters gain an additional strike per attack (base = the killed character’s level) until end of turn.",
+  value: "Limited Order: Kill a non-monster character: All of your Evil monsters gain an additional strike per attack (base = the killed character's level) until end of turn.",
   points: 45
 }, {
   id: 96,
@@ -496,7 +496,7 @@ const textOptions = [{
   points: 45
 }, {
   id: 124,
-  value: "Limited Order: Remove a [FACTION] in your discard pile from the game: Perform a ranged strike (base = the removed [FACTION]’s level).",
+  value: "Limited Order: Remove a [FACTION] in your discard pile from the game: Perform a ranged strike (base = the removed [FACTION]'s level).",
   points: 15
 }, {
   id: 125,
@@ -580,7 +580,7 @@ const textOptions = [{
   points: 30
 }, {
   id: 145,
-  value: "Spend Order: Once per game: Perform a number of +0 ranged strikes equal to [NAME]’s Level.",
+  value: "Spend Order: Once per game: Perform a number of +0 ranged strikes equal to [NAME]'s Level.",
   points: 45
 }, {
   id: 146,
@@ -604,7 +604,7 @@ const textOptions = [{
   points: 30
 }, {
   id: 151,
-  value: "[NAME]’s melee strikes inflict an additional wound against stunned characters.",
+  value: "[NAME]'s melee strikes inflict an additional wound against stunned characters.",
   points: 30
 }, {
   id: 152,
