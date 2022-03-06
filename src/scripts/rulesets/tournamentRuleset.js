@@ -750,9 +750,9 @@ const toTable = function (arr, titleMap, dataMap) {
 
   // Gather columns
   let allKeys = {};
-  Object.keys(titleMap).forEach(x => allKeys[x] = true);
+  Object.keys(titleMap).forEach(x => allKeys[x] = titleMap[x] !== null);
   for (let i = 0; i < arr.length; i++) {
-    Object.keys(arr[i]).forEach(x => allKeys[x] = true);
+    Object.keys(arr[i]).forEach(x => allKeys[x] = titleMap[x] !== null);
   }
 
   let html = '<table class="table table-sm table-striped table-borderless">';
@@ -761,6 +761,7 @@ const toTable = function (arr, titleMap, dataMap) {
   html += "<thead>";
   html += "<tr>";
   Object.keys(allKeys).forEach(x => {
+    if (!allKeys[x]) return;
     if (titleMap[x]) {
       x = titleMap[x];
     } else {
@@ -778,6 +779,7 @@ const toTable = function (arr, titleMap, dataMap) {
     let data = arr[i];
     html += "<tr>";
     Object.keys(allKeys).forEach(x => {
+      if (!allKeys[x]) return;
       if (data[x] != null) {
         let val = dataMap[x] ? dataMap[x](data[x]) : data[x];
         html += "<td>" + val + "</td>";
@@ -853,7 +855,8 @@ const textMapFrom = function (val) {
 
 const textDetailTable = toTable(textOptions, {
   id: "ID",
-  value: "Ability Text"
+  value: "Ability Text",
+  regex: null
 }, {
   value: x => {
     let hashReg = /(Limited Order:|Spend Order:|Order:|Limited React:|Spend React:|React:)/gm;
