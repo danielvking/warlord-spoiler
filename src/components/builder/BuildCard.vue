@@ -374,6 +374,8 @@ rulesets.forEach((x) => {
   rulesetMap[x.description] = x.ruleset;
 });
 
+const defaultRuleset = rulesets.filter((x) => x.ruleset.general && x.ruleset.general.makeDefault)[0] || rulesets[0];
+
 const mapperConfig = {
   props: {
     class: {
@@ -440,20 +442,20 @@ function resizeDataUrl(dataUrl, width, height) {
   let img = document.createElement("img");
   img.setAttribute("src", dataUrl);
   img.setAttribute("style", "display:none");
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     img.onload = () => {
-        let scaleX = width / img.width;
-        let scaleY = height / img.height;
-        let scale = scaleX > scaleY ? scaleX : scaleY;
-        let realWidth = scale * img.width;
-        let realHeight = scale * img.height;
-        let canvas = document.createElement("canvas");
-        canvas.width = realWidth;
-        canvas.height = realHeight
-        let context = canvas.getContext("2d");
-        context.scale(scale, scale);
-        context.drawImage(img, 0, 0); 
-        resolve(canvas.toDataURL());
+      let scaleX = width / img.width;
+      let scaleY = height / img.height;
+      let scale = scaleX > scaleY ? scaleX : scaleY;
+      let realWidth = scale * img.width;
+      let realHeight = scale * img.height;
+      let canvas = document.createElement("canvas");
+      canvas.width = realWidth;
+      canvas.height = realHeight;
+      let context = canvas.getContext("2d");
+      context.scale(scale, scale);
+      context.drawImage(img, 0, 0);
+      resolve(canvas.toDataURL());
     };
   });
 }
@@ -499,7 +501,7 @@ export default {
   data() {
     return {
       rulesetOptions: rulesets.map((x) => x.description),
-      selectedRulesetOption: rulesets[0].description,
+      selectedRulesetOption: defaultRuleset.description,
       infoCache: defaultInfoCache(),
       cardData: {},
       cardTemp: {
@@ -541,7 +543,7 @@ export default {
       mapper: null,
       cardUserImageDataUrl: null,
       cardImageDataUrl: null,
-      extendBleed: false
+      extendBleed: false,
     };
   },
   computed: {
@@ -610,7 +612,7 @@ export default {
         return this.$store.getters.keywordRegexExtended(this.additionalKeywords);
       }
       return this.$store.getters.keywordRegex;
-    }
+    },
   },
   watch: {
     cardData: {
@@ -712,13 +714,13 @@ export default {
       this.saveChanges();
     },
     "cardTemp.abilities"() {
-      this.mapFromAbilities()
+      this.mapFromAbilities();
     },
     "cardData.name"() {
-      this.mapFromAbilities()
+      this.mapFromAbilities();
     },
     "cardData.faction"() {
-      this.mapFromAbilities()
+      this.mapFromAbilities();
     },
   },
   mounted() {
@@ -807,7 +809,7 @@ export default {
       this.setInitialValue("misc");
     },
     refreshCache(prop, val, suppressValidation) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         this.$nextTick(() => {
           let propConfig = this.selectedRuleset && this.selectedRuleset[prop];
           let validationText =
@@ -927,7 +929,7 @@ export default {
         alert("Whoops! Looks like you've gone over the point maximum.");
         return;
       }
-      let dataUrl = await new Promise(resolve => {
+      let dataUrl = await new Promise((resolve) => {
         if (this.extendBleed) {
           // Renders the image size as 300 DPI and adds a standard print margin of 36 pixels on each side
           let img = document.createElement("img");
@@ -940,9 +942,9 @@ export default {
             let context = canvas.getContext("2d");
             context.fillStyle = "black";
             context.fillRect(0, 0, canvas.width, canvas.height);
-            context.drawImage(img, 36, 36, 750, 1050); 
+            context.drawImage(img, 36, 36, 750, 1050);
             resolve(canvas.toDataURL());
-          }
+          };
         } else {
           resolve(this.cardImageDataUrl);
         }
