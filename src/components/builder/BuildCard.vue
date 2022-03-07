@@ -702,13 +702,14 @@ export default {
     },
 
     selectedRuleset() {
-      this.saveChanges();
+      this.mapToAbilities();
       this.infoCache = defaultInfoCache();
       this.formatText.main.isAuto = true;
       this.formatText.flavor.isAuto = true;
       this.setInitialValues();
       this.refreshCacheAll();
       this.updateTemp();
+      this.saveChanges();
     },
     "cardTemp.abilities"() {
       this.mapFromAbilities()
@@ -879,7 +880,6 @@ export default {
     // ------------------- //
 
     onFocusout() {
-      this.mapFromAbilities();
       this.saveChanges();
       this.refreshCacheAll();
     },
