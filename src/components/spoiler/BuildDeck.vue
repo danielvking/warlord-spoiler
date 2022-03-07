@@ -1,5 +1,5 @@
 <template>
-  <div v-if="showSidebar" class="deck-container-outer">
+  <div v-if="showSideMenus" class="deck-container-outer">
     <div class="deck-container-middle">
       <div class="deck-container-inner content-region">
         <div class="site-subheader">
@@ -109,8 +109,8 @@ export default {
     cardIndex() {
       return this.$store.state.cardIndex;
     },
-    showSidebar() {
-      return Object.keys(this.$store.state.deck).length && this.$store.getters.showSidebar;
+    showSideMenus() {
+      return Object.keys(this.$store.state.deck).length && this.$store.getters.showSideMenus;
     },
     cards() {
       let deck = this.$store.state.deck;
@@ -233,6 +233,6 @@ export default {
   width: 250px;
   margin-right: 6px;
   flex-direction: column;
-  max-height: 100vh;
+  max-height: 100%;
 }
 </style>

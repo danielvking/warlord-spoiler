@@ -4,6 +4,8 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import {
   faBars,
   faCheck,
+  faExclamationTriangle,
+  faExternalLinkAlt,
   faEye,
   faFolderOpen,
   faInfoCircle,
@@ -17,6 +19,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(faBars)
 library.add(faCheck)
+library.add(faExclamationTriangle)
+library.add(faExternalLinkAlt)
 library.add(faEye)
 library.add(faInfoCircle)
 library.add(faFolderOpen)

@@ -131,12 +131,11 @@ export default {
 
 @media print {
   #app {
-    background: none;
     height: auto;
   }
 
-  #scrollRegion {
-    overflow: hidden;
+  #backgroundAnchor {
+    background: none;
   }
 
   .outer-group {

@@ -7,7 +7,7 @@
         >
       </div>
       <div class="float-right">
-        <a v-if="showSidebar" href="#" @click.prevent="removeCard(card)" aria-label="Cancel changes"
+        <a v-if="showSideMenus" href="#" @click.prevent="removeCard(card)" aria-label="Cancel changes"
           ><font-awesome-icon icon="minus-square" /> Cancel changes</a
         >
       </div>
@@ -345,8 +345,8 @@ export default {
     cardData() {
       return this.cardIndex[this.card] || {};
     },
-    showSidebar() {
-      return this.$store.getters.showSidebar;
+    showSideMenus() {
+      return this.$store.getters.showSideMenus;
     },
     imageUrl() {
       if (!this.cardData) return null;
@@ -437,10 +437,10 @@ export default {
     }
     this.cardJsonWrapped = this.$store.state.settings.isEditTextWrapped;
     this.viewOption = this.$store.state.settings.editViewOption;
-    this.$nextTick(() => {
-      // Adjust scroll
-      let scrollRegion = document.getElementById("scrollRegion");
-      scrollRegion.scrollTop = 0;
+    this.$store.dispatch("loadCardData").then(() => {
+      if (!this.cardIndex[this.card]) {
+        this.$store.commit("setShow404", true);
+      }
     });
   },
   methods: {

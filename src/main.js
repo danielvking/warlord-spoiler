@@ -5,7 +5,6 @@ import './plugins/bootstrap-vue'
 import './plugins/fontawesome'
 import './plugins/vue-select'
 import App from './App.vue'
-import './scss/bootstrapConfig.scss'
 import router from './router'
 import store from './store'
 

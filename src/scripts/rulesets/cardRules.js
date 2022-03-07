@@ -1,36 +1,37 @@
 import baseRuleset from "@/scripts/rulesets/baseRuleset.js";
 import tournamentRuleset from "@/scripts/rulesets/tournamentRuleset.js";
 
-function combineRuleset(source, target) {
+function setFallback(ruleset, fallback) {
   // Merge each property config
-  Object.keys(source).forEach(p => {
+  Object.keys(fallback).forEach(p => {
     // If the property config does not exist on the target, create it
-    if (!target[p]) target[p] = {};
+    if (!ruleset[p]) ruleset[p] = {};
     // Enumerate config settings
-    const sConfig = source[p];
-    const tConfig = target[p];
-    Object.keys(sConfig).forEach(x => {
-      const sConfigSetting = sConfig[x];
-      const tConfigSetting = tConfig[x];
-      // If the properties are functions, merge them (return truthy results from the target before executing the source)
-      if (typeof sConfigSetting === "function" && typeof tConfigSetting === "function") {
-        tConfig[x] = function (...args) {
-          let result = tConfigSetting.apply(null, args);
+    const fConfig = fallback[p];
+    const rConfig = ruleset[p];
+    Object.keys(fConfig).forEach(x => {
+      const fConfigSetting = fConfig[x];
+      const rConfigSetting = rConfig[x];
+      // If the properties are functions, merge them (return truthy results from the source before executing the target)
+      if (typeof fConfigSetting === "function" && typeof rConfigSetting === "function") {
+        rConfig[x] = function (...args) {
+          let result = rConfigSetting.apply(null, args);
           if (result) return result;
-          return sConfigSetting.apply(null, args);
+          return fConfigSetting.apply(null, args);
         }
-      } else {
-        // Override non-function settings
-        tConfig[x] = sConfigSetting;
+      } else if (rConfigSetting == null) {
+        // Inherit non-function settings
+        rConfig[x] = fConfigSetting;
       }
     })
   })
-  return target;
+
+  return ruleset;
 }
 
 function withBase(ruleset) {
-  let base = combineRuleset(baseRuleset, {});
-  return combineRuleset(ruleset, base);
+  let clone = setFallback({}, ruleset);
+  return setFallback(clone, baseRuleset);
 }
 
 function deepFreeze(object) {

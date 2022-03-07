@@ -24,15 +24,56 @@ function constructCardIndex(cards) {
 
 let cardPromise;
 
+function createKeywordRegex(additionalKeywords) {
+  return function (state) {
+    if (!state.cardsLoaded) return /(?!)/; // Nothing
+
+    // Basic keywords
+    let keywords = (additionalKeywords || []).concat(["Spend Order:", "Order:", "Spend React:", "React:"]);
+
+    function addConjecturedPlurals(word) {
+      keywords.push(word + "s");
+      keywords.push(word + "es");
+      if (word.endsWith("y")) {
+        keywords.push(word.replace(/y$/, "ies"));
+      } else if (word.endsWith("f")) {
+        keywords.push(word.replace(/f$/, "ves"));
+      }
+    }
+
+    // Dynamically aquire keywords from reference lists
+    state.referenceLists.factionList.forEach(x => {
+      keywords.push(x);
+      addConjecturedPlurals(x);
+    });
+    state.referenceLists.traitList.forEach(x => {
+      keywords.push(x);
+      addConjecturedPlurals(x);
+    });
+    state.referenceLists.featList.forEach(x => {
+      keywords.push(x);
+    });
+
+    // This is probably excessive, but lets escape them to avoid regex injection
+    keywords = keywords.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+
+    // Matches any keyword not embedded inside another word
+    return new RegExp(`(^|\\W)(${keywords.join("|")})(?!\\w)`, "gm");
+  }
+}
+
 export default new Vuex.Store({
   state: {
+    show404: false,
     cardsLoaded: false,
     cards: [],
     cardIndex: {},
     referenceLists: {},
     viewPortWidth: window.innerWidth,
+    screenHeight: window.screen.height,
     deck: {},
     editedCards: {},
+    localRoutes: [],
     settings: {
       isEditMode: false,
       isEditTextWrapped: false,
@@ -40,46 +81,18 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    showSidebar(state) {
+    showSideMenus(state) {
       return state.viewPortWidth >= 992; // Bootstrap "large" breakpoint;
     },
-    keywordRegex(state) {
-      if (!state.cardsLoaded) return /(?!)/; // Nothing
-
-      // Basic keywords
-      let keywords = ["Spend Order:", "Order:", "Spend React:", "React:"];
-
-      function addConjecturedPlurals(word) {
-        keywords.push(word + "s");
-        keywords.push(word + "es");
-        if (word.endsWith("y")) {
-          keywords.push(word.replace(/y$/, "ies"));
-        } else if (word.endsWith("f")) {
-          keywords.push(word.replace(/f$/, "ves"));
-        }
-      }
-
-      // Dynamically aquire keywords from reference lists
-      state.referenceLists.factionList.forEach(x => {
-        keywords.push(x);
-        addConjecturedPlurals(x);
-      });
-      state.referenceLists.traitList.forEach(x => {
-        keywords.push(x);
-        addConjecturedPlurals(x);
-      });
-      state.referenceLists.featList.forEach(x => {
-        keywords.push(x);
-      });
-
-      // This is probably excessive, but lets escape them to avoid regex injection
-      keywords = keywords.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-
-      // Matches any keyword not embedded inside another word
-      return new RegExp(`(^|\\W)(${keywords.join("|")})(?!\\w)`, "gm");
+    keywordRegex: createKeywordRegex(),
+    keywordRegexExtended(state) {
+      return additionalKeywords => createKeywordRegex(additionalKeywords)(state);
     }
   },
   mutations: {
+    setShow404(state, val) {
+      state.show404 = val;
+    },
     initialize(state) {
       let deck = localStorage.getItem("deck");
       if (deck) {
@@ -97,6 +110,7 @@ export default new Vuex.Store({
       window.addEventListener("resize",
         utility.debounce(() => {
           state.viewPortWidth = window.innerWidth;
+          state.screenHeight = window.screen.height;
         })
       );
     },
@@ -154,6 +168,9 @@ export default new Vuex.Store({
     clearEditedCards(state) {
       state.editedCards = {};
       localStorage.removeItem("editedCards", JSON.stringify(state.editedCards))
+    },
+    setLocalRoutes(state, localRoutes) {
+      state.localRoutes = localRoutes;
     },
     saveSettings(state, settings) {
       Object.keys(settings).forEach(key => {

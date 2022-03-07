@@ -2,7 +2,7 @@
   <div class="image-holder">
     <div ref="imageHolder">
       <template v-if="!renderingError">
-        <img v-if="cardImageResizedUrl" class="user-image" :src="cardImageResizedUrl" @load="refreshImage()" />
+        <img v-if="cardImageUrl" class="user-image" :src="cardImageUrl" @load="refreshImage()" />
         <template v-if="cardTemplateUrl">
           <img :src="cardTemplateUrl" @load="refreshImage()" />
           <div class="image-name card-title">
@@ -83,30 +83,6 @@ function legalHtml(html) {
   return !html.match(/<(?!\/?(p|b|i|br)>)/m) && !html.replace(/<[^<>]*>/gm).match(/[<>]/m);
 }
 
-// Resize an image to help the browser not crawl as much
-function resizeDataUrl(dataUrl, width, height) {
-  let img = document.createElement("img");
-  img.setAttribute("src", dataUrl);
-  img.setAttribute("style", "display:none");
-  //document.appendChild(img);
-  return new Promise(resolve => {
-    img.onload = () => {
-        let scaleX = width / img.width;
-        let scaleY = height / img.height;
-        let scale = scaleX > scaleY ? scaleX : scaleY;
-        let realWidth = scale * img.width;
-        let realHeight = scale * img.height;
-        let canvas = document.createElement("canvas");
-        canvas.width = realWidth;
-        canvas.height = realHeight
-        let context = canvas.getContext("2d");
-        context.scale(scale, scale);
-        context.drawImage(img, 0, 0); 
-        resolve(canvas.toDataURL());
-    };
-  });
-}
-
 export default {
   props: {
     cardData: Object,
@@ -115,18 +91,18 @@ export default {
     headerHtml: String,
     mainHtml: String,
     flavorHtml: String,
+    keywordRegex: RegExp
   },
   data() {
     return {
       formattedCardText: "",
       cancelToken: { cancel: false },
-      renderingError: false,
-      cardImageResizedUrl: null
+      renderingError: false
     };
   },
   computed: {
-    keywordRegex() {
-      return this.$store.getters.keywordRegex;
+    internalKeywordRegex() {
+      return this.keywordRegex || this.$store.getters.keywordRegex;
     },
     cardTemplateUrl() {
       let type = this.cardData.type || "";
@@ -185,7 +161,7 @@ export default {
       let mainText = "";
       if (this.cardData.text) {
         mainText = sanitizeHtml(this.cardData.text);
-        mainText = mainText.replace(this.keywordRegex, "$1<b>$2</b>"); // Bold keywords
+        mainText = mainText.replace(this.internalKeywordRegex, "$1<b>$2</b>"); // Bold keywords
         mainText = mainText.replace(/\r\n/gm, "</p><p>"); // Line breaks separate paragraphs
         mainText = "<p>" + mainText + "</p>";
       }
@@ -214,12 +190,6 @@ export default {
       },
       deep: true,
     },
-    cardImageUrl() {
-      this.refreshUserImage();
-    },
-    cardImageResizedUrl() {
-      this.$emit("update:cardImageUrl", this.cardImageResizedUrl);
-    },
     points() {
       this.refreshImage();
     },
@@ -242,19 +212,7 @@ export default {
       this.refreshImage();
     },
   },
-  mounted() {
-    this.refreshUserImage();
-  },
   methods: {
-    async refreshUserImage() {
-      if (this.cardImageUrl !== this.cardImageResizedUrl) {
-        if (this.cardImageUrl != null) {
-          this.cardImageResizedUrl = await resizeDataUrl(this.cardImageUrl, 339, 489);
-        } else {
-          this.cardImageResizedUrl = null;
-        }
-      }
-    },
     computeFormattedCardText() {
       let header = this.formattedHeaderText;
       if (this.headerHtml && legalHtml(this.headerHtml)) {

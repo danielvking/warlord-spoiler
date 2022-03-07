@@ -1,12 +1,19 @@
 <template>
   <header-footer>
-    <b-container fluid @focusout="saveChanges">
+    <b-container fluid @focusout="onFocusout">
       <div class="my-2 text-center">
         <p>Welcome to the card builder!<br />Select a ruleset to get started. The page will save your changes.</p>
       </div>
       <b-row>
         <b-col cols="12">
           <b-select v-model="selectedRulesetOption" :options="rulesetOptions"></b-select>
+          <router-link
+            v-if="hasGuide"
+            class="float-right m-1"
+            :to="{ name: 'rulesetGuide', params: { id: selectedRulesetOption } }"
+          >
+            <span><font-awesome-icon icon="external-link-alt" /> View Ruleset Guide</span>
+          </router-link>
         </b-col>
       </b-row>
       <template v-if="cardsLoaded">
@@ -16,11 +23,12 @@
             <div class="card-view d-flex flex-column pb-2 align-items-center">
               <card-image-creator
                 :card-data="cardData"
-                :card-image-url.sync="cardUserImageDataUrl"
+                :card-image-url="cardUserImageDataUrl"
                 :points="infoCache.pointTotal"
                 @input="(x) => (cardImageDataUrl = x)"
                 :main-html.sync="formatText.main.text"
                 :flavor-html.sync="formatText.flavor.text"
+                :keyword-regex="keywordRegex"
               />
 
               <!-- Image -->
@@ -37,7 +45,15 @@
                 </b-row>
                 <!-- Points Desktop -->
                 <div v-if="infoCache.hasPoints" class="point-display d-none d-md-block border-secondary mt-2">
-                  <h3 class="my-0 text-center">{{ infoCache.pointTotal }} Points</h3>
+                  <h3 class="my-0 text-center">
+                    {{ infoCache.pointTotal }} Points
+                    <font-awesome-icon
+                      v-if="infoCache.pointTotal > infoCache.pointMaximum"
+                      class="text-danger"
+                      size="sm"
+                      icon="exclamation-triangle"
+                    />
+                  </h3>
                 </div>
               </div>
             </div>
@@ -46,7 +62,15 @@
           <b-col cols="12" md="6">
             <!-- Points Mobile -->
             <div v-if="infoCache.hasPoints" class="point-display d-block d-md-none border-secondary mb-2">
-              <h3 class="my-0 text-center">{{ infoCache.pointTotal }} Points</h3>
+              <h3 class="my-0 text-center">
+                {{ infoCache.pointTotal }} Points
+                <font-awesome-icon
+                  v-if="infoCache.pointTotal > infoCache.pointMaximum"
+                  class="text-danger"
+                  size="sm"
+                  icon="exclamation-triangle"
+                />
+              </h3>
             </div>
 
             <!-- Reset -->
@@ -260,48 +284,67 @@
               <!-- Text -->
               <div class="my-3">
                 <info-helper :info-cache="infoCache" property="text" @focusout="refreshCache('text')">
-                  <b-form-textarea
-                    rows="4"
-                    :value="formatText.main.isAuto ? cardTemp.text : cardTemp.textFormat"
-                    @input="updateTextEditor"
-                    placeholder="[Card Text]"
-                  />
-                  <b-checkbox v-model="formatText.main.isAuto">Auto-format</b-checkbox>
-                </info-helper>
-              </div>
-              <!-- Flavor Traits -->
-              <div class="clearfix">
-                <div class="card-stat-label"><span>Flavor Traits:</span></div>
-                <div class="card-stat-value">
-                  <info-helper
-                    :info-cache="infoCache"
-                    property="flavorTraits"
-                    @focusout="refreshCache('flavorTraits', cardTemp.printInfo.flavorTraits.join('/'))"
-                  >
+                  <template v-if="restrictText">
                     <v-select
                       multiple
-                      taggable
-                      v-model="cardTemp.printInfo.flavorTraits"
-                      :options="flavorTraitList"
-                      @input="refreshCache('flavorTraits', cardTemp.printInfo.flavorTraits.join('/'))"
+                      class="wrapped-select"
+                      placeholder="[Card Text]"
+                      v-model="cardTemp.abilities"
+                      :get-option-label="getOptionLabel"
+                      :options="textOptions"
+                      @input="refreshCache('text')"
+                    >
+                      <template #option="option">
+                        <span style="white-space: normal">{{ getOptionLabel(option) }}</span>
+                      </template>
+                    </v-select>
+                  </template>
+                  <template v-else>
+                    <b-form-textarea
+                      rows="4"
+                      :value="formatText.main.isAuto ? cardTemp.text : cardTemp.textFormat"
+                      @input="updateTextEditor"
+                      placeholder="[Card Text]"
                     />
-                  </info-helper>
-                </div>
-              </div>
-              <!-- Flavor Text -->
-              <div class="my-2">
-                <info-helper :info-cache="infoCache" property="flavorText" @focusout="refreshCache('flavorText')">
-                  <b-form-textarea
-                    rows="2"
-                    :value="
-                      formatText.flavor.isAuto ? cardTemp.printInfo.flavorText : cardTemp.printInfo.flavorTextFormat
-                    "
-                    @input="updateFlavorTextEditor"
-                    placeholder="[Flavor Text]"
-                  />
-                  <b-checkbox v-model="formatText.flavor.isAuto">Auto-format</b-checkbox>
+                    <b-checkbox v-model="formatText.main.isAuto">Auto-format</b-checkbox>
+                  </template>
                 </info-helper>
               </div>
+              <template v-if="!disallowFlavor">
+                <!-- Flavor Traits -->
+                <div class="clearfix">
+                  <div class="card-stat-label"><span>Flavor Traits:</span></div>
+                  <div class="card-stat-value">
+                    <info-helper
+                      :info-cache="infoCache"
+                      property="flavorTraits"
+                      @focusout="refreshCache('flavorTraits', cardTemp.printInfo.flavorTraits.join('/'))"
+                    >
+                      <v-select
+                        multiple
+                        taggable
+                        v-model="cardTemp.printInfo.flavorTraits"
+                        :options="flavorTraitList"
+                        @input="refreshCache('flavorTraits', cardTemp.printInfo.flavorTraits.join('/'))"
+                      />
+                    </info-helper>
+                  </div>
+                </div>
+                <!-- Flavor Text -->
+                <div class="my-2">
+                  <info-helper :info-cache="infoCache" property="flavorText" @focusout="refreshCache('flavorText')">
+                    <b-form-textarea
+                      rows="2"
+                      :value="
+                        formatText.flavor.isAuto ? cardTemp.printInfo.flavorText : cardTemp.printInfo.flavorTextFormat
+                      "
+                      @input="updateFlavorTextEditor"
+                      placeholder="[Flavor Text]"
+                    />
+                    <b-checkbox v-if="!restrictText" v-model="formatText.flavor.isAuto">Auto-format</b-checkbox>
+                  </info-helper>
+                </div>
+              </template>
             </div>
           </b-col>
 
@@ -309,6 +352,7 @@
             <b-button class="mb-2" block variant="primary" size="lg" @click="downloadImage"
               >Download Card Image</b-button
             >
+            <b-checkbox class="mb-2" v-model="extendBleed">Format for Printing</b-checkbox>
           </b-col>
         </b-row>
       </template>
@@ -392,25 +436,56 @@ const mapperConfig = {
   },
 };
 
+function resizeDataUrl(dataUrl, width, height) {
+  let img = document.createElement("img");
+  img.setAttribute("src", dataUrl);
+  img.setAttribute("style", "display:none");
+  return new Promise(resolve => {
+    img.onload = () => {
+        let scaleX = width / img.width;
+        let scaleY = height / img.height;
+        let scale = scaleX > scaleY ? scaleX : scaleY;
+        let realWidth = scale * img.width;
+        let realHeight = scale * img.height;
+        let canvas = document.createElement("canvas");
+        canvas.width = realWidth;
+        canvas.height = realHeight
+        let context = canvas.getContext("2d");
+        context.scale(scale, scale);
+        context.drawImage(img, 0, 0); 
+        resolve(canvas.toDataURL());
+    };
+  });
+}
+
 function dehtml(html) {
   html = html.replace(/&nbsp;/gm, " ");
-  html = html.replace(/<br>|<\/p><p>/gm, "\r\n");
-  html = html.replace(/<[^<>]*>/gm, "");
   let txt = document.createElement("textarea");
   txt.innerHTML = html;
   html = txt.value; // Decode characters
   html = html.replace(/\s+/gm, " ");
+  html = html.replace(/(<br>|<\/p><p>)/gm, "\r\n");
+  html = html.replace(/<[^<>]*>/gm, "");
   return html;
 }
 
 function defaultInfoCache() {
   return {
+    touched: {},
     validationText: {},
     validationState: {},
     hasPoints: false,
     points: {},
     pointInfo: {},
     pointTotal: 0,
+    pointMaximum: 0,
+  };
+}
+
+function computeSetting(setting) {
+  return function () {
+    let general = this.selectedRuleset && this.selectedRuleset.general;
+    return general && general[setting];
   };
 }
 
@@ -430,6 +505,8 @@ export default {
       cardTemp: {
         name: "",
         text: "",
+        multiclass: null,
+        abilities: [],
         textFormat: "",
         type: "",
         alignment: "",
@@ -464,18 +541,10 @@ export default {
       mapper: null,
       cardUserImageDataUrl: null,
       cardImageDataUrl: null,
+      extendBleed: false
     };
   },
   computed: {
-    selectedRuleset() {
-      return rulesetMap[this.selectedRulesetOption];
-    },
-    hasValidationErrors() {
-      return Object.values(this.infoCache.validationText).some((x) => x);
-    },
-    pointTotal() {
-      return Object.values(this.infoCache.points).reduce((x, y) => x + (y || 0), 0);
-    },
     cardsLoaded() {
       return this.$store.state.cardsLoaded;
     },
@@ -511,13 +580,44 @@ export default {
     flavorTraitList() {
       return (this.referenceLists && this.referenceLists.flavorTraitList) || [];
     },
+
+    multiclassRegex() {
+      let classList = (this.referenceLists && this.referenceLists.classList) || [];
+      return new RegExp(`^[^.:]*is[^.:]*(${classList.join("|")})[^.:]*\\.\\W*`, "i");
+    },
+
+    // ------------ //
+    // - Rulesets - //
+    // ------------ //
+    selectedRuleset() {
+      return rulesetMap[this.selectedRulesetOption];
+    },
+    hasValidationErrors() {
+      return Object.values(this.infoCache.validationText).some((x) => x);
+    },
+    textOptions() {
+      let textOptions = this.selectedRuleset && this.selectedRuleset.text && this.selectedRuleset.text.options;
+      if (!textOptions) return [];
+      return textOptions.filter((x) => !this.cardTemp.abilities.map((y) => y.id).includes(x.id));
+    },
+    hasGuide: computeSetting("hasGuide"),
+    restrictText: computeSetting("restrictText"),
+    disallowFlavor: computeSetting("disallowFlavor"),
+    pointMaximum: computeSetting("pointMaximum"),
+    additionalKeywords: computeSetting("additionalKeywords"),
+    keywordRegex() {
+      if (this.additionalKeywords) {
+        return this.$store.getters.keywordRegexExtended(this.additionalKeywords);
+      }
+      return this.$store.getters.keywordRegex;
+    }
   },
   watch: {
-    selectedRuleset() {
-      this.infoCache = defaultInfoCache();
-      this.setInitialValues();
-      this.refreshCacheAll();
-      this.updateTemp();
+    cardData: {
+      handler() {
+        this.saveChangesDebounced();
+      },
+      deep: true,
     },
 
     // These all just sync formatting
@@ -538,6 +638,7 @@ export default {
         // Coerce
         this.cardTemp.text = dehtml(this.cardTemp.textFormat);
       }
+      this.mapToAbilities();
     },
     "cardTemp.textFormat"(newValue) {
       if (!this.formatText.main.isAuto) {
@@ -568,6 +669,55 @@ export default {
         this.formatText.flavor.text = newValue;
         this.cardTemp.printInfo.flavorText = dehtml(newValue);
       }
+    },
+
+    "cardTemp.classes"(newVal) {
+      if (!this.formatText.main.isAuto) return;
+      let isMulticlass = newVal.length > 1;
+      let match = this.cardTemp.text && this.cardTemp.text.match(this.multiclassRegex);
+
+      if (match) {
+        let sameClass = new RegExp(`is(?=.*${newVal.join(")(?=.*")})`, "i");
+        let otherClass = new RegExp(`(${this.classList.join("|")})`, "i");
+        if (match[0].match(otherClass) || !match[0].match(sameClass)) {
+          this.cardTemp.text = this.cardTemp.text.replace(this.multiclassRegex, "");
+          match = null;
+        }
+      }
+      if (isMulticlass) {
+        if (!match) {
+          let ending = this.cardTemp.classes
+            .map((x, i) => {
+              if (i < this.cardTemp.classes.length - 2) {
+                return x.toLowerCase() + ",";
+              } else if (i === this.cardTemp.classes.length - 1) {
+                return "and " + x.toLowerCase();
+              }
+              return x.toLowerCase();
+            })
+            .join(" ");
+          this.cardTemp.text = "This character is a " + ending + ".\r\n" + (this.cardTemp.text || "");
+        }
+      }
+    },
+
+    selectedRuleset() {
+      this.saveChanges();
+      this.infoCache = defaultInfoCache();
+      this.formatText.main.isAuto = true;
+      this.formatText.flavor.isAuto = true;
+      this.setInitialValues();
+      this.refreshCacheAll();
+      this.updateTemp();
+    },
+    "cardTemp.abilities"() {
+      this.mapFromAbilities()
+    },
+    "cardData.name"() {
+      this.mapFromAbilities()
+    },
+    "cardData.faction"() {
+      this.mapFromAbilities()
     },
   },
   mounted() {
@@ -655,53 +805,84 @@ export default {
       this.setInitialValue("feats");
       this.setInitialValue("misc");
     },
-    refreshCache(prop, val) {
-      this.$nextTick(() => {
-        let propConfig = this.selectedRuleset && this.selectedRuleset[prop];
-        let validationText =
-          propConfig &&
-          propConfig.validate &&
-          propConfig.validate(val || this.cardData[prop], this.cardData, this.referenceLists);
-        Vue.set(this.infoCache.validationText, prop, validationText);
-        Vue.set(this.infoCache.validationState, prop, validationText ? false : null);
-        if (!validationText) {
-          let computePoints = propConfig && propConfig.computePoints;
-          this.infoCache.hasPoints |= !!computePoints;
-          let points = computePoints && computePoints(val || this.cardData[prop], this.cardData, this.referenceLists);
-          let pointInfo = propConfig && propConfig.pointInfo;
-          Vue.set(this.infoCache.points, prop, points);
-          Vue.set(this.infoCache.pointInfo, prop, pointInfo);
-        } else {
-          Vue.set(this.infoCache.points, prop, null);
-          Vue.set(this.infoCache.pointInfo, prop, null);
-        }
-        this.infoCache.pointTotal = Object.values(this.infoCache.points).reduce((x, y) => x + (y || 0), 0);
+    refreshCache(prop, val, suppressValidation) {
+      return new Promise(resolve => {
+        this.$nextTick(() => {
+          let propConfig = this.selectedRuleset && this.selectedRuleset[prop];
+          let validationText =
+            propConfig &&
+            propConfig.validate &&
+            propConfig.validate(val || this.cardData[prop], this.cardData, this.referenceLists);
+          if (!suppressValidation || this.infoCache.touched[prop]) {
+            this.infoCache.touched[prop] = true;
+            Vue.set(this.infoCache.validationText, prop, validationText);
+            Vue.set(this.infoCache.validationState, prop, validationText ? false : null);
+          }
+          if (!validationText) {
+            let computePoints = propConfig && propConfig.computePoints;
+            this.infoCache.hasPoints |= !!computePoints;
+            let points = computePoints && computePoints(val || this.cardData[prop], this.cardData, this.referenceLists);
+            let pointInfo = propConfig && propConfig.pointInfo;
+            Vue.set(this.infoCache.points, prop, points);
+            Vue.set(this.infoCache.pointInfo, prop, pointInfo);
+          } else {
+            Vue.set(this.infoCache.points, prop, null);
+            Vue.set(this.infoCache.pointInfo, prop, null);
+          }
+          this.infoCache.pointTotal = Object.values(this.infoCache.points).reduce((x, y) => x + (y || 0), 0);
+          this.infoCache.pointMaximum = this.pointMaximum;
+          resolve();
+        });
       });
     },
-    refreshCacheAll() {
-      this.refreshCache("name");
-      this.refreshCache("text");
-      this.refreshCache("type");
-      this.refreshCache("alignment");
-      this.refreshCache("class");
-      this.refreshCache("faction");
-      this.refreshCache("attack");
-      this.refreshCache("armorClass");
-      this.refreshCache("skill");
-      this.refreshCache("hitPoints");
-      this.refreshCache("level");
-      this.refreshCache("traits");
-      this.refreshCache("feats");
-      this.refreshCache("misc");
-      this.refreshCache("printInfos");
-      this.refreshCache("flavorText", this.cardTemp.printInfo.flavorText);
-      this.refreshCache("flavorTraits", this.cardTemp.printInfo.flavorTraits.join("/"));
+    async refreshCacheAll(forceValidate) {
+      let refresh = [
+        this.refreshCache("name", null, !forceValidate),
+        this.refreshCache("text", null, !forceValidate),
+        this.refreshCache("type", null, !forceValidate),
+        this.refreshCache("alignment", null, !forceValidate),
+        this.refreshCache("class", null, !forceValidate),
+        this.refreshCache("faction", null, !forceValidate),
+        this.refreshCache("attack", null, !forceValidate),
+        this.refreshCache("armorClass", null, !forceValidate),
+        this.refreshCache("skill", null, !forceValidate),
+        this.refreshCache("hitPoints", null, !forceValidate),
+        this.refreshCache("level", null, !forceValidate),
+        this.refreshCache("traits", null, !forceValidate),
+        this.refreshCache("feats", null, !forceValidate),
+        this.refreshCache("misc", null, !forceValidate),
+        this.refreshCache("printInfos", null, !forceValidate),
+        this.refreshCache("flavorText", this.cardTemp.printInfo.flavorText, !forceValidate),
+        this.refreshCache("flavorTraits", this.cardTemp.printInfo.flavorTraits.join("/"), !forceValidate),
+      ];
+      for (let i = 0; i < refresh.length; i++) await refresh[i];
+    },
+    getOptionLabel(option) {
+      if (option.points == null) return option.value;
+      return `${option.id} - ${option.value} (${option.points} Points)`;
+    },
+    mapToAbilities() {
+      if (this.restrictText) {
+        this.cardTemp.abilities = this.selectedRuleset.text.mapFrom(this.cardTemp.text, this.cardData);
+      } else {
+        this.cardTemp.abilities = [];
+      }
+    },
+    mapFromAbilities() {
+      if (this.restrictText) {
+        this.cardTemp.text = this.selectedRuleset.text.mapTo(this.cardTemp.abilities, this.cardData);
+      }
     },
 
     // ------------------- //
     // - Card Management - //
     // ------------------- //
 
+    onFocusout() {
+      this.mapFromAbilities();
+      this.saveChanges();
+      this.refreshCacheAll();
+    },
     loadSaved() {
       let settings = localStorage.getItem("cardBuilderSettings");
       if (settings) {
@@ -723,41 +904,63 @@ export default {
         })
       );
     },
-    uploadImage() {
-      utility
-        .readImage()
-        .then((response) => {
-          this.cardUserImageDataUrl = response;
-        })
-        .catch((error) => {
-          alert(error);
-        });
+    saveChangesDebounced: utility.debounce(function () {
+      this.saveChanges();
+    }, 1000),
+    async uploadImage() {
+      try {
+        let img = await utility.readImage();
+        img = await resizeDataUrl(img, 339, 489);
+        this.cardUserImageDataUrl = img;
+        this.saveChanges();
+      } catch (error) {
+        alert(error);
+      }
     },
-    downloadImage() {
-      this.refreshCacheAll();
-      this.$nextTick(() =>
-        this.$nextTick(() => {
-          if (this.hasValidationErrors) {
-            alert("Whoops! Looks like this card isn't valid.");
-            return;
+    async downloadImage() {
+      await this.refreshCacheAll(true);
+      if (this.hasValidationErrors) {
+        alert("Whoops! Looks like this card isn't valid.");
+        return;
+      }
+      if (this.infoCache.pointTotal > this.infoCache.pointMaximum) {
+        alert("Whoops! Looks like you've gone over the point maximum.");
+        return;
+      }
+      let dataUrl = await new Promise(resolve => {
+        if (this.extendBleed) {
+          // Renders the image size as 300 DPI and adds a standard print margin of 36 pixels on each side
+          let img = document.createElement("img");
+          img.setAttribute("src", this.cardImageDataUrl);
+          img.setAttribute("style", "display:none");
+          img.onload = () => {
+            let canvas = document.createElement("canvas");
+            canvas.width = 822;
+            canvas.height = 1122;
+            let context = canvas.getContext("2d");
+            context.fillStyle = "black";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(img, 36, 36, 750, 1050); 
+            resolve(canvas.toDataURL());
           }
-          let filename = (this.cardData.name || "Untitled").replace(/[^a-z0-9]/gi, "_") + ".png";
-          utility.saveImage(this.cardImageDataUrl, filename);
-        })
-      );
-    },
-    importCard() {
-      utility.readText().then((response) => {
-        try {
-          let allCard = JSON.parse(response);
-          this.cardUserImageDataUrl = allCard.image;
-          this.cardData = allCard.cardData;
-          this.updateTemp();
-          this.refreshCacheAll();
-        } catch (error) {
-          alert("An error occurred reading the card data: " + error);
+        } else {
+          resolve(this.cardImageDataUrl);
         }
       });
+      let filename = (this.cardData.name || "Untitled").replace(/[^a-z0-9]/gi, "_") + ".png";
+      utility.saveImage(dataUrl, filename);
+    },
+    async importCard() {
+      try {
+        let allCard = JSON.parse(await utility.readText());
+        this.cardUserImageDataUrl = allCard.image;
+        this.cardData = allCard.cardData;
+        this.saveChanges();
+        this.updateTemp();
+        this.refreshCacheAll();
+      } catch (error) {
+        alert("An error occurred reading the card data: " + error);
+      }
     },
     exportCard() {
       let filename = (this.cardData.name || "Untitled").replace(/[^a-z0-9]/gi, "_") + ".card";
@@ -767,21 +970,19 @@ export default {
       };
       utility.saveText(JSON.stringify(allCard), filename);
     },
-    reset() {
+    async reset() {
       if (confirm("Are you sure you want to reset everything?")) {
         this.cardData = {};
         this.cardUserImageDataUrl = null;
+        this.saveChanges();
         this.setInitialValues();
-        this.refreshCacheAll();
         this.updateTemp();
+        await this.refreshCacheAll();
+        // Hide validation text until user messes with it
+        this.infoCache.touched = {};
+        this.infoCache.validationText = {};
+        this.infoCache.validationState = {};
       }
-      // Clear validation (validation occurs next tick)
-      this.$nextTick(() =>
-        this.$nextTick(() => {
-          this.infoCache.validationText = {};
-          this.infoCache.validationState = {};
-        })
-      );
     },
   },
 };
@@ -801,10 +1002,16 @@ export default {
 .point-display {
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 1030;
   border-width: 1px 0px;
   border-style: solid;
   background-color: white;
+}
+
+@media (min-aspect-ratio: 4/1) {
+  .point-display {
+    position: static;
+  }
 }
 
 .card-stat-label {
@@ -818,5 +1025,9 @@ export default {
 .card-stat-value {
   float: right;
   width: 64%;
+}
+
+.wrapped-select >>> .vs__dropdown-menu {
+  white-space: normal;
 }
 </style>

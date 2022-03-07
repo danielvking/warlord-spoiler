@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+const Show404 = () => import('@/components/Show404.vue')
 const PrintDeck = () => import('@/components/spoiler/PrintDeck.vue')
 const CardSpoiler = () => import('@/components/spoiler/CardSpoiler.vue')
 const CardDetailParent = () => import('@/components/spoiler/CardDetailParent.vue')
-const PageNotFound = () => import('@/components/PageNotFound.vue')
 const EnableEdit = () => import('@/components/editor/EnableEdit.vue')
 const BuildCard = () => import('@/components/builder/BuildCard.vue')
+const RulesetGuide = () => import('@/components/builder/RulesetGuide.vue')
 
 Vue.use(Router)
 
@@ -27,8 +28,14 @@ export default new Router({
       component: BuildCard
     },
     {
+      path: "/ruleset-guide/:id",
+      name: "rulesetGuide",
+      component: RulesetGuide,
+      props: true
+    },
+    {
       path: '*',
-      component: PageNotFound
+      component: Show404
     },
     {
       path: '/',
@@ -46,5 +53,20 @@ export default new Router({
         }
       ]
     }
-  ]
+  ],
+  scrollBehavior(to) {
+    if (to.hash) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            selector: to.hash,
+            offset: { x: 0, y: 63 }, // Probably a more elegant solution to this
+            behavior: "smooth"
+          })
+        }, 300)
+      });
+    } else {
+      return { x: 0, y: 0 }
+    }
+  }
 })
