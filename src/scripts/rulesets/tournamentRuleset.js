@@ -28,7 +28,7 @@ const textOptions = [{
   points: 15
 }, {
   id: 7,
-  value: "Limited Order: Target Direwolf you control permanently gains +3 ATK and +3 AC and “This character's items are considered blank.”",
+  value: "Limited Order: Target Direwolf you control permanently gains +3 ATK and +3 AC and “This character’s items are considered blank.”",
   points: 30
 }, {
   id: 8,
@@ -104,7 +104,7 @@ const textOptions = [{
   points: 30
 }, {
   id: 26,
-  value: "Your Mentalists gain [NAME]'s faction and subclass(s).",
+  value: "Your Mentalists gain [NAME]’s faction and subclass(s).",
   points: 30
 }, {
   id: 27,
@@ -128,15 +128,15 @@ const textOptions = [{
   points: 30
 }, {
   id: 32,
-  value: "[NAME]'s spells gain +1 to ranged strikes and DC's for each equipped 'Eyestalk'.",
+  value: "[NAME]’s spells gain +1 to ranged strikes and DC’s for each equipped ‘Eyestalk’.",
   points: 15
 }, {
   id: 33,
-  value: "Limited Order: Search your deck for an 'Eyestalk' and equip it to your target Reaver.",
+  value: "Limited Order: Search your deck for an ‘Eyestalk’ and equip it to your target Reaver.",
   points: 45
 }, {
   id: 34,
-  value: "Spend Order: Ready each 'Eyestalk' you control.",
+  value: "Spend Order: Ready each ‘Eyestalk’ you control.",
   points: 30
 }, {
   id: 35,
@@ -200,7 +200,7 @@ const textOptions = [{
   points: 15
 }, {
   id: 50,
-  value: "Limited React: After initiative, choose your target character's Daybreak or Nightfall ability: This character has that ability this turn.",
+  value: "Limited React: After initiative, choose your target character’s Daybreak or Nightfall ability: This character has that ability this turn.",
   points: 30
 }, {
   id: 51,
@@ -296,7 +296,7 @@ const textOptions = [{
   points: 45
 }, {
   id: 74,
-  value: "Limited Order: Target an action card in either discard pile with \"Bard\" in the text box: Put that card in your hand.",
+  value: "Limited Order: Target an action card in either discard pile with “Bard” in the text box: Put that card in your hand.",
   points: 30
 }, {
   id: 75,
@@ -332,7 +332,7 @@ const textOptions = [{
   points: 30
 }, {
   id: 83,
-  value: "[NAME] may use Charisma regardless of rank, on opposing character's die rolls, and twice per turn.",
+  value: "[NAME] may use Charisma regardless of rank, on opposing character’s die rolls, and twice per turn.",
   points: 30
 }, {
   id: 84,
@@ -380,7 +380,7 @@ const textOptions = [{
   points: 45
 }, {
   id: 95,
-  value: "Limited Order: Kill a non-monster character: All of your Evil monsters gain an additional strike per attack (base = the killed character's level) until end of turn.",
+  value: "Limited Order: Kill a non-monster character: All of your Evil monsters gain an additional strike per attack (base = the killed character’s level) until end of turn.",
   points: 45
 }, {
   id: 96,
@@ -408,7 +408,7 @@ const textOptions = [{
   points: 30
 }, {
   id: 102,
-  value: "Limited Order: Return target non-Warlord character to its owner's hand. This ability may not target opposing characters with items equipped.",
+  value: "Limited Order: Return target non-Warlord character to its owner’s hand. This ability may not target opposing characters with items equipped.",
   points: 45
 }, {
   id: 103,
@@ -428,7 +428,7 @@ const textOptions = [{
   points: 45
 }, {
   id: 107,
-  value: "Order: Discard a spell: Target character within two ranks must succeed with a magic save (DC 8 + [NAME]'s Skill) or stun.",
+  value: "Order: Discard a spell: Target character within two ranks must succeed with a magic save (DC 8 + [NAME]’s Skill) or stun.",
   points: 45
 }, {
   id: 108,
@@ -492,15 +492,15 @@ const textOptions = [{
   points: 30
 }, {
   id: 123,
-  value: "React: After [NAME] hits with a melee strike: Target each character in the hit character's rank whose Level +8 is less than the natural die roll. Move each target backward one rank.",
+  value: "React: After [NAME] hits with a melee strike: Target each character in the hit character’s rank whose Level +8 is less than the natural die roll. Move each target backward one rank.",
   points: 45
 }, {
   id: 124,
-  value: "Limited Order: Remove a [FACTION] in your discard pile from the game: Perform a ranged strike (base = the removed [FACTION]'s level).",
+  value: "Limited Order: Remove a [FACTION] in your discard pile from the game: Perform a ranged strike (base = the removed [FACTION]’s level).",
   points: 15
 }, {
   id: 125,
-  value: "React: After [NAME] is targeted by a melee or ranged strike: The character performing the strike must make a fear save (DC 8 + number of other [FACTION]s in [NAME]'s rank) or the strike is canceled.",
+  value: "React: After [NAME] is targeted by a melee or ranged strike: The character performing the strike must make a fear save (DC 8 + number of other [FACTION]s in [NAME]’s rank) or the strike is canceled.",
   points: 30
 }, {
   id: 126,
@@ -508,7 +508,7 @@ const textOptions = [{
   points: 15
 }, {
   id: 127,
-  value: "Adjacent [FACTION]s have the ability: \"Order: Stun this character: Perform a melee strike.\"",
+  value: "Adjacent [FACTION]s have the ability: “Order: Stun this character: Perform a melee strike.”",
   points: 30
 }, {
   id: 128,
@@ -556,11 +556,11 @@ const textOptions = [{
   points: 45
 }, {
   id: 139,
-  value: "While [NAME] is ready, your [FACTION] may cast wizard spells as though they were in [NAME]'s location.",
+  value: "While [NAME] is ready, your [FACTION] may cast wizard spells as though they were in [NAME]’s location.",
   points: 30
 }, {
   id: 140,
-  value: "Limited React: After [NAME] kills a character with a melee strike or action, that character's controller must discard a card from their hand.",
+  value: "Limited React: After [NAME] kills a character with a melee strike or action, that character’s controller must discard a card from their hand.",
   points: 30
 }, {
   id: 141,
@@ -580,7 +580,7 @@ const textOptions = [{
   points: 30
 }, {
   id: 145,
-  value: "Spend Order: Once per game: Perform a number of +0 ranged strikes equal to [NAME]'s Level.",
+  value: "Spend Order: Once per game: Perform a number of +0 ranged strikes equal to [NAME]’s Level.",
   points: 45
 }, {
   id: 146,
@@ -604,7 +604,7 @@ const textOptions = [{
   points: 30
 }, {
   id: 151,
-  value: "[NAME]'s melee strikes inflict an additional wound against stunned characters.",
+  value: "[NAME]’s melee strikes inflict an additional wound against stunned characters.",
   points: 30
 }, {
   id: 152,
@@ -632,7 +632,7 @@ const textOptions = [{
   points: 45
 }, {
   id: 158,
-  value: "Limited Order: Until [NAME] uses this ability again, your target other Level 3 or higher [FACTION] gains +2 ATK, AC, and Skill and, while not stunned, has the ability, \"[NAME] may target spells as if he were in this character's location.\"",
+  value: "Limited Order: Until [NAME] uses this ability again, your target other Level 3 or higher [FACTION] gains +2 ATK, AC, and Skill and, while not stunned, has the ability, “[NAME] may target spells as if he were in this character’s location.”",
   points: 45
 }, {
   id: 159,
@@ -882,15 +882,15 @@ export default {
     restrictText: true,
     disallowFlavor: true,
     pointMaximum: 140,
-    genInfo: "This ruleset allows you to build your own Warlord. Every attribute of the card has a certain \"point\" cost, and you must keep your card within the allowable limit." +
+    genInfo: "This ruleset allows you to build your own Warlord. Every attribute of the card has a certain “point” cost, and you must keep your card within the allowable limit." +
       "\r\n " +
       "\r\nFor this ruleset, in order to help reduce text box clutter, we are adding some wording rules. Please be aware of the following:" +
-      "\r\nThe word \"Your\" in rules text refers to a card(s) that you control." +
-      "\r\n\"This Turn\" in rules text means the effect in question lasts \"Until end of turn\"" +
-      "\r\nIf you have \"advantage\" on a roll then you roll two dice for the roll and keep the higher result." +
-      "\r\nIf you have \"disadvantage\" on a roll then you roll two dice for the roll and keep the lower result." +
-      "\r\nIf you would have both \"advantage\" and \"disadvantage\" on a roll you are cnsidered to have neither of them." +
-      "\r\n\"Limited\" refers to something that can be preformed Once Per Turn. so \"Limited Order\" would be the same as saying \"Order: Once per turn:\", \"Limited React\" would be the same as saying \"React: Once Per Turn:\", etc.",
+      "\r\nThe word “Your” in rules text refers to a card(s) that you control." +
+      "\r\n“This Turn” in rules text means the effect in question lasts “Until end of turn”" +
+      "\r\nIf you have “advantage” on a roll then you roll two dice for the roll and keep the higher result." +
+      "\r\nIf you have “disadvantage” on a roll then you roll two dice for the roll and keep the lower result." +
+      "\r\nIf you would have both “advantage” and “disadvantage” on a roll you are cnsidered to have neither of them." +
+      "\r\n“Limited” refers to something that can be preformed Once Per Turn. so “Limited Order” would be the same as saying “Order: Once per turn:”, “Limited React” would be the same as saying “React: Once Per Turn:”, etc.",
     additionalKeywords: ["Limited Order:", "Limited React:"],
     makeDefault: true
   },
