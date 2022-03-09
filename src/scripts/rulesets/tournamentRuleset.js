@@ -55,10 +55,6 @@ const textOptions = [{
   value: "Spend Order: Your target Construct is considered to have all of this characters items equipped this turn.",
   points: 30
 }, {
-  id: 14,
-  value: "Your deck may contain two copies of Epic cards.",
-  points: 30
-}, {
   id: 15,
   value: "[NAME] may equip Cursed items regardless of class.",
   points: 15
@@ -84,12 +80,12 @@ const textOptions = [{
   points: 30
 }, {
   id: 21,
-  value: "Your Heroes gain +2 ATK, AC, and Skill.",
+  value: "Your other Heroes gain +2 ATK, AC, and Skill.",
   points: 15
 }, {
   id: 22,
-  value: "Limited Order: Spend a Hero: Switch locations with that Hero, gain any feat with +5 bonus this turn, or remove a wound from this character.",
-  points: 15
+  value: "Limited Order: Spend a Hero: Move forward or backward one rank, gain any feat with +5 bonus this turn, or remove a wound from this character.",
+  points: 45
 }, {
   id: 23,
   value: "Order: Kill a Kratchling: Perform a +0 melee or ranged strike.",
@@ -101,18 +97,18 @@ const textOptions = [{
 }, {
   id: 25,
   value: "Spend Order: Discard an item: Search your deck for a Djinn or Efreet and put it into play adjacent to this character.",
-  points: 30
+  points: 45
 }, {
   id: 26,
   value: "Your Mentalists gain [NAME]’s faction and subclass(s).",
   points: 30
 }, {
   id: 27,
-  value: "React: After your target Mentalist dies: Each opponent discards the top two cards of their deck.",
+  value: "React: After your target Mentalist dies: Each opponent discards the top card of their deck.",
   points: 30
 }, {
   id: 28,
-  value: "Limited Order: You may spend a Mentalist: Each opponent discards a card (two if you spent a Mentalist) from their hand.",
+  value: "Limited Order: Spend a Mentalist: Each opponent discards a card from their hand.",
   points: 45
 }, {
   id: 29,
@@ -216,11 +212,11 @@ const textOptions = [{
   points: 15
 }, {
   id: 54,
-  value: "React: Before playing a Tactics action, choose one: The action does not require spending as a cost; or draw a card.",
-  points: 30
+  value: "Limited React: Before playing a Tactics action, choose one: The action does not require spending as a cost; or draw a card.",
+  points: 45
 }, {
   id: 55,
-  value: "Your deck may include an additional copy of [NAME].",
+  value: "Your deck may include an additional copy of [NAME]. Only one [NAME] may start in play.",
   points: 45
 }, {
   id: 56,
@@ -257,7 +253,7 @@ const textOptions = [{
 }, {
   id: 64,
   value: "Limited React: After [NAME] reduces or removes a wound, target an Aquatic character in your discard pile: Put the character into your hand.",
-  points: 15
+  points: 30
 }, {
   id: 65,
   value: "Limited Order: Spend an Aquatic character and target an Aquatic character you control: Remove one wound from the target, move them forward or backward one rank, and give them +4 AC and +4 Skill this turn.",
@@ -276,7 +272,7 @@ const textOptions = [{
   points: 45
 }, {
   id: 69,
-  value: "React: After starting armies are revealed, name a non-Warlord trait: Your Rangers have advantage on strike rolls against and saves from characters with the named trait.",
+  value: "React: After starting armies are revealed, name a non-Warlord, non-Faction trait: Your Rangers have advantage on strike rolls against and saves from characters with the named trait.",
   points: 45
 }, {
   id: 70,
@@ -292,12 +288,12 @@ const textOptions = [{
   points: 45
 }, {
   id: 73,
-  value: "Limited React: After your target character is targeted by a strike or action: Switch the location of the character with an Illusionist you control. Redirect the strike or action to the Illusionist, if possible.",
+  value: "Limited React: After your target character is targeted by a strike or action: Switch the location of the character with another target Illusionist you control. Redirect the strike or action to the Illusionist, if possible.",
   points: 45
 }, {
   id: 74,
-  value: "Limited Order: Target an action card in either discard pile with “Bard” in the text box: Put that card in your hand.",
-  points: 30
+  value: "Limited Order: Target an action card in your discard pile with “Bard” in the text box: Put that card in your hand.",
+  points: 45
 }, {
   id: 75,
   value: "Limited Order: Look at the top 3 cards of any deck (6 if this character is a Scout): Put them back in any order.",
@@ -308,7 +304,7 @@ const textOptions = [{
   points: 45
 }, {
   id: 77,
-  value: "Limited React: After your target Cantor performs an action that requires spending as a cost: Ready the target.",
+  value: "Limited React: After your target Cantor performs a non-attack action that requires spending as a cost: Ready the target.",
   points: 45
 }, {
   id: 78,
@@ -375,10 +371,6 @@ const textOptions = [{
   value: "Limited Order: Target a Dungeon you control: Until this character uses this ability again, the targeted Dungeon gains +10 CR.",
   points: 15
 }, {
-  id: 94,
-  value: "Limited Order: Put target character you control into your hand.",
-  points: 45
-}, {
   id: 95,
   value: "Limited Order: Kill a non-monster character: All of your Evil monsters gain an additional strike per attack (base = the killed character’s level) until end of turn.",
   points: 45
@@ -388,7 +380,7 @@ const textOptions = [{
   points: 45
 }, {
   id: 97,
-  value: "Limited React: Before your target 1st through 3rd level [FACTION] is killed: If the character does not have the Planar trait, they are not killed, but are instead moved to the rank behind your last rank. Remove all wounds from the character, who permanently has -10AC, Undead, and Planar.",
+  value: "Limited React: Before your other target 1st through 3rd level [FACTION] is killed: If the character does not have the Planar trait, they are not killed, but are instead moved to the rank behind your last rank. Remove all wounds from the character, who permanently has -10AC, Undead, and Planar.",
   points: 30
 }, {
   id: 98,
@@ -405,7 +397,7 @@ const textOptions = [{
 }, {
   id: 101,
   value: "[NAME] inflicts an additional wound when they hit with a melee strike.",
-  points: 30
+  points: 45
 }, {
   id: 102,
   value: "Limited Order: Return target non-Warlord character to its owner’s hand. This ability may not target opposing characters with items equipped.",
@@ -423,16 +415,8 @@ const textOptions = [{
   value: "Order: Discard a card from your hand: Move forward or backward one rank.",
   points: 45
 }, {
-  id: 106,
-  value: "Limited Order: Look at the top five cards of your deck. Put one of the cards into your hand and discard the remaining cards.",
-  points: 45
-}, {
   id: 107,
-  value: "Order: Discard a spell: Target character within two ranks must succeed with a magic save (DC 8 + [NAME]’s Skill) or stun.",
-  points: 45
-}, {
-  id: 108,
-  value: "Limited Order: Kill an opposing non-Warlord character with 4 or more Levels lower than [NAME].",
+  value: "Order: Discard a spell: Target character within two ranks must succeed with a magic save (DC 6 + [NAME]’s Skill) or stun.",
   points: 45
 }, {
   id: 109,
@@ -441,7 +425,7 @@ const textOptions = [{
 }, {
   id: 110,
   value: "Limited Order: Remove a wound from [NAME]: Perform a melee strike.",
-  points: 30
+  points: 45
 }, {
   id: 111,
   value: "Limited React: After a strike targets [NAME]: Cancel the strike.",
@@ -513,7 +497,7 @@ const textOptions = [{
 }, {
   id: 128,
   value: "Limited React: After [NAME] performs an action which reduced or removed wounds from a target [FACTION]: Ready the target.",
-  points: 30
+  points: 45
 }, {
   id: 129,
   value: "[NAME] may perform level 1 actions of any class.",
@@ -521,7 +505,7 @@ const textOptions = [{
 }, {
   id: 130,
   value: "Order: Twice per turn, target a character within one rank: The target must succeed with a magic save (DC 15) or suffer a wound.",
-  points: 30
+  points: 45
 }, {
   id: 131,
   value: "May play 1st and 2nd level fighter actions.",
@@ -536,7 +520,7 @@ const textOptions = [{
   points: 45
 }, {
   id: 134,
-  value: "Spend Order: If [NAME] is in the second rank, succeed with a Stealth check (DC 24) to move him to the first rank of a different formation.",
+  value: "Spend Order: If [NAME] is in the second rank, succeed with a Stealth check (DC 24) to move them to the first rank of a different formation.",
   points: 30
 }, {
   id: 135,
@@ -544,8 +528,8 @@ const textOptions = [{
   points: 15
 }, {
   id: 136,
-  value: "Order: Kill a [FACTION_TRAIT]: This turn [NAME] gains +3 ATK and his melee strikes may target 2 ranks away.",
-  points: 30
+  value: "Limited Order: Kill a [FACTION_TRAIT]: This turn [NAME] gains +3 ATK and their melee strikes may target 2 ranks away.",
+  points: 45
 }, {
   id: 137,
   value: "Limited React: After [NAME] suffers wounds: Ready [NAME]. ",
@@ -568,7 +552,7 @@ const textOptions = [{
   points: 15
 }, {
   id: 142,
-  value: "While adjacent to a cleric, [NAME] has an additional melee strike (base +2 ATK) when he attacks.",
+  value: "While adjacent to a cleric, [NAME] has an additional melee strike (base +2 ATK) when they attack.",
   points: 15
 }, {
   id: 143,
@@ -632,7 +616,7 @@ const textOptions = [{
   points: 45
 }, {
   id: 158,
-  value: "Limited Order: Until [NAME] uses this ability again, your target other Level 3 or higher [FACTION] gains +2 ATK, AC, and Skill and, while not stunned, has the ability, “[NAME] may target spells as if he were in this character’s location.”",
+  value: "Limited Order: Until [NAME] uses this ability again, your target other Level 3 or higher [FACTION] gains +2 ATK, AC, and Skill and, while not stunned, has the ability, “[NAME] may target spells as if they were in this character’s location.”",
   points: 45
 }, {
   id: 159,
@@ -680,7 +664,6 @@ const traitMap = {
   "Cantor": 5,
   "Cohort": 1,
   "Construct": 1,
-  "Cursed": -5,
   "Daemon": 3,
   "Direwolf": 3,
   "Djinn": 1,
@@ -707,7 +690,6 @@ const traitMap = {
   "Nymph": 3,
   "Paladin": 5,
   "Planar": 30,
-  "Poison": -5,
   "Ranger": 5,
   "Reaver": 5,
   "Reindeer": 3,
@@ -727,8 +709,8 @@ const traitMap = {
 }
 
 const featMap = {
-  "Charisma": 5,
-  "Defend": 5,
+  "Charisma": 10,
+  "Defend": 10,
   "Magic Resistance": 15,
   "Marksmanship": 20,
   "Medicine": 15,
@@ -957,17 +939,17 @@ export default {
   "attack": {
     pointInfo: "Attack of 0 is free. Each additional value of attack is: 1 point up to 5 and 2 points beyond that." +
       "\r\nA second strike is 5 points in addition to the points for its value." +
-      "\r\nA third strike strikes is 10 points in addition to the points for its value." +
-      "\r\nA fouth strike strikes is 25 points in addition to the points for its value." +
-      "\r\nSubsequent additional strikes are 30 points in addition to the points for their value.",
+      "\r\nA third strike strikes is 30 points in addition to the points for its value." +
+      "\r\nA fouth strike strikes is 35 points in addition to the points for its value." +
+      "\r\nSubsequent additional strikes are 40 points in addition to the points for their value.",
     computePoints(val) {
       if (val == null) return null;
       function numAttacksPoints(num) {
         if (num <= 1) return 0;
         if (num <= 2) return 5;
-        if (num <= 3) return 15;
-        if (num <= 4) return 40;
-        return (num - 4) * 30 + 40;
+        if (num <= 3) return 35;
+        if (num <= 4) return 70;
+        return (num - 4) * 40 + 70;
       }
       function strikePoints(attack) {
         if (attack <= 0) return 0;
@@ -984,7 +966,7 @@ export default {
     }
   },
   "armorClass": {
-    pointInfo: "AC of 8 is free. Each additional value of AC is: 2 points up to 12, 3 points up to 17, and 15 points beyond that." +
+    pointInfo: "AC of 8 is free. Each additional value of AC is: 2 points up to 12, 3 points up to 16, and 15 points beyond that." +
       "\r\nCards with the Planar trait may not have more than 14 AC.",
     validate(val, cardData) {
       if (val && cardData.traits) {
@@ -995,29 +977,30 @@ export default {
       if (val == null) return null;
       if (val <= 8) return 0;
       if (val <= 12) return (val - 8) * 2;
-      if (val <= 17) return (val - 12) * 3 + 8;
-      return (val - 17) * 15 + 23;
+      if (val <= 16) return (val - 12) * 3 + 8;
+      return (val - 16) * 15 + 20;
     }
   },
   "skill": {
-    pointInfo: "Skill of 0 is free. Each additional value of skill is: 1 point up to 5, 3 points up to 10, 10 points up to 15, and 15 points beyond that.",
+    pointInfo: "Skill of 0 is free. Each additional value of skill is: 1 point up to 5, 3 points up to 8, 6 points up to 10, 10 points up to 15, and 15 points beyond that.",
     computePoints(val) {
       if (val == null) return null;
       if (val <= 0) return 0;
       if (val <= 5) return val * 1;
-      if (val <= 10) return (val - 5) * 3 + 5;
-      if (val <= 15) return (val - 10) * 10 + 20;
-      return (val - 15) * 15 + 70;
+      if (val <= 8) return (val - 5) * 3 + 5;
+      if (val <= 10) return (val - 8) * 6 + 14;
+      if (val <= 15) return (val - 10) * 10 + 26;
+      return (val - 15) * 15 + 76;
     }
   },
   "hitPoints": {
-    pointInfo: "HP of 1 is free. Each additional value of HP is: 5 points up to 3, 10 points up to 4, and 25 points beyond that.",
+    pointInfo: "HP of 1 is free. Each additional value of HP is: 5 points up to 3, 15 points up to 4, and 25 points beyond that.",
     computePoints(val) {
       if (val == null) return null;
       if (val <= 1) return 0;
       if (val <= 3) return (val - 1) * 5;
-      if (val <= 4) return (val - 3) * 10 + 10;
-      return (val - 4) * 25 + 20;
+      if (val <= 4) return (val - 3) * 15 + 10;
+      return (val - 4) * 25 + 25;
     }
   },
   "level": {
