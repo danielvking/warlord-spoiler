@@ -288,7 +288,7 @@ const textOptions = [{
     points: 45
   }, {
     id: 73,
-    value: "Limited React: After your target character is targeted by a strike or action: Switch the location of the character with another target Illusionist you control. Redirect the strike or action to the Illusionist, if possible.",
+    value: "Limited React: After your target character is targeted by an opposing strike or action: Switch the location of the character with another target Illusionist you control. Redirect the strike or action to the Illusionist, if possible.",
     points: 45
   }, {
     id: 74,
