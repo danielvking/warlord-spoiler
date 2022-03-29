@@ -204,7 +204,7 @@ const textOptions = [{
     points: 15
   }, {
     id: 52,
-    value: "Limited React: After an opponent draws or retrieves a card from their deck, discard a Trap: Discard the card(s).",
+    value: "Limited React: After an opponent draws or retrieves a card from their deck, discard a Trap equipped to [NAME]: Discard the card(s).",
     points: 15
   }, {
     id: 53,
@@ -400,7 +400,7 @@ const textOptions = [{
     points: 45
   }, {
     id: 102,
-    value: "Limited Order: Return target other non-Warlord character to its owner’s hand. This ability may not target opposing characters with items equipped.",
+    value: "Limited Order: Return target other lower level non-Warlord character to its owner’s hand. This ability may not target opposing characters with items equipped.",
     points: 45
   }, {
     id: 103,
