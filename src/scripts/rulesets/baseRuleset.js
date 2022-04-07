@@ -1,4 +1,8 @@
 export default {
+  "general": {
+    // These are non-standard, but we are going to go ahead and include them across all rulesets
+    additionalKeywords: ["Limited Spend Order:", "Limited Order:", "Limited Spend React:", "Limited React:"]
+  },
   "name": {
     validate(val) {
       if (!val) return "A name is required.";
