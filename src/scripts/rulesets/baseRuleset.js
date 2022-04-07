@@ -10,7 +10,7 @@ export default {
   },
   "text": {
     validate(val, cardData) {
-      if (cardData.class && cardData.class.includes("/")) {
+      if (cardData.class && cardData.class.includes("/") && cardData.type === "Character") {
         // Multiclass
         let extraClasses = cardData.class.split("/").slice(1);
         let regex = new RegExp("[^.]*is[^.]*" + extraClasses.join("[^.]*"), "mi");

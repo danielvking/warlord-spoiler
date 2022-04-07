@@ -8,19 +8,19 @@
           <div class="image-name card-title">
             {{ cardData.name }}
           </div>
-          <div class="image-atk card-title">
+          <div v-show="hasTopStats" class="image-atk card-title">
             {{ cardData.attack }}
           </div>
-          <div class="image-ac card-title">
+          <div v-show="hasTopStats" class="image-ac card-title">
             {{ cardData.armorClass }}
           </div>
-          <div class="image-lvl card-title" :class="cardData.alignment === 'Evil' ? 'text-white' : ''">
+          <div class="image-lvl card-title" :class="hasWhiteLevel ? 'text-white' : ''">
             {{ cardData.level }}
           </div>
-          <div class="image-sk card-title text-white">
+          <div v-show="hasBottomStats" class="image-sk card-title text-white">
             {{ cardData.skill }}
           </div>
-          <div class="image-hp card-title text-white">
+          <div v-show="hasBottomStats" class="image-hp card-title text-white">
             {{ cardData.hitPoints }}
           </div>
           <div v-if="points" class="image-set card-title">
@@ -123,6 +123,16 @@ export default {
     },
     noTemplateUrl() {
       return cardTemplates["no_template"];
+    },
+    
+    hasTopStats() {
+      return this.cardData.type === "Character" || this.cardData.type === "Item";
+    },
+    hasBottomStats() {
+      return this.cardData.type === "Character";
+    },
+    hasWhiteLevel() {
+      return this.cardData.type === "Action" || (this.cardData.type === "Character" && this.cardData.alignment === "Evil");
     },
 
     formattedHeaderText() {

@@ -554,7 +554,7 @@ export default {
       return this.$store.state.referenceLists;
     },
     typeList() {
-      return ((this.referenceLists && this.referenceLists.typeList) || []).filter((x) => x === "Character");
+      return ((this.referenceLists && this.referenceLists.typeList) || []).filter((x) => x === "Action" || x === "Character" || x === "Item");
     },
     alignmentList() {
       return (this.referenceLists && this.referenceLists.alignmentList) || [];
@@ -686,7 +686,7 @@ export default {
           match = null;
         }
       }
-      if (isMulticlass) {
+      if (this.cardTemp.type === "Character" && isMulticlass) {
         if (!match) {
           let ending = this.cardTemp.classes
             .map((x, i) => {
