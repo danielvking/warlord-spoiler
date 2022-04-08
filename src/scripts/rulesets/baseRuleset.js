@@ -262,7 +262,6 @@ export default {
           case "Action":
           case "Battlefield":
           case "Dungeon":
-          case "Item":
             if (val) return "Feats are invalid for this card type.";
             break;
         }
