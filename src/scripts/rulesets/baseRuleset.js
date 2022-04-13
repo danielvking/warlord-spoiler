@@ -279,6 +279,20 @@ export default {
   },
   "misc": {
     validate(val, cardData) {
+      if (val) {
+        if (val.includes("Charge")) {
+          let miscValue = val.split(" ");
+          if (+miscValue[0] < 0) return "Charges cannot be negative.";
+        }
+        if (val.includes("gp")) {
+          let miscValue = val.split(" ");
+          if (+miscValue[0] < 0) return "GP cannot be negative.";
+        }
+        if (val.includes("Challenge Rating")) {
+          let miscValue = val.split(" ");
+          if (+miscValue[2] < 0) return "Challenge Rating cannot be negative.";
+        }
+      }
       if (cardData.type) {
         if ((!val || !val.includes("Challenge Rating")) && cardData.type === "Dungeon") {
           return "Challenge Rating is required for this card type.";
