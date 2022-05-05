@@ -81,5 +81,9 @@ module.exports = {
         'bootstrap-vue$': 'bootstrap-vue/src/index.js'
       }
     }
-  }
+  },
+  transpileDependencies: [
+    // Because bootstrap is stupid
+    'bootstrap-vue'
+  ]
 }

@@ -6,5 +6,6 @@ module.exports = {
         "useBuiltIns": "entry"
       }
     ]
-  ]
+  ],
+  "plugins": ["@babel/plugin-proposal-nullish-coalescing-operator"]
 }

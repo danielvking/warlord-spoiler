@@ -23,6 +23,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.16.7",
     "@babel/polyfill": "^7.7.0",
     "@vue/cli-plugin-babel": "^3.9.0",
     "@vue/cli-plugin-eslint": "^3.9.0",
@@ -37,7 +38,7 @@
     "portal-vue": "^2.1.6",
     "sass": "^1.25.0",
     "sass-loader": "^8.0.2",
-    "vue-cli-plugin-bootstrap-vue": "^0.6.0",
+    "vue-cli-plugin-bootstrap-vue": "~0.6.0",
     "vue-template-compiler": "^2.6.10"
   },
   "eslintConfig": {
@@ -54,13 +55,13 @@
       "parser": "babel-eslint"
     }
   },
+  "prettier": {
+    "printWidth": 120
+  },
   "postcss": {
     "plugins": {
       "autoprefixer": {}
     }
-  },
-  "prettier": {
-    "printWidth": 120
   },
   "browserslist": [
     "> 1%",
