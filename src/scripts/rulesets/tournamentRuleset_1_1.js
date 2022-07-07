@@ -672,7 +672,7 @@ const textOptions = [{
     points: 45
   }, {
     id: 168,
-    value: "May use the Powerattack feat any number of times per turn.",
+    value: "[NAME] may use the Powerattack feat any number of times per turn.",
     points: 15
   }, {
     id: 169,
@@ -716,11 +716,11 @@ const textOptions = [{
     points: 45
   }, {
     id: 179,
-    value: "Your Giants and Trolls have +5 ATK and AC",
+    value: "Your other Giants and Trolls have +5 ATK and AC",
     points: 15
   }, {
     id: 180,
-    value: "[NAME] is +2 Levels for equipping bows.",
+    value: "[NAME] is +2 Levels for equipping Bows.",
     points: 30
   }, {
     id: 181,
