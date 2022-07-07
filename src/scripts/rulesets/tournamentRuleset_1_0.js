@@ -869,7 +869,7 @@ const textOptions = [{
         "\r\nIf you have “disadvantage” on a roll then you roll two dice for the roll and keep the lower result." +
         "\r\nIf you would have both “advantage” and “disadvantage” on a roll you are cnsidered to have neither of them." +
         "\r\n“Limited” refers to something that can be preformed Once Per Turn. so “Limited Order” would be the same as saying “Order: Once per turn:”, “Limited React” would be the same as saying “React: Once Per Turn:”, etc.",
-      makeDefault: true
+      makeDefault: false
     },
     "name": {
       validate(val) {

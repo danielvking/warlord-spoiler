@@ -897,13 +897,16 @@ export default {
       }
     },
     saveChanges() {
+      let settings = {
+        cardData: this.cardData,
+        cardUserImageDataUrl: this.cardUserImageDataUrl,
+      }
+      if (this.selectedRulesetOption !== defaultRuleset.description) {
+        settings.selectedRulesetOption = this.selectedRulesetOption
+      }
       localStorage.setItem(
         "cardBuilderSettings",
-        JSON.stringify({
-          cardData: this.cardData,
-          cardUserImageDataUrl: this.cardUserImageDataUrl,
-          selectedRulesetOption: this.selectedRulesetOption,
-        })
+        JSON.stringify(settings)
       );
     },
     saveChangesDebounced: utility.debounce(function () {
