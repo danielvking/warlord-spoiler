@@ -1021,9 +1021,11 @@ const textOptions = [{
         "\r\nFor this ruleset, in order to help reduce text box clutter, we are adding some wording rules. Please be aware of the following:" +
         "\r\nThe word “Your” in rules text refers to a card(s) that you control." +
         "\r\n“This Turn” in rules text means the effect in question lasts “Until end of turn”" +
-        "\r\nIf you have “advantage” on a roll then you roll two dice for the roll and keep the higher result." +
-        "\r\nIf you have “disadvantage” on a roll then you roll two dice for the roll and keep the lower result." +
-        "\r\nIf you would have both “advantage” and “disadvantage” on a roll you are cnsidered to have neither of them." +
+        "\r\nIf you have “Advantage” on a roll then you roll two dice for the roll and keep the higher result." +
+        "\r\nIf you have “Disadvantage” on a roll then you roll two dice for the roll and keep the lower result." +
+        "\r\nIf you have Advantage on a non-spell strike roll against a Planar character, you'll keep the highest even roll (if there is one)." +
+        "\r\nIf you have Disadvantage on a non-spell strike roll against a Planar character, you'll keep the lowest odd roll (if there is one)." +
+        "\r\nIf you would have both “advantage” and “disadvantage” on a roll you are considered to have neither of them." +
         "\r\n“Limited” refers to something that can be preformed Once Per Turn. so “Limited Order” would be the same as saying “Order: Once per turn:”, “Limited React” would be the same as saying “React: Once Per Turn:”, etc.",
       makeDefault: true
     },
