@@ -800,7 +800,7 @@ const textOptions = [{
     points: 30
   }, {
     id: 200,
-    value: "Limited Order: Perform a Marksmanship check (DC 20): This turn, after a ranged strike that targeted [Name] resolves, perform two +5 ranged strikes.",
+    value: "Limited Order: Perform a Marksmanship check (DC 20): This turn, after a ranged strike that targeted [NAME] resolves, perform two +5 ranged strikes.",
     points: 30
   }]
   
