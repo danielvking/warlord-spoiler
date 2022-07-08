@@ -680,7 +680,7 @@ const textOptions = [{
     points: 15
   }, {
     id: 170,
-    value: "Your Vampire's gain the text  “React: After this charter hits with a melee strike: The strike inflicts no wounds. The target has -1 HP Permenently.”",
+    value: "Your Vampire's gain the text  “React: After this character hits with a melee strike: The strike inflicts no wounds. The target has -1 HP Permenently.”",
     points: 30
   }, {
     id: 171,
