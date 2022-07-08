@@ -688,7 +688,7 @@ const textOptions = [{
     points: 30
   }, {
     id: 172,
-    value: "For each wound on [Name] they have +3 ATK, and an additional melee strike with a base of +0 ATK.",
+    value: "For each wound on [NAME] they have +3 ATK, and an additional melee strike with a base of +0 ATK.",
     points: 30
   }, {
     id: 173,
@@ -760,7 +760,7 @@ const textOptions = [{
     points: 15
   }, {
     id: 190,
-    value: "[Name] may not target ready characters with melee strikes. [Name] has Advantage on melee strikes.",
+    value: "[Name] may not target ready characters with melee strikes. [NAME] has Advantage on melee strikes.",
     points: 30
   }, {
     id: 191,
