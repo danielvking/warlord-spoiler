@@ -136,7 +136,7 @@ const textOptions = [{
     points: 30
   }, {
     id: 34,
-    value: "Limited Order: Ready each ‘Eyestalk’ you control.",
+    value: "Limited Order: Ready each ‘Eyestalk’ item you control.",
     points: 30
   }, {
     id: 35,
@@ -1017,6 +1017,8 @@ const textOptions = [{
       disallowFlavor: true,
       pointMaximum: 150,
       genInfo: "This ruleset allows you to build your own Warlord. Every attribute of the card has a certain “point” cost, and you must keep your card within the allowable limit." +
+        "\r\n " +
+        "\r\nYou name not name yourself anything that would be benefitial in any way. Meaning no injection attacks, and no existing names." +
         "\r\n " +
         "\r\nFor this ruleset, in order to help reduce text box clutter, we are adding some wording rules. Please be aware of the following:" +
         "\r\nThe word “Your” in rules text refers to a card(s) that you control." +
