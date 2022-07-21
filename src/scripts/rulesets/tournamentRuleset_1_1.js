@@ -456,7 +456,7 @@ const textOptions = [{
     points: 30
   }, {
     id: 114,
-    value: "Order: Target an item in your army and discard a card: Equip the item to a different [FACION] in your army. If you do, ready the item.",
+    value: "Order: Target an item in your army and discard a card: Equip the item to a different [FACTION] in your army. If you do, ready the item.",
     points: 45
   }, {
     id: 115,
@@ -684,7 +684,7 @@ const textOptions = [{
     points: 30
   }, {
     id: 171,
-    value: "Your Vampiress gain the text  “Limited React: After this charter kills an opposing character: Gain +1 HP Permanently.”",
+    value: "Your Vampires gain the text  “Limited React: After this character kills an opposing character: Gain +1 HP Permanently.”",
     points: 30
   }, {
     id: 172,
