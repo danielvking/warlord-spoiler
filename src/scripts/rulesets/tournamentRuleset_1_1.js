@@ -296,7 +296,7 @@ const textOptions = [{
     points: 45
   }, {
     id: 74,
-    value: "Limited Order: Target an action card in your discard pile with “Bard” in the text box: Put that card in your hand.",
+    value: "Limited Order: Target an action card in your discard pile with “Bard” or “Bards” in the text box: Put that card in your hand.",
     points: 45
   }, {
     id: 75,
