@@ -1149,13 +1149,13 @@ const textOptions = [{
       }
     },
     "hitPoints": {
-      pointInfo: "HP of 1 is free. Each additional value of HP is: 5 points up to 3, 15 points up to 4, and 25 points beyond that.",
+      pointInfo: "HP of 1 is free. Each additional value of HP is: 5 points up to 3, 20 points up to 4, and 35 points beyond that.",
       computePoints(val) {
         if (val == null) return null;
         if (val <= 1) return 0;
         if (val <= 3) return (val - 1) * 5;
-        if (val <= 4) return (val - 3) * 15 + 10;
-        return (val - 4) * 25 + 25;
+        if (val <= 4) return (val - 3) * 20 + 10;
+        return (val - 4) * 35 + 25;
       }
     },
     "level": {
