@@ -99,8 +99,8 @@
 </template>
 
 <script>
-import utility from "@/scripts/utility.js";
-import routeMixin from "@/mixins/routeMixin.js";
+import utility from "../../scripts/utility";
+import routeMixin from "../../mixins/routeMixin";
 
 export default {
   name: "BuildDeck",

@@ -235,7 +235,7 @@
 </template>
 
 <script>
-import utility from "@/scripts/utility.js";
+import utility from "../../scripts/utility";
 
 function initialState() {
   return {

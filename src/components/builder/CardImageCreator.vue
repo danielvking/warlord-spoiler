@@ -48,8 +48,8 @@
 </template>
 
 <script>
-import utility from "@/scripts/utility.js";
-import cardTemplates from "@/scripts/cardTemplates.js";
+import utility from "../../scripts/utility";
+import cardTemplates from "../../scripts/cardTemplates";
 import domtoimage from "dom-to-image";
 
 const isSafari = navigator.userAgent.indexOf("Safari") != -1;

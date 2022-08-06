@@ -297,8 +297,8 @@
 
 <script>
 import Vue from "vue";
-import addRemoveCardMixin from "@/mixins/addRemoveCardMixin.js";
-import { createMapper } from "@/scripts/cardMapper.js";
+import addRemoveCardMixin from "../../mixins/addRemoveCardMixin";
+import { createMapper } from "../../scripts/cardMapper";
 
 export default {
   name: "CardDetailEdit",

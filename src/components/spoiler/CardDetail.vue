@@ -174,7 +174,7 @@
 </template>
 
 <script>
-import addRemoveCardMixin from "@/mixins/addRemoveCardMixin.js";
+import addRemoveCardMixin from "../../mixins/addRemoveCardMixin";
 
 export default {
   name: "CardDetail",

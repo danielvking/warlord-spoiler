@@ -75,9 +75,9 @@
 </template>
 
 <script>
-import utility from "@/scripts/utility.js";
-import routeMixin from "@/mixins/routeMixin.js";
-import addRemoveCardMixin from "@/mixins/addRemoveCardMixin.js";
+import utility from "../../scripts/utility";
+import routeMixin from "../../mixins/routeMixin";
+import addRemoveCardMixin from "../../mixins/addRemoveCardMixin";
 
 export default {
   name: "EditCards",

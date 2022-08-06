@@ -1,6 +1,6 @@
-import baseRuleset from "@/scripts/rulesets/baseRuleset.js";
-import tournamentRuleset from "@/scripts/rulesets/tournamentRuleset_1_0.js";
-import tournamentRuleset2 from "@/scripts/rulesets/tournamentRuleset_1_1.js";
+import baseRuleset from "./baseRuleset";
+import tournamentRuleset from "./tournamentRuleset_1_0";
+import tournamentRuleset2 from "./tournamentRuleset_1_1";
 
 function setFallback(ruleset, fallback) {
   // Merge each property config

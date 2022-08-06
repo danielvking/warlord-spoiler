@@ -3,8 +3,8 @@
 </template>
 
 <script>
-import CardDetail from "@/components/spoiler/CardDetail";
-import CardDetailEdit from "@/components/editor/CardDetailEdit";
+import CardDetail from "./CardDetail.vue";
+import CardDetailEdit from "../editor/CardDetailEdit.vue";
 
 export default {
   components: { CardDetail, CardDetailEdit },

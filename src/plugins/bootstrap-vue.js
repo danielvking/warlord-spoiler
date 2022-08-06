@@ -16,7 +16,7 @@ import {
   SpinnerPlugin,
   TablePlugin
 } from 'bootstrap-vue'
-import '@/scss/bootstrapConfig.scss'
+import '../scss/bootstrapConfig.scss'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(ButtonPlugin)

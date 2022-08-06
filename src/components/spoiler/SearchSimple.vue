@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import utility from "@/scripts/utility.js";
+import utility from "../../scripts/utility";
 
 export default {
   name: "SearchSimple",

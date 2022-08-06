@@ -362,12 +362,12 @@
 
 <script>
 import Vue from "vue";
-import HeaderFooter from "@/components/shared/HeaderFooter.vue";
-import InfoHelper from "@/components/builder/InfoHelper.vue";
-import utility from "@/scripts/utility.js";
-import rulesets from "@/scripts/rulesets/cardRules.js";
-import CardImageCreator from "@/components/builder/CardImageCreator.vue";
-import { createMapper } from "@/scripts/cardMapper.js";
+import HeaderFooter from "../shared/HeaderFooter.vue";
+import InfoHelper from "./InfoHelper.vue";
+import utility from "../../scripts/utility";
+import rulesets from "../../scripts/rulesets/cardRules";
+import CardImageCreator from "./CardImageCreator.vue";
+import { createMapper } from "../../scripts/cardMapper";
 
 const rulesetMap = {};
 rulesets.forEach((x) => {

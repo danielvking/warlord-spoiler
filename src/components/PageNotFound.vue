@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import HeaderFooter from "@/components/shared/HeaderFooter.vue";
+import HeaderFooter from "./shared/HeaderFooter.vue";
 
 export default {
   components: { HeaderFooter },

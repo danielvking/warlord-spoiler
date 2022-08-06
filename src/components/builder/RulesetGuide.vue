@@ -22,8 +22,8 @@
 </template>
 
 <script>
-import HeaderFooter from "@/components/shared/HeaderFooter.vue";
-import rulesets from "@/scripts/rulesets/cardRules.js";
+import HeaderFooter from "../shared/HeaderFooter.vue";
+import rulesets from "../../scripts/rulesets/cardRules";
 
 export default {
   components: { HeaderFooter },

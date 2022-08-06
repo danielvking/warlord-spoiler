@@ -1,5 +1,5 @@
 import Vue from "vue";
-import utility from "@/scripts/utility";
+import utility from "./utility";
 
 
 // --------------------------------------------- //

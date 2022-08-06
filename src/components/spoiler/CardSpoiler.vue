@@ -115,15 +115,15 @@
 </template>
 
 <script>
-import HeaderFooter from "@/components/shared/HeaderFooter.vue";
-import BuildDeck from "@/components/spoiler/BuildDeck.vue";
-import EditCards from "@/components/editor/EditCards.vue";
-import SearchSimple from "@/components/spoiler/SearchSimple.vue";
-import SearchAdvanced from "@/components/spoiler/SearchAdvanced.vue";
-import CardCompact from "@/components/spoiler/CardCompact.vue";
-import utility from "@/scripts/utility.js";
-import addRemoveCardMixin from "@/mixins/addRemoveCardMixin.js";
-import routeMixin from "@/mixins/routeMixin.js";
+import HeaderFooter from "../shared/HeaderFooter.vue";
+import BuildDeck from "./BuildDeck.vue";
+import EditCards from "../editor/EditCards.vue";
+import SearchSimple from "./SearchSimple.vue";
+import SearchAdvanced from "./SearchAdvanced.vue";
+import CardCompact from "./CardCompact.vue";
+import utility from "../../scripts/utility";
+import addRemoveCardMixin from "../../mixins/addRemoveCardMixin";
+import routeMixin from "../../mixins/routeMixin";
 
 export default {
   name: "CardSpoiler",
