@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "node prebuild.js && vite --port 50005",
     "build": "node prebuild.js && vite build",
-    "preview": "node prebuild.js && vite preview"
+    "preview": "node prebuild.js && vite preview --port 50005"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.2",
@@ -13,7 +13,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "@fortawesome/vue-fontawesome": "^2.0.2",
     "axios": "^0.21.4",
-    "bootstrap-vue": "^2.21.2",
+    "bootstrap-vue": "^2.22.0",
     "core-js": "^2.6.5",
     "dom-to-image": "^2.6.0",
     "vue": "^2.6.10",
@@ -22,16 +22,12 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.16.7",
-    "@babel/polyfill": "^7.7.0",
-    "babel-eslint": "^10.0.1",
-    "bootstrap": "^4.3.1",
+    "autoprefixer": "^10.4.8",
+    "bootstrap": "^4.6.2",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "mutationobserver-shim": "^0.3.3",
     "popper.js": "^1.16.0",
-    "portal-vue": "^2.1.6",
-    "sass": "^1.25.0",
+    "sass": "^1.54.4",
     "sass-loader": "^8.0.2",
     "vite": "^3.0.4",
     "vite-plugin-vue2": "^2.0.2",
@@ -46,10 +42,7 @@
       "plugin:vue/essential",
       "eslint:recommended"
     ],
-    "rules": {},
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
+    "rules": {}
   },
   "prettier": {
     "printWidth": 120
