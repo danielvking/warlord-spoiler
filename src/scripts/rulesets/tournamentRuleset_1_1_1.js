@@ -140,7 +140,7 @@ const textOptions = [{
     points: 30
   }, {
     id: 35,
-    value: "Your Reindeer and characters named Blitzer gain the ability "Spend React: Before putting Kristophe Kringle into play, reduce his entering rank by one and ignore loyalty penalties.",
+    value: "Your Reindeer and characters named Blitzer gain the ability \"Spend React: Before putting Kristophe Kringle into play, reduce his entering rank by one and ignore loyalty penalties.",
     points: 30
   }, {
     id: 36,
