@@ -60,7 +60,7 @@ const rulesets = [
   {
     description: "Tournament 1.1",
     ruleset: withBase(tournamentRuleset2)
-  }
+  },
   {
     description: "Tournament 2.0",
     ruleset: withBase(tournamentRuleset3)
