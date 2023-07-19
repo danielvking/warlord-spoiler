@@ -280,7 +280,7 @@ const textOptions = [{
     points: 45
   }, {
     id: 70,
-    value: "Your army ignores "spend" requirements for bringing Totems into play. Your characters have +2 levels for equipping Totems.",
+    value: "Your army ignores 'spend' requirements for bringing Totems into play. Your characters have +2 levels for equipping Totems.",
     points: 30
   }, {
     id: 71,
