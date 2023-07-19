@@ -128,7 +128,7 @@ const textOptions = [{
     points: 30
   }, {
     id: 32,
-    value: "Spend X "Eyestalks;" Perform X +X ranged strikes.",
+    value: "Spend X 'Eyestalks': Perform X +X ranged strikes.",
     points: 45
   }, {
     id: 33,
