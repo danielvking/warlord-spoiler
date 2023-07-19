@@ -8,7 +8,7 @@ const textOptions = [{
     points: 30
   }, {
     id: 2,
-    value: "Your Monsters gain =3ATK and -5AC.",
+    value: "Your Monsters have +3ATK and -5AC.",
     points: 15
   }, {
     id: 3,
