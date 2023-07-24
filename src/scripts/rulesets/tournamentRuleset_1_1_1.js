@@ -292,7 +292,7 @@ const textOptions = [{
     points: 15
   }, {
     id: 86,
-    value: "After [NAME] succeeds with a Marksmanship check on a strike, they may choose to target a character within 1 rank with that strike."
+    value: "After [NAME] succeeds with a Marksmanship check on a strike, they may choose to target a character within 1 rank with that strike.",
     points: 30
   }, {
     id: 87,
