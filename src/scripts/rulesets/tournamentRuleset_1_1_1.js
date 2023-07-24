@@ -232,7 +232,7 @@ const textOptions = [{
     points: 30
   }, {
     id: 71,
-    value: "Limited Order: All chatacters in play have a penalty to AC and skill equal to the numbers of characters in their owner's discard pile, with a maximum of -4 (-8 if this character is a Necromancer.",
+    value: "Limited Order: All chatacters in play have a penalty to AC and skill equal to the numbers of characters in their owner's discard pile, with a maximum of -4 (-8 if this character is a Necromancer.)",
     points: 30
   }, {
     id: 72,
