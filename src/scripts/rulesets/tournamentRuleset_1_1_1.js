@@ -16,7 +16,7 @@ const textOptions = [{
     points: 15
   }, {
     id: 4,
-    value: "Your Harpies gain gain an extra melee strike (base +0 ATK.)",
+    value: "Your Harpies gain an extra melee strike (base +0 ATK) when they attack.",
     points: 45
   }, {
     id: 5,
@@ -24,40 +24,20 @@ const textOptions = [{
     points: 15
   }, {
     id: 6,
-    value: "React: After your target Direwolf kills an opposing character: Move your target Direwolf forward one rank.",
-    points: 15
-  }, {
-    id: 7,
-    value: "Limited Order: Target Direwolf you control permanently gains +3 ATK and +3 AC and “This character’s items are considered blank.”",
-    points: 30
-  }, {
-    id: 8,
-    value: "Your Avatars ignore loyalty penalty and may enter play one rank lower.",
+    value: "React: After your target Direwolf kills an opposing character: Once per turn per target, move your target Direwolf forward one rank.",
     points: 30
   }, {
     id: 9,
     value: "Limited Order: Spend an Avatar: Search your deck for an Air, Earth, Fire, or Water card, reveal it, and put it in your hand.",
-    points: 45
+    points: 30
   }, {
     id: 10,
     value: "Spend Order: Another target Avatar is all classes and +1 level this turn.",
     points: 30
   }, {
-    id: 11,
-    value: "Your other Constructs gain +3 levels and ignore class restrictions for equipping.",
-    points: 15
-  }, {
-    id: 12,
-    value: "Limited Order: Put target item or Construct from your discard pile into play.",
-    points: 45
-  }, {
     id: 13,
     value: "Spend Order: Your target Construct is considered to have all of this characters items equipped this turn.",
     points: 30
-  }, {
-    id: 14,
-    value: "You may have two copies of non-Hero Epic cards in your deck.",
-    points: 15
   }, {
     id: 15,
     value: "[NAME] may equip Cursed items regardless of class.",
@@ -65,10 +45,6 @@ const textOptions = [{
   }, {
     id: 16,
     value: "React: After a die roll, spend an equipped Cursed item: reroll the die.",
-    points: 30
-  }, {
-    id: 17,
-    value: "Limited Order: Characters have -X ATK, AC, and Skill this turn while within two ranks of [NAME], where X is the number of Cursed items equipped to [NAME].",
     points: 30
   }, {
     id: 18,
@@ -82,10 +58,6 @@ const textOptions = [{
     id: 20,
     value: "Limited Order: Destroy an equipped Familiar: [NAME] may play an action card from your discard pile, then banish it.",
     points: 30
-  }, {
-    id: 21,
-    value: "Your other Heroes gain +2 ATK, AC, and Skill.",
-    points: 15
   }, {
     id: 22,
     value: "Limited Order: Spend a Hero: Move forward or backward one rank, gain any feat with +5 bonus this turn, or remove a wound from this character.",
@@ -101,7 +73,7 @@ const textOptions = [{
   }, {
     id: 25,
     value: "Spend Order: Discard an item: Search your deck for a Djinn or Efreet and put it into play adjacent to this character.",
-    points: 45
+    points: 30
   }, {
     id: 26,
     value: "Your Mentalists gain [NAME]’s faction and class(es), and they suffer no loyalty penalty.",
@@ -123,12 +95,8 @@ const textOptions = [{
     value: "Limited React: Before your target Monk performs an attack: All strikes from the attack ignore bonuses to AC.",
     points: 15
   }, {
-    id: 31,
-    value: "Spend Order: Move each Monk within one rank forward one rank. They gain +3 ATK this turn.",
-    points: 30
-  }, {
     id: 32,
-    value: "Spend X 'Eyestalks': Perform X +X ranged strikes.",
+    value: "Spend X 'Eyestalks'; Perform X +X ranged strikes.",
     points: 45
   }, {
     id: 33,
@@ -172,7 +140,7 @@ const textOptions = [{
     points: 15
   }, {
     id: 43,
-    value: "Ignores class restrictions when equipping Helms.",
+    value: "[NAME] ignores class restrictions when equipping Helms.",
     points: 15
   }, {
     id: 44,
@@ -208,12 +176,8 @@ const textOptions = [{
     points: 15
   }, {
     id: 52,
-    value: "Limited React: After a character pays the cost of an acction card, remove an attached Trap of equal or greater level to the action card from the game; Cancel the action.",
+    value: "Limited React: After a character pays the cost of an action card, remove an attached Trap of equal or greater level to the action card from the game; Cancel the action.",
     points: 45
-  }, {
-    id: 53,
-    value: "Your fighters gain +1 ATK for each card with the Tactics trait in your discard pile.",
-    points: 15
   }, {
     id: 54,
     value: "Limited React: Before playing a Tactics action, choose one: The action does not require spending as a cost; or draw a card.",
@@ -222,14 +186,6 @@ const textOptions = [{
     id: 55,
     value: "Spend Order: Spend a character in each rank you control. All characters coming into play enter play as if they were one level higher.",
     points: 45
-  }, {
-    id: 56,
-    value: "Your Sutek gain +2 ATK and inflict an additional wound with melee strikes against stunned characters.",
-    points: 15
-  }, {
-    id: 57,
-    value: "Limited React: After your Sutek hits target opposing character with a strike: Stun the target.",
-    points: 30
   }, {
     id: 58,
     value: "React: After this character casts a spell: Target opposing character within two ranks must make a reflex save (DC 10) or become stunned.",
@@ -243,10 +199,6 @@ const textOptions = [{
     value: "Limited Order: Perform an attack without spending. Strikes from this attack inflict an additional wound. Kill [NAME], which may not be cancelled.",
     points: 45
   }, {
-    id: 61,
-    value: "Limited Order: Discard an equipped Treasure: Put a character from your hand into play ignoring loyalty penalties and reduce their entering rank by one.",
-    points: 15
-  }, {
     id: 62,
     value: "[NAME] may play Air, Earth, Fire, and Water actions regardless of class restrictions.",
     points: 45
@@ -254,10 +206,6 @@ const textOptions = [{
     id: 63,
     value: "Order: Once per game, if [NAME] played a separate Air, Earth, Fire, and Water action this turn: [NAME] permanently gains +6 ATK, +6 AC, +6 Skill, and +2 HP.",
     points: 15
-  }, {
-    id: 64,
-    value: "Limited React: After [NAME] reduces or removes a wound, target an Aquatic character in your discard pile: Put the character into your hand.",
-    points: 30
   }, {
     id: 65,
     value: "Limited Order: Discard a card: Search your deck for a level 3 or lower [FACTION_TRAIT], show it to the other players, and put it into your hand.",
@@ -277,14 +225,14 @@ const textOptions = [{
   }, {
     id: 69,
     value: "React: After starting armies are revealed, name a non-Warlord, non-Faction trait: Your Rangers have advantage on strike rolls against and saves from characters with the named trait.",
-    points: 45
+    points: 30
   }, {
     id: 70,
     value: "Your army ignores 'spend' requirements for bringing Totems into play. Your characters have +2 levels for equipping Totems.",
     points: 30
   }, {
     id: 71,
-    value: "Limited Order: All chatacters in play have a penaldy to AC and skill equal to the numbers of characters in their owner's discard pile, with a maximum of -4 (-8 if this character is a Necromancer.",
+    value: "Limited Order: All chatacters in play have a penalty to AC and skill equal to the numbers of characters in their owner's discard pile, with a maximum of -4 (-8 if this character is a Necromancer.",
     points: 30
   }, {
     id: 72,
@@ -344,7 +292,7 @@ const textOptions = [{
     points: 15
   }, {
     id: 86,
-    value: "[NAME] may choose two options with the Marksmanship feat.",
+    value: "After [NAME] succeeds with a Marksmanship check on a strike, they may choose to target a character within 1 rank with that strike."
     points: 30
   }, {
     id: 87,
@@ -360,7 +308,7 @@ const textOptions = [{
     points: 45
   }, {
     id: 90,
-    value: "React: After an opposing character moves without spending or stunning: Move [NAME] forward of backward one rank.”",
+    value: "Limited React: After an opposing character moves without spending or stunning: Move [NAME] forward of backward one rank.”",
     points: 30
   }, {
     id: 91,
@@ -369,7 +317,7 @@ const textOptions = [{
   }, {
     id: 92,
     value: "You may have two additional Dungeons in play if none share a name with another Dungeon in play.",
-    points: 30
+    points: 15
   }, {
     id: 93,
     value: "Limited Order: Discard a card: Put one level one Rat into play (with +1/+1 ATK, 7AC, +0 Skill, 1 HP)",
@@ -431,16 +379,12 @@ const textOptions = [{
     value: "Order: Discard a spell: Target character within two ranks must succeed with a magic save (DC 6 + [NAME]’s Skill) or stun.",
     points: 45
   }, {
-    id: 108,
-    value: "React: After target character rolls a magic save that failed by 10 or more, or was a Critical Failure: Inflict a wound on the target.",
-    points: 30
-  }, {
     id: 109,
     value: "Spend Order: Perform a +0 ranged strike that inflicts two additional wounds if it hits.",
     points: 30
   }, {
     id: 110,
-    value: "Dragons you control gain the Fighter class in addition to their other class(es).",
+    value: "Other Dragons you control gain the Fighter class in addition to their other class(es).",
     points: 45
   }, {
     id: 111,
@@ -491,10 +435,6 @@ const textOptions = [{
     value: "React: After a [FACTION] in this rank is targeted with a melee strike: Make a Defend check (DC 20). If successful, redirect the strike to [NAME].",
     points: 30
   }, {
-    id: 123,
-    value: "React: After [NAME] hits with a melee strike: Target each character in the hit character’s rank whose Level +8 is less than the natural die roll. Move each target backward one rank.",
-    points: 45
-  }, {
     id: 124,
     value: "Limited Order: Remove a [FACTION] in your discard pile from the game: Perform a ranged strike (base = the removed [FACTION]’s level).",
     points: 15
@@ -531,10 +471,6 @@ const textOptions = [{
     value: "Limited React: After [NAME] kills an opposing character with a spell, [NAME] permanently gains +2 skill.",
     points: 15
   }, {
-    id: 133,
-    value: "React: After [NAME] moves to a different rank: Perform a +4 ranged strike.",
-    points: 45
-  }, {
     id: 134,
     value: "Spend Order: If [NAME] is in the second rank, succeed with a Stealth check (DC 24) to move them to the first rank of a different formation.",
     points: 30
@@ -544,7 +480,7 @@ const textOptions = [{
     points: 15
   }, {
     id: 136,
-    value: "Your level 2 characters gain Order: Move this character backwards one rank.",
+    value: "Your level 2 characters gain Limited Order: Move this character backwards one rank.",
     points: 15
   }, {
     id: 137,
@@ -652,11 +588,11 @@ const textOptions = [{
     points: 45
   }, {
     id: 163,
-    value: "Limited React: Before falling forward: Do not spend or stun before moving.",
-    points: 45
+    value: "All your non-[FACTION_TRAIT] gain the Thrall trait.",
+    points: 15
   }, {
     id: 164,
-    value: "Limited React: After a character performs an action to draw a card or retireve a card from their deck: Inflict one wound on that character.",
+    value: "Limited React: After a character performs an action to draw a card or retrieve a card from their deck: Inflict one wound on that character.",
     points: 15
   }, {
     id: 165,
@@ -688,7 +624,7 @@ const textOptions = [{
     points: 30
   }, {
     id: 172,
-    value: "Your Giants and Trolls count as an additional character for determining illegal ranks.",
+    value: "Your Giants and Trolls count as two additional characters for determining whether the rank behind them is illegal.",
     points: 15
   }, {
     id: 173,
@@ -1154,8 +1090,8 @@ const textOptions = [{
         if (val == null) return null;
         if (val <= 1) return 0;
         if (val <= 3) return (val - 1) * 5;
-        if (val <= 4) return (val - 3) * 20 + 10;
-        return (val - 4) * 40 + 30;
+        if (val <= 4) return (val - 3) * 20 + 20;
+        return (val - 4) * 40 + 40;
       }
     },
     "level": {
