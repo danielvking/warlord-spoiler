@@ -119,9 +119,9 @@
             <div class="clearfix my-2">
               <div class="card-stat-label"><span>Formats:</span></div>
               <div v-if="cardData.editions && cardData.editions[0]" class="card-stat-value">
-                <span v-for="edition in cardData.editions" :key="edition">{{ edition + " " }}</span>
+                <div v-for="edition in cardData.editions" :key="edition">{{ edition }}</div>
               </div>
-              <div v-else class="card-stat-value"><span>Open</span></div>
+              <div v-else class="card-stat-value"><div>Open</div></div>
             </div>
             <!-- Text -->
             <div class="my-3" v-html="$options.filters.formatCardText(cardData.text)"></div>
