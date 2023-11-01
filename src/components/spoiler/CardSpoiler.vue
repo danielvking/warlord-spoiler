@@ -141,7 +141,6 @@ export default {
       isBusy: true,
       searchType: "Simple",
       pageSettings: {
-        include4Ex: false,
         includeChallengeLords: false,
       },
       showSearch: false,

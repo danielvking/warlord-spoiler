@@ -41,7 +41,6 @@
       <b-col cols="12" md="6">
         <!-- Include Extended -->
         <b-form-group label-cols="6" label="Include Extended:" class="my-1">
-          <b-form-checkbox v-model="pageSettings.include4ex" stacked>4Ex</b-form-checkbox>
           <b-form-checkbox v-model="pageSettings.includeChallengeLords" stacked>Challenge Lords</b-form-checkbox>
         </b-form-group>
 
@@ -350,22 +349,6 @@ export default {
 
       let searchResults = [];
       let filter = (x) => {
-        if (!this.pageSettings.include4ex || this.set) {
-          let sets = x.printInfos.map((y) => y.set).filter((y) => y);
-          // Include 4Ex
-          let _4exSets = [
-            "4EX",
-            "AMH",
-            "RttA",
-            "4th Edition Expanded (4EX)",
-            "Aftermath (AMH)",
-            "Return to the Accordlands (RttA)",
-          ];
-          if (!this.pageSettings.include4ex && sets[0] && !sets.filter((s) => !_4exSets.includes(s))[0]) return false;
-
-          // Set
-          if (this.set && !sets.includes(this.set)) return false;
-        }
         // Include Challenge Lords
         if (!this.pageSettings.includeChallengeLords) {
           if (x.challengeLord) return false;
