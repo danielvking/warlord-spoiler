@@ -13,14 +13,12 @@
 
         <search-simple
           v-show="searchType === 'Simple'"
-          :page-settings="pageSettings"
           @search-started="searchStarted"
           @search-completed="searchCompleted"
         />
 
         <search-advanced
           v-show="searchType === 'Advanced'"
-          :page-settings="pageSettings"
           @search-started="searchStarted"
           @search-completed="searchCompleted"
         />
@@ -140,9 +138,6 @@ export default {
     return {
       isBusy: true,
       searchType: "Simple",
-      pageSettings: {
-        includeChallengeLords: false,
-      },
       showSearch: false,
       resultStyle: "detailed",
       searchResults: [],

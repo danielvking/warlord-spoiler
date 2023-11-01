@@ -38,7 +38,7 @@
       <b-col cols="12" md="6">
         <!-- Include Extended -->
         <b-form-group label-cols="6" label="Include Extended:" class="my-1">
-          <b-form-checkbox v-model="pageSettings.includeChallengeLords" stacked>Challenge Lords</b-form-checkbox>
+          <b-form-checkbox v-model="includeChallengeLords" stacked>Challenge Lords</b-form-checkbox>
         </b-form-group>
 
         <!-- Class -->
@@ -270,15 +270,13 @@ function initialState() {
     selectedMisc: [],
     miscOps: {},
     miscValues: {},
+    includeChallengeLords: false,
     isBusy: false,
   };
 }
 
 export default {
   name: "SearchAdvanced",
-  props: {
-    pageSettings: Object,
-  },
   data() {
     return initialState();
   },
@@ -330,6 +328,17 @@ export default {
       return this.referenceLists.flavorTraitList.filter((t) => !this.flavorTraits.includes(t));
     },
   },
+  watch: {
+    edition(newValue) {
+      this.$store.commit("saveSettings", { searchEdition: newValue });
+    },
+    "$store.state.settings.searchEdition"(newValue) {
+      this.edition = newValue;
+    },
+  },
+  mounted() {
+    this.edition = this.$store.state.settings.searchEdition || null;
+  },
   methods: {
     clear() {
       Object.assign(this.$data, initialState());
@@ -350,7 +359,7 @@ export default {
       let searchResults = [];
       let filter = (x) => {
         // Include Challenge Lords
-        if (!this.pageSettings.includeChallengeLords) {
+        if (!this.includeChallengeLords) {
           if (x.challengeLord) return false;
         }
         // Name

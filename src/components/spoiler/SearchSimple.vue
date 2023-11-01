@@ -23,10 +23,14 @@
         </b-form-group>
       </b-col>
 
-      <!-- Include Extended -->
+      <!-- Edition -->
       <b-col cols="12" md="6">
-        <b-form-group class="text-center my-2" label="Include Extended:">
-          <b-form-checkbox v-model="pageSettings.includeChallengeLords" inline>Challenge Lords</b-form-checkbox>
+        <b-form-group class="text-center my-2" label="Format:">
+          <b-form-select v-model="edition" inline :options="editionList">
+            <template v-slot:first>
+              <b-form-select-option :value="null">Open</b-form-select-option>
+            </template>
+          </b-form-select>
         </b-form-group>
       </b-col>
     </b-form-row>
@@ -46,6 +50,7 @@ export default {
       searchText: null,
       byName: true,
       byText: false,
+      edition: null,
       isBusy: false,
     };
   },
@@ -53,9 +58,26 @@ export default {
     cards() {
       return this.$store.state.cards;
     },
+    referenceLists() {
+      return this.$store.state.referenceLists;
+    },
     canSearch() {
       return this.cards && !this.isBusy;
     },
+    editionList() {
+      return (this.referenceLists && this.referenceLists.editionList) || [];
+    },
+  },
+  watch: {
+    edition(newValue) {
+      this.$store.commit("saveSettings", { searchEdition: newValue });
+    },
+    "$store.state.settings.searchEdition"(newValue) {
+      this.edition = newValue;
+    },
+  },
+  mounted() {
+    this.edition = this.$store.state.settings.searchEdition || null;
   },
   methods: {
     onSearch() {
@@ -66,9 +88,9 @@ export default {
       let searchText = this.searchText || "";
       let searchResults = [];
       let filter = (x) => {
-        // Include Challenge Lords
-        if (!this.pageSettings.includeChallengeLords) {
-          if (x.challengeLord) return false;
+        // Edition
+        if (this.edition) {
+          if (!x.editions.includes(this.edition)) return false;
         }
         if (this.byName && x.name && utility.includesTokens(x.name, searchText)) {
           return true;

@@ -75,6 +75,7 @@ export default new Vuex.Store({
     editedCards: {},
     localRoutes: [],
     settings: {
+      searchEdition: null,
       isEditMode: false,
       isEditTextWrapped: false,
       editViewOption: "Art"
