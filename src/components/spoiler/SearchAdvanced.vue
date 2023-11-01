@@ -36,14 +36,14 @@
       </b-col>
 
       <b-col cols="12" md="6">
-        <!-- Include Extended -->
-        <b-form-group label-cols="6" label="Include Extended:" class="my-1">
-          <b-form-checkbox v-model="includeChallengeLords" stacked>Challenge Lords</b-form-checkbox>
-        </b-form-group>
-
         <!-- Class -->
         <b-form-group label-cols="6" label="Class:" class="my-1">
           <b-form-checkbox-group v-model="classes" :options="classList" stacked />
+        </b-form-group>
+
+        <!-- Exclude -->
+        <b-form-group label-cols="6" label="Exclude:" class="my-2">
+          <b-form-checkbox v-model="excludeChallengeLords" stacked>Exclusive Lords</b-form-checkbox>
         </b-form-group>
       </b-col>
     </b-row>
@@ -270,7 +270,7 @@ function initialState() {
     selectedMisc: [],
     miscOps: {},
     miscValues: {},
-    includeChallengeLords: false,
+    excludeChallengeLords: false,
     isBusy: false,
   };
 }
@@ -358,10 +358,6 @@ export default {
 
       let searchResults = [];
       let filter = (x) => {
-        // Include Challenge Lords
-        if (!this.includeChallengeLords) {
-          if (x.challengeLord) return false;
-        }
         // Name
         if (this.name && (!x.name || !utility.includesTokens(x.name, this.name))) {
           return false;
@@ -393,6 +389,10 @@ export default {
           if (!x.class) return false;
           let classes = x.class.split("/");
           if (this.classes.filter((c) => !classes.includes(c))[0]) return false;
+        }
+        // Exclude Challenge Lords
+        if (this.excludeChallengeLords) {
+          if (x.challengeLord) return false;
         }
         // Faction
         if (this.factions[0]) {
