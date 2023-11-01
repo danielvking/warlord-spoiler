@@ -128,7 +128,7 @@ body > * {
   width: 100vw;
   height: 100vh;
   background-color: rgb(96, 87, 82);
-  background: url(/images/AccordlandsMap.jpg);
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(/images/AccordlandsMap.jpg);
   background-repeat: no-repeat;
   background-position: bottom center;
   background-size: cover;
