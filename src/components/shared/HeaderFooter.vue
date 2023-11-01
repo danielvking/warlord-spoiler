@@ -16,7 +16,7 @@
         <slot />
       </div>
     </b-row>
-    <b-row class="site-footer">
+    <b-row class="site-footer d-block">
       <div class="my-1 text-muted text-center">© Kingswood Games {{ new Date().getFullYear() }}</div>
     </b-row>
   </b-container>
