@@ -19,9 +19,6 @@
         <b-form-group label-cols="6" label="Exclude Traits:" label-class="my-1">
           <v-select multiple v-model="excludeTraits" :options="traitList" />
         </b-form-group>
-        <b-form-group label-cols="6" label="Artist:">
-          <b-form-input v-model="artist" @keypress.enter="onSearch" />
-        </b-form-group>
         <b-form-group label-cols="6" label="Type:">
           <b-form-select v-model="type" :options="typeList">
             <template v-slot:first>
@@ -135,6 +132,9 @@
               <b-form-select-option :value="null">Open</b-form-select-option>
             </template>
           </b-form-select>
+        </b-form-group>
+        <b-form-group label-cols="6" label="Artist:">
+          <b-form-input v-model="artist" @keypress.enter="onSearch" />
         </b-form-group>
         <b-form-group label-cols="6" label="Flavor Text:">
           <b-form-input v-model="flavorText" @keypress.enter="onSearch" />
@@ -371,10 +371,6 @@ export default {
             if (this.excludeTraits.filter((t) => traits.includes(t))[0]) return false;
           }
         }
-        // Artist
-        if (this.artist && !x.printInfos.filter((y) => y.artist && utility.includesTokens(y.artist, this.artist))[0]) {
-          return false;
-        }
         // Type
         if (this.type && x.type !== this.type) {
           return false;
@@ -471,6 +467,10 @@ export default {
         // Edition
         if (this.edition) {
           if (!x.editions.includes(this.edition)) return false;
+        }
+        // Artist
+        if (this.artist && !x.printInfos.filter((y) => y.artist && utility.includesTokens(y.artist, this.artist))[0]) {
+          return false;
         }
         // Flavor Text
         if (
