@@ -1,6 +1,7 @@
 import baseRuleset from "./baseRuleset";
 import tournamentRuleset from "./tournamentRuleset_1_0";
 import tournamentRuleset2 from "./tournamentRuleset_1_1";
+import tournamentRuleset3 from "./tournamentRuleset_1_1_1";
 
 function setFallback(ruleset, fallback) {
   // Merge each property config
@@ -59,6 +60,10 @@ const rulesets = [
   {
     description: "Tournament 1.1",
     ruleset: withBase(tournamentRuleset2)
+  },
+  {
+    description: "Tournament 2.0",
+    ruleset: withBase(tournamentRuleset3)
   }
 ]//.filter(x => x.description === "No Ruleset")
 
