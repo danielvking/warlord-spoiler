@@ -17,9 +17,7 @@
       </div>
     </b-row>
     <b-row class="site-footer">
-      <a class="my-1 mx-3 text-muted" href="https://github.com/danielvking/warlord-spoiler" target="_blank"
-        >View on GitHub</a
-      >
+      <div class="my-1 text-muted text-center">© Kingswood Games {{ new Date().getFullYear() }}</div>
     </b-row>
   </b-container>
 </template>
