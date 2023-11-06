@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://theaccordlands.com/schemas/v1/cardBattlefield",
+  "$ref": "https://theaccordlands.com/schemas/v1/cardBase",
+  "title": "Battlefield Card",
+  "description": "Represents a battlefield card in Warlord",
+  "properties": {
+    "type": { "const": "Battlefield" },
+    "alignment": { "not": {} },
+    "class": { "not": {} },
+    "faction": { "not": {} },
+    "attack": { "not": {} },
+    "armorClass": { "not": {} },
+    "skill": { "not": {} },
+    "hitPoints": { "not": {} },
+    "level": { "not": {} },
+    "traits": { "not": {} },
+    "feats": { "not": {} }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://theaccordlands.com/schemas/v1/cardDungeon",
+  "$ref": "https://theaccordlands.com/schemas/v1/cardBase",
+  "title": "Dungeon Card",
+  "description": "Represents a dungeon card in Warlord",
+  "properties": {
+    "type": { "const": "Dungeon" },
+    "alignment": { "not": {} },
+    "class": { "not": {} },
+    "faction": { "not": {} },
+    "attack": { "not": {} },
+    "armorClass": { "not": {} },
+    "skill": { "not": {} },
+    "hitPoints": { "not": {} },
+    "level": { "not": {} },
+    "traits": { "not": {} },
+    "feats": { "not": {} }
+  }
+}

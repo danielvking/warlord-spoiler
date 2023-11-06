@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://theaccordlands.com/schemas/v2/cardItem",
+  "$ref": "https://theaccordlands.com/schemas/v2/cardBase",
+  "title": "Item Card",
+  "description": "Represents an item card in Warlord",
+  "properties": {
+    "type": { "const": "Item" },
+    "alignment": { "not": {} },
+    "faction": { "not": {} },
+    "damageType": { "not": {} },
+    "skill": { "not": {} },
+    "hitPoints": { "not": {} }
+  },
+  "required": [
+    "class",
+    "level"
+  ]
+}

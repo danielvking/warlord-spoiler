@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://theaccordlands.com/schemas/v1/cardEpicClass",
+  "$ref": "https://theaccordlands.com/schemas/v1/cardBase",
+  "title": "Epic Class Card",
+  "description": "Represents an epic class card in Warlord",
+  "properties": {
+    "type": { "const": "Epic Class" },
+    "alignment": { "not": {} },
+    "class": { "not": {} },
+    "faction": { "not": {} }
+  },
+  "required": [
+    "attack",
+    "armorClass",
+    "skill",
+    "hitPoints",
+    "level"
+  ]
+}

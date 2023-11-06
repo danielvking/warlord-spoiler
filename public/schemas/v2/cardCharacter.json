@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://theaccordlands.com/schemas/v2/cardCharacter",
+  "$ref": "https://theaccordlands.com/schemas/v2/cardBase",
+  "title": "Character Card",
+  "description": "Represents a character card in Warlord",
+  "properties": {
+    "type": { "const": "Character" }
+  },
+  "required": [
+    "alignment",
+    "class",
+    "faction",
+    "attack",
+    "damageType",
+    "armorClass",
+    "skill",
+    "hitPoints",
+    "level"
+  ]
+}

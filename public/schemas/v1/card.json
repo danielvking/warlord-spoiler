@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://theaccordlands.com/schemas/v1/card",
+  "title": "Card",
+  "description": "Represents a Warlord card",
+  "properties": {
+    "type": {
+      "enum": [
+        "Action",
+        "Battlefield",
+        "Character",
+        "Dungeon",
+        "Epic Class",
+        "Item"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": { "const": "Action" }
+        }
+      },
+      "then": {
+        "$ref": "https://theaccordlands.com/schemas/v1/cardAction"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": { "const": "Battlefield" }
+        }
+      },
+      "then": {
+        "$ref": "https://theaccordlands.com/schemas/v1/cardBattlefield"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": { "const": "Character" }
+        }
+      },
+      "then": {
+        "$ref": "https://theaccordlands.com/schemas/v1/cardCharacter"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": { "const": "Dungeon" }
+        }
+      },
+      "then": {
+        "$ref": "https://theaccordlands.com/schemas/v1/cardDungeon"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": { "const": "Epic Class" }
+        }
+      },
+      "then": {
+        "$ref": "https://theaccordlands.com/schemas/v1/cardEpicClass"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": { "const": "Item" }
+        }
+      },
+      "then": {
+        "$ref": "https://theaccordlands.com/schemas/v1/cardItem"
+      }
+    }
+  ]
+}

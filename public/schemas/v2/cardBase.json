@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://theaccordlands.com/schemas/v2/cardBase",
+  "title": "Card Base",
+  "description": "Represents all possible data for a Warlord card",
+  "type": "object",
+  "properties": {
+    "name": { "type": "string" },
+    "text": { "type": "string" },
+    "type": { "type": "string" },
+    "subtype": { "type": "string" },
+    "alignment": { "type": "string" },
+    "class": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "faction": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "attack": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/statValue"
+      }
+    },
+    "damageType": { "type": "string" },
+    "armorClass": { "$ref": "#/$defs/statValue" },
+    "skill": { "$ref": "#/$defs/statValue" },
+    "hitPoints": { "$ref": "#/$defs/statValue" },
+    "level": { "$ref": "#/$defs/statValue" },
+    "traits": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "value": { "type": "integer" }
+        },
+        "required": [ "name" ],
+        "additionalProperties": false
+      }
+    },
+    "feats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "value": { "type": "integer" }
+        },
+        "required": [ "name", "value" ],
+        "additionalProperties": false
+      }
+    },
+    "editions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "errata": { "type": "string" },
+    "exclusiveLordCard": {
+      "type": "boolean",
+      "default": false
+    },
+    "printInfos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "set": { "type": "string" },
+          "setNumber": { "type": "integer" },
+          "rarity": { "type": "string" },
+          "flavorText": { "type": "string" },
+          "artist": { "type": "string" },
+          "imageUrl": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "name",
+    "type"
+  ],
+  "additionalProperties": false,
+
+  "$defs": {
+    "statValue": {
+      "anyOf": [
+        { "type": "integer" },
+        { "const": "X" }
+      ]
+    }
+  }
+}

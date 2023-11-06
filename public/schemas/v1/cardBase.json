@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://theaccordlands.com/schemas/v1/cardBase",
+  "title": "Card Base",
+  "description": "Represents all possible data for a Warlord card",
+  "type": "object",
+  "properties": {
+    "name": { "type": "string" },
+    "text": { "type": "string" },
+    "type": { "type": "string" },
+    "alignment": { "type": "string" },
+    "class": { "type": "string" },
+    "faction": { "type": "string" },
+    "attack": { "type": "string" },
+    "armorClass": { "type": "string" },
+    "skill": { "type": "string" },
+    "hitPoints": { "type": "string" },
+    "level": { "type": "string" },
+    "traits": { "type": "string" },
+    "feats": { "type": "string" },
+    "misc": { "type": "string" },
+    "editions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "errata": { "type": "string" },
+    "challengeLord": {
+      "type": "boolean",
+      "default": false
+    },
+    "printInfos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "set": { "type": "string" },
+          "setNumber": { "type": "string" },
+          "rarity": { "type": "string" },
+          "flavorText": { "type": "string" },
+          "flavorTraits": { "type": "string" },
+          "artist": { "type": "string" },
+          "imageUrl": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "name",
+    "type"
+  ],
+  "additionalProperties": false
+}
