@@ -7,13 +7,13 @@
   "properties": {
     "type": { "const": "Item" },
     "alignment": { "not": {} },
-    "faction": { "not": {} },
+    "factions": { "not": {} },
     "damageType": { "not": {} },
     "skill": { "not": {} },
     "hitPoints": { "not": {} }
   },
   "required": [
-    "class",
+    "classes",
     "level"
   ]
 }

@@ -10,19 +10,19 @@
     "type": { "type": "string" },
     "subtype": { "type": "string" },
     "alignment": { "type": "string" },
-    "class": {
+    "classes": {
       "type": "array",
       "items": {
         "type": "string"
       }
     },
-    "faction": {
+    "factions": {
       "type": "array",
       "items": {
         "type": "string"
       }
     },
-    "attack": {
+    "attacks": {
       "type": "array",
       "items": {
         "$ref": "#/$defs/statValue"

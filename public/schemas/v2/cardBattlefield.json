@@ -7,9 +7,9 @@
   "properties": {
     "type": { "const": "Battlefield" },
     "alignment": { "not": {} },
-    "class": { "not": {} },
-    "faction": { "not": {} },
-    "attack": { "not": {} },
+    "classes": { "not": {} },
+    "factions": { "not": {} },
+    "attacks": { "not": {} },
     "damageType": { "not": {} },
     "armorClass": { "not": {} },
     "skill": { "not": {} },
