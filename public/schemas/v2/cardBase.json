@@ -47,8 +47,7 @@
           "name": { "type": "string" },
           "value": { "type": "integer" }
         },
-        "required": [ "name" ],
-        "additionalProperties": false
+        "required": [ "name" ]
       }
     },
     "feats": {
@@ -59,8 +58,7 @@
           "name": { "type": "string" },
           "value": { "type": "integer" }
         },
-        "required": [ "name", "value" ],
-        "additionalProperties": false
+        "required": [ "name", "value" ]
       }
     },
     "editions": {
@@ -83,8 +81,7 @@
           "flavorText": { "type": "string" },
           "artist": { "type": "string" },
           "imageUrl": { "type": "string" }
-        },
-        "additionalProperties": false
+        }
       }
     }
   },
@@ -92,7 +89,6 @@
     "name",
     "type"
   ],
-  "additionalProperties": false,
 
   "$defs": {
     "statValue": {

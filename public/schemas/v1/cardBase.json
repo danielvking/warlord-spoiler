@@ -40,14 +40,12 @@
           "flavorTraits": { "type": "string" },
           "artist": { "type": "string" },
           "imageUrl": { "type": "string" }
-        },
-        "additionalProperties": false
+        }
       }
     }
   },
   "required": [
     "name",
     "type"
-  ],
-  "additionalProperties": false
+  ]
 }
