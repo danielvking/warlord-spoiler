@@ -7,8 +7,8 @@
   "properties": {
     "type": { "const": "Action" },
     "alignment": { "not": {} },
-    "factions": { "not": {} },
-    "attacks": { "not": {} },
+    "faction": { "not": {} },
+    "attack": { "not": {} },
     "damageType": { "not": {} },
     "armorClass": { "not": {} },
     "skill": { "not": {} },
@@ -16,7 +16,7 @@
     "feats": { "not": {} }
   },
   "required": [
-    "classes",
+    "class",
     "level"
   ]
 }

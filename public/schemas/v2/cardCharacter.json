@@ -9,9 +9,9 @@
   },
   "required": [
     "alignment",
-    "classes",
-    "factions",
-    "attacks",
+    "class",
+    "faction",
+    "attack",
     "damageType",
     "armorClass",
     "skill",

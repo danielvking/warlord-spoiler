@@ -7,9 +7,9 @@
   "properties": {
     "type": { "const": "Dungeon" },
     "alignment": { "not": {} },
-    "classes": { "not": {} },
-    "factions": { "not": {} },
-    "attacks": { "not": {} },
+    "class": { "not": {} },
+    "faction": { "not": {} },
+    "attack": { "not": {} },
     "damageType": { "not": {} },
     "armorClass": { "not": {} },
     "skill": { "not": {} },

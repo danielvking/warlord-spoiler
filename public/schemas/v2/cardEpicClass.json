@@ -7,12 +7,12 @@
   "properties": {
     "type": { "const": "Epic Class" },
     "alignment": { "not": {} },
-    "classes": { "not": {} },
-    "factions": { "not": {} },
+    "class": { "not": {} },
+    "faction": { "not": {} },
     "damageType": { "not": {} }
   },
   "required": [
-    "attacks",
+    "attack",
     "armorClass",
     "skill",
     "hitPoints",
