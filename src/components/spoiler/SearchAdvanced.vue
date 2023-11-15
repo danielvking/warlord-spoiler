@@ -43,7 +43,7 @@
 
         <!-- Exclude -->
         <b-form-group label-cols="6" label="Exclude:" class="my-2">
-          <b-form-checkbox v-model="excludeChallengeLords" stacked>Exclusive Lords</b-form-checkbox>
+          <b-form-checkbox v-model="excludeExclusiveLordCards" stacked>Exclusive Lord Cards</b-form-checkbox>
         </b-form-group>
       </b-col>
     </b-row>
@@ -138,9 +138,6 @@
         </b-form-group>
         <b-form-group label-cols="6" label="Flavor Text:">
           <b-form-input v-model="flavorText" @keypress.enter="onSearch" />
-        </b-form-group>
-        <b-form-group label-cols="6" label="Flavor Traits:" label-class="my-1">
-          <v-select multiple v-model="flavorTraits" :options="flavorTraitList" />
         </b-form-group>
       </b-col>
 
@@ -263,14 +260,13 @@ function initialState() {
     rarity: null,
     edition: null,
     flavorText: null,
-    flavorTraits: [],
     selectedFeats: [],
     featOps: {},
     featValues: {},
     selectedMisc: [],
     miscOps: {},
     miscValues: {},
-    excludeChallengeLords: false,
+    excludeExclusiveLordCards: false,
     isBusy: false,
   };
 }
@@ -312,7 +308,7 @@ export default {
     },
     miscList() {
       // I admit this is inelegant
-      return ["Challenge Rating", "Charges", "GP"].filter((f) => !this.selectedMisc.includes(f));
+      return ["Challenge Rating", "Charges"].filter((f) => !this.selectedMisc.includes(f));
     },
     editionList() {
       return (this.referenceLists && this.referenceLists.editionList) || [];
@@ -322,10 +318,6 @@ export default {
     },
     rarityList() {
       return (this.referenceLists && this.referenceLists.rarityList) || [];
-    },
-    flavorTraitList() {
-      if (!this.referenceLists || !this.referenceLists.flavorTraitList) return [];
-      return this.referenceLists.flavorTraitList.filter((t) => !this.flavorTraits.includes(t));
     },
   },
   watch: {
@@ -368,7 +360,7 @@ export default {
         }
         // Traits
         if (this.traits[0] || this.excludeTraits[0]) {
-          let traits = x.traits ? x.traits.split("/") : [];
+          let traits = x.traits || [];
           if (this.traits[0]) {
             if (this.traits.filter((t) => !traits.includes(t))[0]) return false;
           }
@@ -387,18 +379,16 @@ export default {
         // Class
         if (this.classes[0]) {
           if (!x.class) return false;
-          let classes = x.class.split("/");
-          if (this.classes.filter((c) => !classes.includes(c))[0]) return false;
+          if (this.classes.filter((c) => !x.class.includes(c))[0]) return false;
         }
-        // Exclude Challenge Lords
-        if (this.excludeChallengeLords) {
-          if (x.challengeLord) return false;
+        // Exclude Exclusive Lord Cards
+        if (this.excludeExclusiveLordCards) {
+          if (x.exclusiveLordCard) return false;
         }
         // Faction
         if (this.factions[0]) {
-          if (!x.faction) return false;
-          let factions = x.faction.split("/");
-          if (this.factions.filter((f) => !factions.includes(f))[0]) return false;
+          if (!x.factions) return false;
+          if (this.factions.filter((f) => !x.factions.includes(f))[0]) return false;
         }
         // Level
         if (typeof this.level === "number") {
@@ -412,7 +402,7 @@ export default {
           }
         }
         if (typeof this.numAttacks === "number" || typeof this.attack === "number") {
-          let attacks = x.attack == null ? [] : x.attack.split("/");
+          let attacks = x.attack || [];
           // Number of Attacks
           if (typeof this.numAttacks === "number") {
             if (this.numAttacksOp === "≥") {
@@ -488,21 +478,12 @@ export default {
         ) {
           return false;
         }
-        // Flavor Traits
-        if (this.flavorTraits[0]) {
-          let allFlavorTraits = x.printInfos.map((y) => y.flavorTraits).filter((y) => y);
-          let flavorTraits = new Set(allFlavorTraits.map((y) => y.split("/")).flat());
-          if (this.flavorTraits.filter((t) => !flavorTraits.has(t))[0]) return false;
-        }
         // Feats
         if (this.selectedFeats.length > 0) {
           if (!x.feats) return false;
           let featsMap = {};
-          x.feats.split("/").forEach((f) => {
-            let featValue = f.split(/ (?=[-+])/);
-            let feat = featValue[0];
-            let value = featValue[1];
-            featsMap[feat] = value;
+          x.feats.forEach((f) => {
+            featsMap[f.name] = f.value;
           });
           for (let i = 0; i < this.selectedFeats.length; i++) {
             let feat = this.selectedFeats[i];
@@ -523,18 +504,11 @@ export default {
         }
         // Misc
         if (this.selectedMisc.length > 0) {
-          if (!x.misc) return false;
+          if (!x.keywords) return false;
           let miscMap = {};
-          x.misc.split("/").forEach((m) => {
-            if (m.match(/^-?\d+ Charges?$/)) {
-              let miscValue = m.split(" ");
-              miscMap["Charges"] = miscValue[0];
-            } else if (m.match(/^-?\d+ gp$/)) {
-              let miscValue = m.split(" ");
-              miscMap["GP"] = miscValue[0];
-            } else {
-              let miscValue = m.split(/ (?=-?\d+)/);
-              miscMap[miscValue[0]] = miscValue[1];
+          x.keywords.forEach((k) => {
+            if (k.value != null) {
+              miscMap[k.name] = k.value;
             }
           });
           for (let i = 0; i < this.selectedMisc.length; i++) {

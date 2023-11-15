@@ -6,36 +6,38 @@ import utility from "./utility";
 // - Static lists for preferred property order - //
 // --------------------------------------------- //
 
-const cardKeyOrder = [
+const keyOrder = [
+  // Card properties
   "name",
   "text",
   "textFormat",
   "type",
+  "subtype",
   "alignment",
   "class",
   "faction",
   "attack",
+  "damageType",
   "armorClass",
   "skill",
   "hitPoints",
   "level",
   "traits",
+  "keywords",
   "feats",
   "misc",
   "editions",
   "errata",
-  "challengeLord",
+  "exclusiveLordCard",
   "printInfos",
-];
-const printKeyOrder = [
+  // Print info properties
   "set",
   "setNumber",
   "rarity",
   "flavorText",
   "flavorTextFormat",
-  "flavorTraits",
   "artist",
-  "imageUrl",
+  "imageUrl"
 ];
 
 
@@ -43,119 +45,139 @@ const printKeyOrder = [
 // - Utility functions for data conversions - //
 // ------------------------------------------ //
 
-function setProp(obj, key, value, keyOrder) {
+/**
+ * Deeply sets a reactive property, skipping key-values that are already equal
+ * @param {object} obj 
+ * @param {string} key 
+ * @param {*} value 
+ */
+function setProp(obj, key, value) {
+  // Value is undefined: delete it, stop
   if (value === undefined) {
     Vue.delete(obj, key);
     return;
   }
+  // Key is undefined: add it in an ordered manner
   if (obj[key] === undefined) {
     utility.insertKeyOrdered(obj, key, keyOrder, Vue.set, Vue.delete);
   }
-  obj[key] = value;
-}
-function fromEmptyToUndefined(str) {
-  if (str == null || str === "") return undefined;
-  return str;
-}
-function fixCarriageReturns(str) {
-  if (!str) return str;
-  return str.replace(/\r/g, "").replace(/\n/g, "\r\n");
-}
-function fromSlashesToArray(str) {
-  if (!str) return [];
-  return str.split("/");
-}
-function fromArrayToSlashes(arr) {
-  if (arr[0] == null) return undefined;
-  return arr.join("/");
-}
-function fromSlashesToFeats(featStr) {
-  let feats = fromSlashesToArray(featStr);
-  let selectedFeats = [];
-  let featValues = {};
-  feats.forEach((f, i) => {
-    let featValue = f.split(/ (?=[-+]\d+)/);
-    selectedFeats[i] = featValue[0];
-    let value = +featValue[1];
-    if (!isNaN(value)) {
-      featValues[featValue[0]] = value;
+  if (typeof (value) === 'object' && value !== null) {
+    if (typeof (obj[key]) === 'object' && obj[key] !== null) {
+      // Source and destination are objects: copy and delete properties recursively from one to the other, stop
+      deepCopy(value, obj[key], setProp, true);
+      return;
     }
-  });
-  return { selectedFeats, featValues };
-}
-function fromFeatsToSlashes(featArr, featValues) {
-  if (featArr[0] == null) return undefined;
-  return featArr
-    .map((x) => {
-      let value = featValues[x];
-      let valueNum = +value;
-      if (value == null || value === "" || isNaN(valueNum)) return x;
-      if (valueNum >= 0) value = "+" + valueNum;
-      return `${x} ${value}`;
-    })
-    .join("/");
-}
-function fromSlashesToMisc(miscStr) {
-  let misc = fromSlashesToArray(miscStr);
-  var selectedMisc = [];
-  var miscValues = {};
-  misc.forEach((m, i) => {
-    let value;
-    if (m.match(/^-?\d+ Charges?$/)) {
-      let miscValue = m.split(" ");
-      selectedMisc[i] = "Charges";
-      value = +miscValue[0];
-    } else if (m.match(/^-?\d+ gp$/)) {
-      let miscValue = m.split(" ");
-      selectedMisc[i] = "GP";
-      value = +miscValue[0];
+  }
+  // If the properties are not equal: set destination from source
+  if (obj[key] !== value) {
+    if (typeof (value) === 'object' && value !== null) {
+      Vue.set(obj, key, deepCopy(value));
     } else {
-      let miscValue = m.split(/ (?=-?\d+)/);
-      selectedMisc[i] = miscValue[0];
-      value = +miscValue[1];
+      Vue.set(obj, key, value);
     }
-    if (!isNaN(value)) {
-      miscValues[selectedMisc[i]] = value;
-    }
-  });
-  return { selectedMisc, miscValues };
+  }
 }
-function fromMiscToSlashes(miscArr, miscValues) {
-  if (miscArr[0] == null) return undefined;
-  return miscArr
-    .map((x) => {
-      let value = miscValues[x];
-      let valueNum = +value;
-      if (value == null || value === "" || isNaN(valueNum)) return x;
 
-      if (x === "Charges") {
-        return `${valueNum} ${valueNum === 1 ? "Charge" : "Charges"}`;
-      } else if (x === "GP") {
-        return `${valueNum} gp`;
+/**
+ * Deeply copies objFrom into an optional objTo, returning the result
+ * @param {object} objFrom Object to copy properties from
+ * @param {object} [objTo] Object to copy properties into
+ * @param {(obj: Object, key: string, value: *) => void} [setFunc] Optionally override the logic for setting properties
+ * @param {boolean} [deleteAbsent] Optionally delete properties from objTo that are absent in objFrom
+ * @returns {object} The result of the copy
+ */
+function deepCopy(objFrom, objTo, setFunc, deleteAbsent) {
+  // By default, delete undefined, set everything else
+  if (setFunc == null) {
+    setFunc = (obj, key, value) => {
+      if (value === undefined) {
+        delete obj[key];
       } else {
-        return `${x} ${valueNum}`;
+        obj[key] = value;
       }
-    })
-    .join("/");
-}
-function fromArrayToArray(arr) {
-  if (!arr || !arr[0]) return undefined;
-  return arr.map(x => x);
-}
+    }
+  }
 
-function deepCopy(objFrom, objTo) {
+  // Makes the objTo parameter optional
+  if (objTo == null) {
+    objTo = Array.isArray(objFrom) ? [] : {};
+  }
+
+  // Removes the missing keys from the destination object
+  if (deleteAbsent) {
+    if (Array.isArray(objTo)) {
+      // There are probably some gross edge cases that could happen here... but let's just handle normal arrays
+      for (let k = objTo.length - 1; k >= 0; k--) {
+        if (!(k in objFrom)) {
+          setFunc(objTo, k, undefined);
+        }
+      }
+    }
+    Object.keys(objTo).map(x => x).forEach(k => {
+      if (!(k in objFrom)) {
+        setFunc(objTo, k, undefined);
+      }
+    });
+  }
+
+  // Copies the source object key-values into the destination object, recursively
   Object.keys(objFrom).forEach(k => {
     let val = objFrom[k];
     if (typeof (val) === 'object' && val != null) {
       let destVal = objTo[k];
       if (typeof (destVal) === 'object' && destVal != null) {
-        deepCopy(val, destVal);
-        return;
+        deepCopy(val, destVal, setFunc, deleteAbsent);
+      } else {
+        setFunc(objTo, k, deepCopy(val, null, setFunc, deleteAbsent));
       }
+    } else {
+      setFunc(objTo, k, val);
     }
-    objTo[k] = val;
   });
+
   return objTo;
+}
+
+/**
+ * @param {string} str 
+ * @returns {string}
+ */
+function fixCarriageReturns(str) {
+  if (!str) return str;
+  return str.replace(/\r/g, "").replace(/\n/g, "\r\n");
+}
+
+/**
+ * @param {string} str 
+ * @returns {string}
+ */
+function fromEmptyStringToUndefined(str) {
+  if (str == null || str === "") return undefined;
+  return str;
+}
+
+/**
+ * @param {Array} arr 
+ * @returns {Array}
+ */
+function fromEmptyArrayToUndefined(arr) {
+  if (!arr || !arr[0]) return undefined;
+  return arr;
+}
+
+/**
+ * @param {string} val 
+ * @returns {integer}
+ */
+function fromStringToInteger(val) {
+  if (val == null || val === "") return undefined;
+  let str = String(val);
+  if (/^[+-]?\d+$/.test(str)) {
+    return +str;
+  } else if (str.startsWith("+")) {
+    str = str.substring(1);
+  }
+  return str;
 }
 
 
@@ -163,138 +185,119 @@ function deepCopy(objFrom, objTo) {
 // - Stardard configuration - //
 // -------------------------- //
 
-function standardMap(prop, transform, otherProp, otherTransform) {
-  otherProp = otherProp || prop;
-  otherTransform = otherTransform || (x => x);
+/**
+ * @typedef {object} CardPropertyMap
+ * @property {(vm: object, cardDataProp: string, cardMappedProp: string) => void} [initialize]
+ * @property {(vm: object, cardDataProp: string, cardMappedProp: string) => void} [sync]
+ */
+
+/**
+ * @param {string} dataProp 
+ * @param {(value: *) => *} transformToData 
+ * @param {string} mapProp 
+ * @param {(value: *) => *} transformToMap 
+ * @returns {CardPropertyMap}
+ */
+function standardMap(dataProp, transformToData, mapProp, transformToMap) {
+  mapProp = mapProp || dataProp;
+  transformToMap = transformToMap || (x => x);
   return {
     initialize(vm, cardDataProp, cardMappedProp) {
-      vm.$watch(cardMappedProp + "." + otherProp, newValue => {
+      vm.$watch(cardMappedProp + "." + mapProp, newValue => {
         let cardData = vm[cardDataProp];
-        setProp(cardData, prop, transform(newValue), cardKeyOrder);
-      });
+        setProp(cardData, dataProp, transformToData(newValue));
+      }, { deep: true });
     },
     sync(vm, cardDataProp, cardMappedProp) {
       let cardData = vm[cardDataProp], cardMapped = vm[cardMappedProp];
-      cardMapped[otherProp] = otherTransform(cardData[prop]);
+      setProp(cardMapped, mapProp, transformToMap(cardData[dataProp]));
     }
   }
 }
 
+/**
+ * @typedef {object} CardMapperConfig
+ * @property {object.<string, CardPropertyMap>} props
+ */
+
+/**
+ * @typedef {object} CardMapperConfig
+ * @property {object} utils
+ * @property {(dataProp: string, transformToData: (value: *) => *, mapProp: string, transformToMap: (value: *) => *) => CardPropertyMap} utils.standardMap
+ * @property {(obj: object, key: string, value: *) => void} utils.setProp
+ * @property {(str: string) => string} utils.fixCarriageReturns
+ * @property {(str: string) => string} utils.fromEmptyStringToUndefined
+ * @property {(str: Array) => Array} utils.fromEmptyArrayToUndefined
+ * @property {(str: string) => integer} utils.fromStringToInteger
+ * @property {object.<string, CardPropertyMap>} props
+ */
+
+/**
+ * @typedef {CardMapperConfig & CardMapperUtil} CardMapperUtilConfig
+ */
+
+/**
+ * @type {CardMapperUtilConfig}
+ */
 const standardConfig = {
   utils: {
     fixCarriageReturns,
-    fromArrayToArray,
-    fromArrayToSlashes,
-    fromEmptyToUndefined,
-    fromFeatsToSlashes,
-    fromMiscToSlashes,
-    fromSlashesToArray,
-    fromSlashesToFeats,
-    fromSlashesToMisc,
-    setProp,
-    cardKeyOrder,
-    printKeyOrder
+    fromEmptyStringToUndefined,
+    fromEmptyArrayToUndefined,
+    fromStringToInteger,
+    standardMap,
+    setProp
   },
   props: {
-    "name": standardMap("name", fromEmptyToUndefined),
-    "text": standardMap("text", x => fromEmptyToUndefined(fixCarriageReturns(x))),
-    "textFormat": standardMap("textFormat", fromEmptyToUndefined),
-    "type": standardMap("type", fromEmptyToUndefined),
-    "alignment": standardMap("alignment", fromEmptyToUndefined),
-    "class": standardMap("class", fromArrayToSlashes, "classes", fromSlashesToArray),
-    "faction": standardMap("faction", fromArrayToSlashes, "factions", fromSlashesToArray),
-    "attack": standardMap("attack", fromEmptyToUndefined),
-    "armorClass": standardMap("armorClass", fromEmptyToUndefined),
-    "skill": standardMap("skill", fromEmptyToUndefined),
-    "hitPoints": standardMap("hitPoints", fromEmptyToUndefined),
-    "level": standardMap("level", fromEmptyToUndefined),
-    "traits": standardMap("traits", fromArrayToSlashes, null, fromSlashesToArray),
-    "feats": {
-      initialize(vm, cardDataProp, cardMappedProp) {
-        vm.$watch(cardMappedProp + ".featValues", newValue => {
-          let cardData = vm[cardDataProp], cardMapped = vm[cardMappedProp];
-          setProp(cardData, "feats", fromFeatsToSlashes(cardMapped.selectedFeats, newValue), cardKeyOrder);
-        }, { deep: true });
-      },
-      sync(vm, cardDataProp, cardMappedProp) {
-        let cardData = vm[cardDataProp], cardMapped = vm[cardMappedProp];
-        let feats = fromSlashesToFeats(cardData.feats);
-        cardMapped.selectedFeats = feats.selectedFeats;
-        cardMapped.featValues = feats.featValues;
+    "name": standardMap("name", fromEmptyStringToUndefined),
+    "text": standardMap("text", x => fromEmptyStringToUndefined(fixCarriageReturns(x))),
+    "textFormat": standardMap("textFormat", fromEmptyStringToUndefined),
+    "type": standardMap("type", fromEmptyStringToUndefined),
+    "alignment": standardMap("alignment", fromEmptyStringToUndefined),
+    "class": standardMap("class", fromEmptyArrayToUndefined, null, x => x || []),
+    "faction": standardMap("faction", fromEmptyArrayToUndefined, null, x => x || []),
+    "attack": standardMap("attack", x => {
+      if (x == null || x === "") return undefined;
+      let values = String(x).split("/").filter(x => x !== "");
+      for (let i = 0; i < values.length; i++) {
+        values[i] = fromStringToInteger(values[i]);
       }
-    },
-    "misc": {
-      initialize(vm, cardDataProp, cardMappedProp) {
-        vm.$watch(cardMappedProp + ".miscValues", newValue => {
-          let cardData = vm[cardDataProp], cardMapped = vm[cardMappedProp];
-          setProp(cardData, "misc", fromMiscToSlashes(cardMapped.selectedMisc, newValue), cardKeyOrder);
-        }, { deep: true });
-      },
-      sync(vm, cardDataProp, cardMappedProp) {
-        let cardData = vm[cardDataProp], cardMapped = vm[cardMappedProp];
-        let misc = fromSlashesToMisc(cardData.misc);
-        cardMapped.selectedMisc = misc.selectedMisc;
-        cardMapped.miscValues = misc.miscValues;
-      }
-    },
-    "editions": {
-      initialize(vm, cardDataProp, cardMappedProp) {
-        vm.$watch(cardMappedProp + ".editions", newValue => {
-          let cardData = vm[cardDataProp], cardMapped = vm[cardMappedProp];
-          if (newValue && cardData.editions && newValue.length === cardData.editions.length) {
-            if (newValue.every((x, i) => x === cardData.editions[i])) {
-              return;
-            }
-          }
-          setProp(cardData, "editions", fromArrayToArray(cardMapped.editions, newValue), cardKeyOrder);
-        });
-      },
-      sync(vm, cardDataProp, cardMappedProp) {
-        let cardData = vm[cardDataProp], cardMapped = vm[cardMappedProp];
-        cardMapped.editions = fromArrayToArray(cardData.editions) || [];
-      }
-    },
-    "errata": standardMap("errata", x => fromEmptyToUndefined(fixCarriageReturns(x))),
-    "challengeLord": standardMap("challengeLord", x => x || false),
-    "printInfos": {
-      initialize(vm, cardDataProp, cardMappedProp) {
-        vm.$watch(cardMappedProp + ".printInfos", newValue => {
-          let cardData = vm[cardDataProp];
-          if (newValue != null && newValue.length > 0) {
-            cardData.printInfos = [];
-            newValue.forEach(x => {
-              let y = {};
-              cardData.printInfos.push(y);
-              setProp(y, "set", x.set, printKeyOrder);
-              setProp(y, "setNumber", fromEmptyToUndefined(x.setNumber), printKeyOrder);
-              setProp(y, "rarity", x.rarity, printKeyOrder);
-              setProp(y, "flavorTraits", fromArrayToSlashes(x.flavorTraits || []), printKeyOrder);
-              setProp(y, "artist", fromEmptyToUndefined(x.artist), printKeyOrder);
-              setProp(y, "imageUrl", fromEmptyToUndefined(x.imageUrl), printKeyOrder);
-              setProp(y, "flavorText", fromEmptyToUndefined(fixCarriageReturns(x.flavorText)), printKeyOrder);
-              setProp(y, "flavorTextFormat", fromEmptyToUndefined(x.flavorTextFormat), printKeyOrder);
-            });
-          } else {
-            setProp(cardData, "printInfos", undefined, cardKeyOrder);
-          }
-        }, { deep: true });
-      },
-      sync(vm, cardDataProp, cardMappedProp) {
-        let cardData = vm[cardDataProp], cardMapped = vm[cardMappedProp];
-        cardMapped.printInfos = (cardData.printInfos || []).map(x => {
-          return {
-            set: x.set,
-            setNumber: x.setNumber,
-            rarity: x.rarity,
-            flavorTraits: fromSlashesToArray(x.flavorTraits),
-            artist: x.artist,
-            flavorText: x.flavorText,
-            flavorTextFormat: x.flavorTextFormat,
-            imageUrl: x.imageUrl,
-          };
-        });
-      }
-    }
+      return values;
+    }, null, x => {
+      if (!Array.isArray(x)) return x;
+      return x.join("/");
+    }),
+    "armorClass": standardMap("armorClass", fromStringToInteger),
+    "skill": standardMap("skill", fromStringToInteger),
+    "hitPoints": standardMap("hitPoints", fromStringToInteger),
+    "level": standardMap("level", fromStringToInteger),
+    "traits": standardMap("traits", fromEmptyArrayToUndefined, null, x => x || []),
+    "feats": standardMap("feats", x => {
+      if (!Array.isArray(x) || x[0] == null) return undefined;
+      return x.map(y => {
+        return {
+          name: y.name,
+          value: fromStringToInteger(y.value)
+        };
+      });
+    }, null, x => x || []),
+    "editions": standardMap("editions", fromEmptyStringToUndefined),
+    "errata": standardMap("errata", x => fromEmptyStringToUndefined(fixCarriageReturns(x))),
+    "exclusiveLordCard": standardMap("exclusiveLordCard", x => !x ? undefined : x),
+    "printInfos": standardMap("printInfos", x => {
+      if (!Array.isArray(x) || x[0] == null) return undefined;
+      return x.map(y => {
+        return {
+          set: y.set,
+          setNumber: fromStringToInteger(y.setNumber),
+          rarity: y.rarity,
+          flavorText: fromEmptyStringToUndefined(fixCarriageReturns(y.flavorText)),
+          flavorTextFormat: fromEmptyStringToUndefined(y.flavorTextFormat),
+          artist: fromEmptyStringToUndefined(y.artist),
+          imageUrl: fromEmptyStringToUndefined(y.imageUrl)
+        };
+      });
+    }, null, x => x || [])
   }
 }
 
@@ -303,21 +306,37 @@ const standardConfig = {
 // - Final export - //
 // ---------------- //
 
-export function createMapper(vm, cardDataProp, cardMappedProp, config) {
-  let mergedConfig = {};
-  deepCopy(standardConfig, mergedConfig);
-  if (config) deepCopy(config, mergedConfig);
 
-  Object.keys(mergedConfig.props).forEach(x => {
-    let initialize = mergedConfig.props[x].initialize;
-    if (initialize) initialize(vm, cardDataProp, cardMappedProp, mergedConfig);
+/**
+ * @param {(config: CardMapperConfig) => void} configtransform
+ * @returns {CardMapperConfig}
+ */
+export function buildConfig(configtransform) {
+  let config = deepCopy(standardConfig);
+  configtransform(config)
+  return config;
+}
+
+/**
+ * @param {object} vm 
+ * @param {string} cardDataProp 
+ * @param {string} cardMappedProp 
+ * @param {CardMapperConfig} [config]
+ * @returns {() => void}
+ */
+export function createMapper(vm, cardDataProp, cardMappedProp, config) {
+  config = config || standardConfig;
+
+  Object.keys(config.props).forEach(x => {
+    let initialize = config.props[x].initialize;
+    if (initialize) initialize(vm, cardDataProp, cardMappedProp, config);
   });
 
   return {
     sync() {
-      Object.keys(mergedConfig.props).forEach(x => {
-        let sync = mergedConfig.props[x].sync;
-        if (sync) sync(vm, cardDataProp, cardMappedProp, mergedConfig);
+      Object.keys(config.props).forEach(x => {
+        let sync = config.props[x].sync;
+        if (sync) sync(vm, cardDataProp, cardMappedProp, config);
       });
     }
   }

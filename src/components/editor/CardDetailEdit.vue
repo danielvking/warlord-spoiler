@@ -78,7 +78,7 @@
             <div class="clearfix">
               <div class="card-stat-label"><span>Class:</span></div>
               <div class="card-stat-value">
-                <v-select multiple v-model="cardTemp.classes" :options="classList" />
+                <v-select multiple v-model="cardTemp.class" :options="classList" />
               </div>
             </div>
             <!-- Attack -->
@@ -115,7 +115,7 @@
             <div class="clearfix">
               <div class="card-stat-label"><span>Faction:</span></div>
               <div class="card-stat-value">
-                <v-select multiple v-model="cardTemp.factions" :options="factionList" />
+                <v-select multiple v-model="cardTemp.faction" :options="factionList" />
               </div>
             </div>
             <!-- Traits -->
@@ -129,10 +129,10 @@
             <div class="clearfix">
               <div class="card-stat-label"><span>Feats:</span></div>
               <div class="card-stat-value">
-                <b-form-row v-for="i in cardTemp.selectedFeats.length + Math.min(1, featList.length)" :key="'Feat' + i">
-                  <template v-if="cardTemp.selectedFeats[i - 1] == null">
+                <b-form-row v-for="i in cardTemp.feats.length + Math.min(1, featList.length)" :key="'Feat' + i">
+                  <template v-if="i - 1 >= cardTemp.feats.length">
                     <b-col cols="8">
-                      <b-select v-model="cardTemp.selectedFeats[i - 1]" :options="featList" @input="selectFeat(i - 1)">
+                      <b-select :options="featList" @input="x => selectFeat(x, i - 1)">
                         <template v-slot:first>
                           <b-form-select-option :value="undefined">- Select Feat -</b-form-select-option>
                         </template>
@@ -140,7 +140,7 @@
                     </b-col>
                   </template>
                   <template v-else>
-                    <label class="col-7 col-form-label">{{ cardTemp.selectedFeats[i - 1] }}:</label>
+                    <label class="col-7 col-form-label">{{ cardTemp.feats[i - 1].name }}:</label>
                     <b-col cols="1">
                       <a href="#" @click.prevent="deselectFeat(i - 1)"><span class="font-default">✘</span></a>
                     </b-col>
@@ -149,39 +149,7 @@
                         <b-form-input
                           :id="'txtFeat' + i"
                           type="number"
-                          v-model.number="cardTemp.featValues[cardTemp.selectedFeats[i - 1]]"
-                        />
-                      </b-input-group>
-                    </b-col>
-                  </template>
-                </b-form-row>
-              </div>
-            </div>
-            <!-- Misc -->
-            <div class="clearfix">
-              <div class="card-stat-label"><span>Misc:</span></div>
-              <div class="card-stat-value">
-                <b-form-row v-for="i in cardTemp.selectedMisc.length + Math.min(1, miscList.length)" :key="'Misc' + i">
-                  <template v-if="cardTemp.selectedMisc[i - 1] == null">
-                    <b-col cols="8">
-                      <b-select v-model="cardTemp.selectedMisc[i - 1]" :options="miscList" @input="selectMisc(i - 1)">
-                        <template v-slot:first>
-                          <b-form-select-option :value="undefined">- Select Misc -</b-form-select-option>
-                        </template>
-                      </b-select>
-                    </b-col>
-                  </template>
-                  <template v-else>
-                    <label class="col-7 col-form-label">{{ cardTemp.selectedMisc[i - 1] }}:</label>
-                    <b-col cols="1">
-                      <a href="#" @click.prevent="deselectMisc(i - 1)"><span class="font-default">✘</span></a>
-                    </b-col>
-                    <b-col cols="4">
-                      <b-input-group>
-                        <b-form-input
-                          :id="'txtMisc' + i"
-                          type="number"
-                          v-model.number="cardTemp.miscValues[cardTemp.selectedMisc[i - 1]]"
+                          v-model.number="cardTemp.feats[i - 1].value"
                         />
                       </b-input-group>
                     </b-col>
@@ -196,11 +164,11 @@
                 <v-select multiple v-model="cardTemp.editions" :options="editionList" />
               </div>
             </div>
-            <!-- Challenge Lord -->
+            <!-- Exclusive Lord Card -->
             <div class="clearfix">
               <div class="card-stat-label"></div>
               <div class="card-stat-value">
-                <b-checkbox v-model="cardTemp.challengeLord">Is Challenge Lord</b-checkbox>
+                <b-checkbox v-model="cardTemp.exclusiveLordCard">Is Exclusive Lord Card</b-checkbox>
               </div>
             </div>
             <!-- Text -->
@@ -234,7 +202,7 @@
               <div class="clearfix">
                 <div class="card-stat-label"><span>Set Number:</span></div>
                 <div class="card-stat-value">
-                  <b-input v-model="printInfo.setNumber" />
+                  <b-input type="number" v-model.number="printInfo.setNumber" />
                 </div>
               </div>
               <!-- Rarity -->
@@ -246,13 +214,6 @@
                       <b-form-select-option :value="undefined"></b-form-select-option>
                     </template>
                   </b-form-select>
-                </div>
-              </div>
-              <!-- Flavor Traits -->
-              <div class="clearfix">
-                <div class="card-stat-label"><span>Flavor Traits:</span></div>
-                <div class="card-stat-value">
-                  <v-select multiple taggable v-model="printInfo.flavorTraits" :options="flavorTraitList" />
                 </div>
               </div>
               <!-- Artist -->
@@ -314,26 +275,7 @@ export default {
       cardJsonSelected: false,
       imageUrlOverride: null,
       cardTemp: {
-        name: "",
-        text: "",
-        type: "",
-        alignment: "",
-        attack: "",
-        armorClass: "",
-        skill: "",
-        hitPoints: "",
-        level: "",
-        classes: [],
-        factions: [],
-        traits: [],
-        selectedFeats: [],
-        featValues: {},
-        selectedMisc: [],
-        miscValues: {},
-        editions: [],
-        challengeLord: undefined,
-        printInfos: [],
-        errata: "",
+        feats: [] // Defaulting this for the UI
       },
       mapper: null,
     };
@@ -355,6 +297,7 @@ export default {
       if (!printInfos[0]) return null;
       return printInfos[0].imageUrl;
     },
+
     referenceLists() {
       return this.$store.state.referenceLists;
     },
@@ -366,23 +309,19 @@ export default {
     },
     classList() {
       if (!this.referenceLists || !this.referenceLists.classList) return [];
-      return this.referenceLists.classList.filter((t) => !this.cardTemp.classes.includes(t));
+      return this.referenceLists.classList.filter((t) => !this.cardTemp.class || !this.cardTemp.class.includes(t));
     },
     factionList() {
       if (!this.referenceLists || !this.referenceLists.factionList) return [];
-      return this.referenceLists.factionList.filter((t) => !this.cardTemp.factions.includes(t));
+      return this.referenceLists.factionList.filter((t) => !this.cardTemp.faction || !this.cardTemp.faction.includes(t));
     },
     traitList() {
       if (!this.referenceLists || !this.referenceLists.traitList) return [];
-      return this.referenceLists.traitList.filter((t) => !this.cardTemp.traits.includes(t));
+      return this.referenceLists.traitList.filter((t) => !this.cardTemp.traits || !this.cardTemp.traits.includes(t));
     },
     featList() {
       if (!this.referenceLists || !this.referenceLists.featList) return [];
-      return this.referenceLists.featList.filter((f) => !this.cardTemp.selectedFeats.includes(f));
-    },
-    miscList() {
-      // I admit this is inelegant
-      return ["Challenge Rating", "Charges", "GP"].filter((f) => !this.cardTemp.selectedMisc.includes(f));
+      return this.referenceLists.featList.filter((f) => !this.cardTemp.feats.map(x => x && x.name).includes(f));
     },
     editionList() {
       return (this.referenceLists && this.referenceLists.editionList) || [];
@@ -462,36 +401,17 @@ export default {
     updateTemp() {
       this.mapper.sync();
     },
-    selectFeat(index) {
-      Vue.set(this.cardTemp.featValues, this.cardTemp.selectedFeats[index], 0);
+    selectFeat(val, index) {
+      Vue.set(this.cardTemp.feats, index, { name: val });
     },
     deselectFeat(index) {
-      this.cardTemp.featValues[this.cardTemp.selectedFeats[index]] = 0; // Force update
-      Vue.delete(this.cardTemp.featValues, this.cardTemp.selectedFeats[index]);
-      this.cardTemp.selectedFeats.splice(index, 1);
-    },
-    selectMisc(index) {
-      Vue.set(this.cardTemp.miscValues, this.cardTemp.selectedMisc[index], 0);
-    },
-    deselectMisc(index) {
-      this.cardTemp.miscValues[this.cardTemp.selectedMisc[index]] = 0; // Force update
-      Vue.delete(this.cardTemp.miscValues, this.cardTemp.selectedMisc[index]);
-      this.cardTemp.selectedMisc.splice(index, 1);
+      Vue.delete(this.cardTemp.feats, index);
     },
     addPrintInfo() {
-      this.cardTemp.printInfos.splice(0, 0, { flavorTraits: [] });
-      if (!this.cardData.printInfos) {
-        Vue.set(this.cardData, "printInfos", []);
-      }
-      this.cardData.printInfos.splice(0, 0, {});
+      this.cardTemp.printInfos.splice(0, 0, { });
     },
     removePrintInfo(index) {
       this.cardTemp.printInfos.splice(index, 1);
-      if (!this.cardTemp.printInfos || !this.cardTemp.printInfos[0]) {
-        Vue.delete(this.cardData, "printInfos");
-        return;
-      }
-      this.cardData.printInfos.splice(index, 1);
     },
     saveChanges() {
       this.$store.commit("saveEditedCards");

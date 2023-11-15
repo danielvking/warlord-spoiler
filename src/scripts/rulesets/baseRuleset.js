@@ -10,9 +10,9 @@ export default {
   },
   "text": {
     validate(val, cardData) {
-      if (cardData.class && cardData.class.includes("/") && cardData.type === "Character") {
+      if (cardData.class && cardData.class.length > 1 && cardData.type === "Character") {
         // Multiclass
-        let extraClasses = cardData.class.split("/").slice(1);
+        let extraClasses = cardData.class.slice(1);
         let regex = new RegExp("[^.]*is[^.]*" + extraClasses.join("[^.]*"), "mi");
         if (!val || !val.match(regex)) {
           return "Multiclass must be specified in description.";
@@ -42,10 +42,7 @@ export default {
         }
       }
       if (val && referenceLists.alignmentList) {
-        let split = val.split("/");
-        for (let i = 0; i < split.length; i++) {
-          if (!referenceLists.alignmentList.includes(split[i])) return `${split[i]} is not a valid alignment.`;
-        }
+        if (!referenceLists.alignmentList.includes(val)) return `${val} is not a valid alignment.`;
       }
     }
   },
@@ -53,9 +50,8 @@ export default {
     validate(val, _cardData, referenceLists) {
       if (!val) return "Class is required."
       if (referenceLists.classList) {
-        let split = val.split("/");
-        for (let i = 0; i < split.length; i++) {
-          if (!referenceLists.classList.includes(split[i])) return `${split[i]} is not a valid class.`;
+        for (let i = 0; i < val.length; i++) {
+          if (!referenceLists.classList.includes(val[i])) return `${val[i]} is not a valid class.`;
         }
       }
     }
@@ -65,7 +61,7 @@ export default {
       if (cardData.type) {
         switch (cardData.type) {
           case "Character":
-            if (!val) return "Faction is required for this card type.";
+            if (!val || val.length === 0) return "Faction is required for this card type.";
             break;
           case "Action":
           case "Battlefield":
@@ -77,9 +73,8 @@ export default {
         }
       }
       if (val && referenceLists.factionList) {
-        let split = val.split("/");
-        for (let i = 0; i < split.length; i++) {
-          if (!referenceLists.factionList.includes(split[i])) return `${split[i]} is not a valid faction.`;
+        for (let i = 0; i < val.length; i++) {
+          if (!referenceLists.factionList.includes(val[i])) return `${val[i]} is not a valid faction.`;
         }
       }
     }
@@ -90,7 +85,7 @@ export default {
         switch (cardData.type) {
           case "Character":
           case "Epic Class":
-            if (!val) return "Attack is required for this card type.";
+            if (!val || val.length === 0) return "Attack is required for this card type.";
             break;
           case "Action":
           case "Battlefield":
@@ -100,22 +95,11 @@ export default {
         }
       }
       if (val) {
-        let attacks = val.split("/");
-        let coerce = false;
-        let notNumeric = false;
-        for (let i = 0; i < attacks.length; i++) {
-          if (/^[+-]?(\d+|\*|X)$/.test(attacks[i])) {
-            // Always signed
-            if (/^\d+$/.test(attacks[i])) {
-              coerce = true;
-              attacks[i] = "+" + attacks[i]; // coerce
-            }
-          } else {
-            notNumeric = true;
+        for (let i = 0; i < val.length; i++) {
+          if (!/^[+-]?(\d+|\*|X)$/.test(val[i])) {
+            return "Attack must be a number."
           }
         }
-        if (coerce) cardData.attack = attacks.join("/");
-        if (notNumeric) return "Attack must be a number.";
       }
     }
   },
@@ -135,14 +119,7 @@ export default {
         }
       }
       if (val) {
-        if (/^[+-]?(\d+|\*|X)$/.test(val)) {
-          // Signed for non-characters
-          if (/^\d+$/.test(val) && cardData.type !== "Character") {
-            cardData.armorClass = "+" + val; // coerce
-          } else if (/^\+.*$/.test(val) && cardData.type === "Character") {
-            cardData.armorClass = val.substring(1); // coerce
-          }
-        } else {
+        if (!/^[+-]?(\d+|\*|X)$/.test(val)) {
           return "AC must be a number.";
         }
       }
@@ -165,12 +142,7 @@ export default {
         }
       }
       if (val) {
-        if (/^[+-]?(\d+|\*|X)$/.test(val)) {
-          // Always signed
-          if (/^\d+$/.test(val)) {
-            cardData.skill = "+" + val; // coerce
-          }
-        } else {
+        if (!/^[+-]?(\d+|\*|X)$/.test(val)) {
           return "Skill must be a number.";
         }
       }
@@ -193,14 +165,7 @@ export default {
         }
       }
       if (val) {
-        if (/^[+-]?(\d+|\*|X)$/.test(val)) {
-          // Signed for non-characters
-          if (/^\d+$/.test(val) && cardData.type !== "Character") {
-            cardData.hitPoints = "+" + val; // coerce
-          } else if (/^\+.*$/.test(val) && cardData.type === "Character") {
-            cardData.hitPoints = val.substring(1); // coerce
-          }
-        } else {
+        if (!/^[+-]?(\d+|\*|X)$/.test(val)) {
           return "HP must be a number.";
         }
       }
@@ -223,14 +188,7 @@ export default {
         }
       }
       if (val) {
-        if (/^[+-]?(\d+|\*|X)$/.test(val)) {
-          // Unsigned for non-epic-classes
-          if (/^\d+$/.test(val) && cardData.type === "Epic Class") {
-            cardData.level = "+" + val; // coerce
-          } else if (/^\+.*$/.test(val) && cardData.type !== "Epic Class") {
-            cardData.level = val.substring(1); // coerce
-          }
-        } else {
+        if (!/^[+-]?(\d+|\*|X)$/.test(val)) {
           return "Level must be a number.";
         }
         if (val < 1) return "Level must be positive.";
@@ -248,9 +206,8 @@ export default {
         }
       }
       if (val && referenceLists.traitList) {
-        let split = val.split("/");
-        for (let i = 0; i < split.length; i++) {
-          if (!referenceLists.traitList.includes(split[i])) return `${split[i]} is not a valid trait.`;
+        for (let i = 0; i < val.length; i++) {
+          if (!referenceLists.traitList.includes(val[i])) return `${val[i]} is not a valid trait.`;
         }
       }
     }
@@ -267,12 +224,10 @@ export default {
         }
       }
       if (val && referenceLists.featList) {
-        let featValues = val.split("/");
-        for (let i = 0; i < featValues.length; i++) {
-          let featValue = featValues[i].split(/ (?=[-+])/);
-          if (!referenceLists.featList.includes(featValue[0])) return `${featValue[0]} is not a valid feat.`;
-          if (!/^[+-](\d+|\*|X)$/.test(featValue[1])) return `${featValue[0]} must be a signed number.`;
-          if (featValue[1] < 0) return `${featValue[0]} cannot be negative.`;
+        for (let i = 0; i < val.length; i++) {
+          if (!referenceLists.featList.includes(val[i].name)) return `${val[i].name} is not a valid feat.`;
+          if (val[i].value == null) return `${val[i].name} must have a value.`;
+          if (val[i].value < 0) return `${val[i].name} cannot be negative.`;
         }
       }
     }
@@ -302,18 +257,6 @@ export default {
         }
         if (val && val.includes("gp") && cardData.type !== "Item") {
           return "GP is invalid for this card type.";
-        }
-      }
-    }
-  },
-  "flavorTraits": {
-    validate(val, _cardData, referenceLists) {
-      if (val && referenceLists.traitList) {
-        let fTraits = val.split("/");
-        for (let i = 0; i < fTraits.length; i++) {
-          if (referenceLists.traitList.includes(fTraits[i])) {
-            return "Flavor traits must not be real traits.";
-          }
         }
       }
     }

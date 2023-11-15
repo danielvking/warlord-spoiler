@@ -804,8 +804,8 @@ const textOptions = [{
     return val.map((x) => {
       let text = x.value;
       text = text.replace(/\[NAME\]/g, cardData.name || "");
-      text = text.replace(/\[FACTION\]/g, orJoin((cardData.faction || "").split("/")));
-      text = text.replace(/\[FACTION_TRAIT\]/g, orJoin((cardData.faction || "").split("/").map(x => factionTrait[x])));
+      text = text.replace(/\[FACTION\]/g, orJoin(cardData.faction || []));
+      text = text.replace(/\[FACTION_TRAIT\]/g, orJoin((cardData.faction || []).map(x => factionTrait[x])));
       return text;
     }).join("\r\n");
   }
@@ -882,7 +882,7 @@ const textOptions = [{
       mapFrom: textMapFrom,
       validate(val, cardData) {
         let options = textMapFrom(val);
-        let i = cardData.class && cardData.class.includes("/") ? 1 : 0; // Multiclass
+        let i = cardData.class && cardData.class.length > 1 ? 1 : 0; // Multiclass
         if (options.length - i > 2) return "Only two abilities are permitted in this ruleset."
         for (; i < options.length; i++) {
           if (options[i].points == null) return "This text is not permitted in this ruleset.";
@@ -894,7 +894,7 @@ const textOptions = [{
       computePoints(val, cardData) {
         let sum = 0;
         let options = textMapFrom(val);
-        let i = cardData.class && cardData.class.includes("/") ? 1 : 0; // Multiclass
+        let i = cardData.class && cardData.class.length > 1 ? 1 : 0; // Multiclass
         for (; i < options.length; i++) {
           sum += options[i].points;
         }
@@ -912,7 +912,7 @@ const textOptions = [{
         "\r\nBeing both multiclass and at least level 5 costs an additional 30 points.",
       computePoints(val, cardData) {
         if (val == null) return null;
-        let classes = val.split("/").filter(x => x !== "Classless");
+        let classes = val.filter(x => x !== "Classless");
         if (classes.length === 0) return -10;
         if (classes.length === 1) return 0;
         return (classes.length - 1) * 40 + (cardData.level >= 5 ? 30 : 0);
@@ -921,14 +921,12 @@ const textOptions = [{
     "faction": {
       validate(val) {
         if (val == null) return null;
-        let factions = val.split("/");
-        if (factions.length > 2) return "More than 2 factions is not permitted in this ruleset.";
+        if (val.length > 2) return "More than 2 factions is not permitted in this ruleset.";
       },
       pointInfo: "The first faction is free, and a second faction is 55 points.",
       computePoints(val) {
         if (val == null) return null;
-        let factions = val.split("/");
-        return (factions.length - 1) * 55;
+        return (val.length - 1) * 55;
       }
     },
     "attack": {
@@ -952,7 +950,7 @@ const textOptions = [{
           return (attack - 5) * 2 + 5;
         }
   
-        let attacks = val.split("/");
+        let attacks = val;
         let sum = numAttacksPoints(attacks.length);
         attacks.forEach(attack => {
           sum += strikePoints(attack);
@@ -965,7 +963,7 @@ const textOptions = [{
         "\r\nCards with the Planar trait may not have more than 14 AC.",
       validate(val, cardData) {
         if (val && cardData.traits) {
-          if (val > 14 && cardData.traits.split("/").includes("Planar")) return "Cards with the Planar trait are not permitted to have more than 14 AC in this ruleset."
+          if (val > 14 && cardData.traits.includes("Planar")) return "Cards with the Planar trait are not permitted to have more than 14 AC in this ruleset."
         }
       },
       computePoints(val) {
@@ -1012,10 +1010,10 @@ const textOptions = [{
     "traits": {
       initialValue: "Warlord",
       validate(val) {
-        let split = val && val.split("/");
-        if (!val || !split.includes("Warlord")) return "Warlord is required in this ruleset.";
-        for (let i = 0; i < split.length; i++) {
-          let trait = split[i];
+        val = val || [];
+        if (!val.includes("Warlord")) return "Warlord is required in this ruleset.";
+        for (let i = 0; i < val.length; i++) {
+          let trait = val[i];
           if (traitMap[trait] == null) return `${trait} is not permitted in this ruleset.`;
         }
       },
@@ -1025,11 +1023,10 @@ const textOptions = [{
         traitDetailTable,
       computePoints(val) {
         if (val) {
-          let split = val.split("/");
           let sum = 0;
           let positiveTraits = 0;
-          for (let i = 0; i < split.length; i++) {
-            let trait = split[i];
+          for (let i = 0; i < val.length; i++) {
+            let trait = val[i];
             let points = +traitMap[trait];
             sum += points;
             if (points > 0) positiveTraits++;
@@ -1046,11 +1043,10 @@ const textOptions = [{
         featDetailTable,
       computePoints(val) {
         if (val == null) return null;
-        let featValues = val.split("/");
         let sum = 0;
-        for (let i = 0; i < featValues.length; i++) {
-          let featValue = featValues[i].split(/ (?=[-+])/);
-          sum += featMap[featValue[0]] + 3 * featValue[1];
+        for (let i = 0; i < val.length; i++) {
+          let feat = val[i];
+          sum += featMap[feat.name] + 3 * feat.value;
         }
         return sum;
       }
@@ -1060,10 +1056,9 @@ const textOptions = [{
       computePoints(val) {
         if (val == null) return null;
         let sum = 0;
-        let misc = val.split("/");
-        for (let i = 0; i < misc.length; i++) {
-          if (/^-?\d+ Charges?$/.test(misc[i])) {
-            let charges = misc[i].split(" ")[0];
+        for (let i = 0; i < val.length; i++) {
+          if (val[i].name === "Charges") {
+            let charges = val[i].val;
             sum += 1 + charges * 3;
           }
         }
@@ -1076,16 +1071,6 @@ const textOptions = [{
         if (cardData.printInfos) {
           cardData.printInfos.forEach(x => {
             x.flavorText = null;
-          })
-        }
-      }
-    },
-    "flavorTraits": {
-      validate(_val, cardData) {
-        // Coerce
-        if (cardData.printInfos) {
-          cardData.printInfos.forEach(x => {
-            x.flavorTraits = null;
           })
         }
       }

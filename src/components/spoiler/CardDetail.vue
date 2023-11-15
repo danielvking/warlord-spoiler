@@ -33,7 +33,7 @@
             <div v-if="cardData.level" class="clearfix">
               <div class="card-stat-label"><span>Level:</span></div>
               <div class="card-stat-value">
-                <span>{{ cardData.level }}</span>
+                <span>{{ cardData.level | cardFormatter("level", cardData) }}</span>
               </div>
             </div>
             <!-- Alignment -->
@@ -54,28 +54,28 @@
             <div v-if="cardData.class" class="clearfix">
               <div class="card-stat-label"><span>Class:</span></div>
               <div class="card-stat-value">
-                <span>{{ cardData.class | slashToMaybeBreak }}</span>
+                <span>{{ cardData.class | arrayToMaybeBreak }}</span>
               </div>
             </div>
             <!-- Attack -->
             <div v-if="cardData.attack" class="clearfix">
               <div class="card-stat-label"><span>Attack:</span></div>
               <div class="card-stat-value">
-                <span>{{ cardData.attack }}</span>
+                <span>{{ cardData.attack | cardFormatter("attack", cardData) }}</span>
               </div>
             </div>
             <!-- Armor Class -->
             <div v-if="cardData.armorClass" class="clearfix">
               <div class="card-stat-label"><span>Armor Class:</span></div>
               <div class="card-stat-value">
-                <span>{{ cardData.armorClass }}</span>
+                <span>{{ cardData.armorClass | cardFormatter("armorClass", cardData) }}</span>
               </div>
             </div>
             <!-- Skill -->
             <div v-if="cardData.skill" class="clearfix">
               <div class="card-stat-label"><span>Skill:</span></div>
               <div class="card-stat-value">
-                <span>{{ cardData.skill }}</span>
+                <span>{{ cardData.skill | cardFormatter("skill", cardData) }}</span>
               </div>
             </div>
             <!-- Hit Points -->
@@ -84,35 +84,28 @@
                 <span>Hit Points:</span>
               </div>
               <div class="card-stat-value">
-                <span>{{ cardData.hitPoints }}</span>
+                <span>{{ cardData.hitPoints | cardFormatter("hitPoints", cardData) }}</span>
               </div>
             </div>
             <!-- Faction -->
             <div v-if="cardData.faction" class="clearfix">
               <div class="card-stat-label"><span>Faction:</span></div>
               <div class="card-stat-value">
-                <span>{{ cardData.faction | slashToMaybeBreak }}</span>
+                <span>{{ cardData.faction | arrayToMaybeBreak }}</span>
               </div>
             </div>
             <!-- Traits -->
             <div v-if="cardData.traits" class="clearfix">
               <div class="card-stat-label"><span>Traits:</span></div>
               <div class="card-stat-value">
-                <span>{{ cardData.traits | slashToLineBreak }}</span>
+                <span>{{ cardData.traits | arrayToLineBreak }}</span>
               </div>
             </div>
             <!-- Feats -->
             <div v-if="cardData.feats" class="clearfix">
               <div class="card-stat-label"><span>Feats:</span></div>
               <div class="card-stat-value">
-                <span>{{ cardData.feats | slashToLineBreak }}</span>
-              </div>
-            </div>
-            <!-- Misc -->
-            <div v-if="cardData.misc" class="clearfix">
-              <div class="card-stat-label"><span>Misc:</span></div>
-              <div class="card-stat-value">
-                <span>{{ cardData.misc | slashToLineBreak }}</span>
+                <div v-for="feat in cardData.feats" :key="feat">{{ feat | cardFormatter("feat", cardData) }}</div>
               </div>
             </div>
             <!-- Editions -->
@@ -129,7 +122,7 @@
             <div v-for="(printInfo, i) in cardData.printInfos" :key="i">
               <!-- Image Link (Set, Set Number) -->
               <div class="card-print-link" @click="setImage(printInfo.imageUrl)">
-                <span>{{ printInfo | formatSetName }}</span>
+                <span>{{ printInfo | formatSetName(cardData) }}</span>
               </div>
               <div class="mx-2">
                 <!-- Rarity -->
@@ -137,13 +130,6 @@
                   <div class="card-stat-label"><span>Rarity:</span></div>
                   <div class="card-stat-value">
                     <span>{{ printInfo.rarity }}</span>
-                  </div>
-                </div>
-                <!-- Flavor Traits -->
-                <div v-if="printInfo.flavorTraits" class="clearfix">
-                  <div class="card-stat-label"><span>Flavor Traits:</span></div>
-                  <div class="card-stat-value">
-                    <span>{{ printInfo.flavorTraits }}</span>
                   </div>
                 </div>
                 <!-- Artist -->
@@ -175,6 +161,7 @@
 
 <script>
 import addRemoveCardMixin from "../../mixins/addRemoveCardMixin";
+import { formatCardProperty } from "../../scripts/cardFormatter";
 
 export default {
   name: "CardDetail",
@@ -214,21 +201,17 @@ export default {
       value = value.replace(hashReg, "<br>");
       return value;
     },
-    slashToLineBreak(value) {
-      if (!value) return value;
-      let hashReg = /\//gm;
-      value = value.replace(hashReg, "\r\n");
-      return value;
+    arrayToLineBreak(value) {
+      if (!Array.isArray(value)) return value;
+      return value.join("\r\n");
     },
-    slashToMaybeBreak(value) {
-      if (!value) return value;
-      let hashReg = /\//gm;
-      value = value.replace(hashReg, "/\u200B");
-      return value;
+    arrayToMaybeBreak(value) {
+      if (!Array.isArray(value)) return value;
+      return value.join("/\u200B");
     },
-    formatSetName(value) {
+    formatSetName(value, cardData) {
       let display = value.set;
-      if (value.setNumber != null) display += ` (${value.setNumber})`;
+      if (value.setNumber != null) display += ` (${formatCardProperty("setNumber", value.setNumber, cardData)})`;
       return display;
     },
   },

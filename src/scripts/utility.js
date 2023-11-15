@@ -172,10 +172,19 @@ export default {
     if (!deleteFunc) deleteFunc = (x, y) => delete x[y];
 
     // Map each defined key to an index
+    keyOrder = keyOrder || [];
     let keySet = {};
-    for (let i = 0; i < keyOrder.length; i++) {
-      keySet[keyOrder[i]] = i + 1;
+    let counter = 0;
+    while (counter < keyOrder.length) {
+      keySet[keyOrder[counter]] = ++counter;
     }
+
+    // Map remaining keys to an index ("key" might be duplicated, but whatever)
+    Object.keys(obj).concat([key]).sort().forEach(k => {
+      if (!keySet[k]) {
+        keySet[k] = ++counter;
+      }
+    });
 
     // Insert and/or quit early
     if (obj[key] != null) return;

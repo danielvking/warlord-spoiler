@@ -6,7 +6,15 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+import { formatCardProperty } from './scripts/cardFormatter'
+
 Vue.config.productionTip = false
+
+// Register card filters
+Vue.filter('cardFormatter', function(value, prop, cardData) {
+  return formatCardProperty(prop, value, cardData)
+})
+
 
 new Vue({
   router,

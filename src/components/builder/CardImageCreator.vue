@@ -9,19 +9,19 @@
             {{ cardData.name }}
           </div>
           <div v-show="hasTopStats" class="image-atk card-title">
-            {{ cardData.attack }}
+            {{ cardData.attack | cardFormatter("attack", cardData) }}
           </div>
           <div v-show="hasTopStats" class="image-ac card-title">
-            {{ cardData.armorClass }}
+            {{ cardData.armorClass | cardFormatter("armorClass", cardData) }}
           </div>
           <div class="image-lvl card-title" :class="hasWhiteLevel ? 'text-white' : ''">
-            {{ cardData.level }}
+            {{ cardData.level | cardFormatter("level", cardData) }}
           </div>
           <div v-show="hasBottomStats" class="image-sk card-title text-white">
-            {{ cardData.skill }}
+            {{ cardData.skill | cardFormatter("skill", cardData) }}
           </div>
           <div v-show="hasBottomStats" class="image-hp card-title text-white">
-            {{ cardData.hitPoints }}
+            {{ cardData.hitPoints | cardFormatter("hitPoints", cardData) }}
           </div>
           <div v-if="points" class="image-set card-title">
             {{ points }}
@@ -50,6 +50,7 @@
 <script>
 import utility from "../../scripts/utility";
 import cardTemplates from "../../scripts/cardTemplates";
+import { formatCardProperty } from "../../scripts/cardFormatter";
 import domtoimage from "dom-to-image";
 
 const isSafari = navigator.userAgent.indexOf("Safari") != -1;
@@ -106,15 +107,14 @@ export default {
     },
     cardTemplateUrl() {
       let type = this.cardData.type || "";
-      let _class = this.cardData.class || "";
-      let faction = this.cardData.faction || "";
+      let _class = this.cardData.class && this.cardData.class[0] || "";
+      let faction = this.cardData.faction && this.cardData.faction[0] || "";
       let alignment = this.cardData.alignment || "";
 
-      if (_class.includes("/")) _class = "Classless";
+      if (this.cardData.class && this.cardData.class.length > 1) _class = "Classless";
 
       let key = type + "|" + _class;
       if (type === "Character") {
-        if (faction.includes("/")) faction = faction.split("/")[0];
         key += "|" + alignment;
         key += "|" + faction;
       }
@@ -136,31 +136,24 @@ export default {
     },
 
     formattedHeaderText() {
-      function bulletSplit(str, isBold) {
-        let temp = str.replace(/ /gm, "&nbsp;").split("/");
+      function bulletJoin(arr, isBold) {
+        if (!Array.isArray(arr)) return "";
+        let temp = arr.map(x => sanitizeHtml(x).replace(/ /gm, "&nbsp;"));
         if (isBold) temp = temp.map((x) => "<b>" + x + "</b>");
         return temp.join(" • ");
       }
 
       let headerText = "";
       if (this.cardData.faction) {
-        headerText += bulletSplit(sanitizeHtml(this.cardData.faction), true);
+        headerText += bulletJoin(this.cardData.faction, true);
       }
       if (this.cardData.traits) {
         if (headerText) headerText += " • ";
-        headerText += bulletSplit(sanitizeHtml(this.cardData.traits), true);
+        headerText += bulletJoin(this.cardData.traits, true);
       }
       if (this.cardData.feats) {
         if (headerText) headerText += " • ";
-        headerText += bulletSplit(sanitizeHtml(this.cardData.feats), true);
-      }
-      if (this.cardData.misc) {
-        if (headerText) headerText += " • ";
-        headerText += bulletSplit(sanitizeHtml(this.cardData.misc), true);
-      }
-      if (this.cardData.printInfos && this.cardData.printInfos[0] && this.cardData.printInfos[0].flavorTraits) {
-        if (headerText) headerText += " • ";
-        headerText += bulletSplit(sanitizeHtml(this.cardData.printInfos[0].flavorTraits), false);
+        headerText += bulletJoin(this.cardData.feats.map(x => formatCardProperty("feat", x, this.cardData)), true);
       }
       if (headerText) headerText = "<p>" + headerText + "</p>";
 

@@ -128,7 +128,7 @@
                   <info-helper :info-cache="infoCache" property="class" @focusout="refreshCache('class')">
                     <v-select
                       multiple
-                      v-model="cardTemp.classes"
+                      v-model="cardTemp.class"
                       :options="classList"
                       placeholder="(Classless)"
                       @input="refreshCache('class')"
@@ -181,7 +181,7 @@
                   <info-helper :info-cache="infoCache" property="faction" @focusout="refreshCache('faction')">
                     <v-select
                       multiple
-                      v-model="cardTemp.factions"
+                      v-model="cardTemp.faction"
                       :options="factionList"
                       @input="refreshCache('faction')"
                     />
@@ -202,17 +202,10 @@
                 <div class="card-stat-label"><span>Feats:</span></div>
                 <div class="card-stat-value">
                   <info-helper :info-cache="infoCache" property="feats" @focusout="refreshCache('feats')">
-                    <b-form-row
-                      v-for="i in cardTemp.selectedFeats.length + Math.min(1, featList.length)"
-                      :key="'Feat' + i"
-                    >
-                      <template v-if="cardTemp.selectedFeats[i - 1] == null">
+                    <b-form-row v-for="i in cardTemp.feats.length + Math.min(1, featList.length)" :key="'Feat' + i">
+                      <template v-if="cardTemp.feats[i - 1] == null">
                         <b-col cols="8">
-                          <b-select
-                            v-model="cardTemp.selectedFeats[i - 1]"
-                            :options="featList"
-                            @input="selectFeat(i - 1)"
-                          >
+                          <b-select :options="featList" @input="x => selectFeat(x, i - 1)">
                             <template v-slot:first>
                               <b-form-select-option :value="undefined">- Select Feat -</b-form-select-option>
                             </template>
@@ -220,7 +213,7 @@
                         </b-col>
                       </template>
                       <template v-else>
-                        <label class="col-7 col-form-label">{{ cardTemp.selectedFeats[i - 1] }}:</label>
+                        <label class="col-7 col-form-label">{{ cardTemp.feats[i - 1].name }}:</label>
                         <b-col cols="1">
                           <a href="#" @click.prevent="deselectFeat(i - 1)"><span class="font-default">✘</span></a>
                         </b-col>
@@ -229,50 +222,7 @@
                             <b-form-input
                               :id="'txtFeat' + i"
                               type="number"
-                              v-model.number="cardTemp.featValues[cardTemp.selectedFeats[i - 1]]"
-                              @input="refreshCache('feats')"
-                            />
-                          </b-input-group>
-                        </b-col>
-                      </template>
-                    </b-form-row>
-                  </info-helper>
-                </div>
-              </div>
-              <!-- Misc -->
-              <div class="clearfix">
-                <div class="card-stat-label"><span>Misc:</span></div>
-                <div class="card-stat-value">
-                  <info-helper :info-cache="infoCache" property="misc" @focusout="refreshCache('misc')">
-                    <b-form-row
-                      v-for="i in cardTemp.selectedMisc.length + Math.min(1, miscList.length)"
-                      :key="'Misc' + i"
-                    >
-                      <template v-if="cardTemp.selectedMisc[i - 1] == null">
-                        <b-col cols="8">
-                          <b-select
-                            v-model="cardTemp.selectedMisc[i - 1]"
-                            :options="miscList"
-                            @input="selectMisc(i - 1)"
-                          >
-                            <template v-slot:first>
-                              <b-form-select-option :value="undefined">- Select Misc -</b-form-select-option>
-                            </template>
-                          </b-select>
-                        </b-col>
-                      </template>
-                      <template v-else>
-                        <label class="col-7 col-form-label">{{ cardTemp.selectedMisc[i - 1] }}:</label>
-                        <b-col cols="1">
-                          <a href="#" @click.prevent="deselectMisc(i - 1)"><span class="font-default">✘</span></a>
-                        </b-col>
-                        <b-col cols="4">
-                          <b-input-group>
-                            <b-form-input
-                              :id="'txtMisc' + i"
-                              type="number"
-                              v-model.number="cardTemp.miscValues[cardTemp.selectedMisc[i - 1]]"
-                              @input="refreshCache('misc')"
+                              v-model.number="cardTemp.feats[i - 1].value"
                             />
                           </b-input-group>
                         </b-col>
@@ -289,7 +239,7 @@
                       multiple
                       class="wrapped-select"
                       placeholder="[Card Text]"
-                      v-model="cardTemp.abilities"
+                      v-model="abilities"
                       :get-option-label="getOptionLabel"
                       :options="textOptions"
                       @input="refreshCache('text')"
@@ -311,25 +261,6 @@
                 </info-helper>
               </div>
               <template v-if="!disallowFlavor">
-                <!-- Flavor Traits -->
-                <div class="clearfix">
-                  <div class="card-stat-label"><span>Flavor Traits:</span></div>
-                  <div class="card-stat-value">
-                    <info-helper
-                      :info-cache="infoCache"
-                      property="flavorTraits"
-                      @focusout="refreshCache('flavorTraits', cardTemp.printInfo.flavorTraits.join('/'))"
-                    >
-                      <v-select
-                        multiple
-                        taggable
-                        v-model="cardTemp.printInfo.flavorTraits"
-                        :options="flavorTraitList"
-                        @input="refreshCache('flavorTraits', cardTemp.printInfo.flavorTraits.join('/'))"
-                      />
-                    </info-helper>
-                  </div>
-                </div>
                 <!-- Flavor Text -->
                 <div class="my-2">
                   <info-helper :info-cache="infoCache" property="flavorText" @focusout="refreshCache('flavorText')">
@@ -367,7 +298,8 @@ import InfoHelper from "./InfoHelper.vue";
 import utility from "../../scripts/utility";
 import rulesets from "../../scripts/rulesets/cardRules";
 import CardImageCreator from "./CardImageCreator.vue";
-import { createMapper } from "../../scripts/cardMapper";
+import { createMapper, buildConfig } from "../../scripts/cardMapper";
+import { upgradeCard, currentCardSchema } from "../../scripts/cardUpgrader";
 
 const rulesetMap = {};
 rulesets.forEach((x) => {
@@ -376,67 +308,21 @@ rulesets.forEach((x) => {
 
 const defaultRuleset = rulesets.filter((x) => x.ruleset.general && x.ruleset.general.makeDefault)[0] || rulesets[0];
 
-const mapperConfig = {
-  props: {
-    class: {
-      initialize(vm, cardDataProp, cardMappedProp, config) {
-        let { setProp, fromArrayToSlashes, cardKeyOrder } = config.utils;
-        vm.$watch(cardMappedProp + ".classes", (newValue) => {
-          let cardData = vm[cardDataProp];
-          if (newValue.length !== 1) {
-            newValue = ["Classless"].concat(newValue);
-          }
-          setProp(cardData, "class", fromArrayToSlashes(newValue), cardKeyOrder);
-        });
-      },
-      sync(vm, cardDataProp, cardMappedProp, config) {
-        let { fromSlashesToArray } = config.utils;
-        let cardData = vm[cardDataProp],
-          cardMapped = vm[cardMappedProp];
-        cardMapped.classes = fromSlashesToArray(cardData.class).filter((x) => x !== "Classless");
-      },
-    },
-    challengeLord: {},
-    printInfos: {
-      initialize(vm, cardDataProp, cardMappedProp, config) {
-        let { setProp, fromArrayToSlashes, fromEmptyToUndefined, fixCarriageReturns, cardKeyOrder, printKeyOrder } =
-          config.utils;
-        vm.$watch(
-          cardMappedProp + ".printInfo",
-          (newValue) => {
-            let cardData = vm[cardDataProp];
-            if (newValue.flavorTraits[0] || newValue.flavorText) {
-              let y = {};
-              setProp(cardData, "printInfos", [y], cardKeyOrder);
-              setProp(y, "flavorTraits", fromArrayToSlashes(newValue.flavorTraits || []), printKeyOrder);
-              setProp(y, "flavorText", fromEmptyToUndefined(fixCarriageReturns(newValue.flavorText)), printKeyOrder);
-              setProp(y, "flavorTextFormat", fromEmptyToUndefined(newValue.flavorTextFormat), printKeyOrder);
-            } else {
-              setProp(cardData, "printInfos", undefined, cardKeyOrder);
-            }
-          },
-          { deep: true }
-        );
-      },
-      sync(vm, cardDataProp, cardMappedProp, config) {
-        let { fromSlashesToArray } = config.utils;
-        let cardData = vm[cardDataProp],
-          cardMapped = vm[cardMappedProp];
-        cardMapped.printInfo = (cardData.printInfos || []).map((x) => {
-          return {
-            flavorTraits: fromSlashesToArray(x.flavorTraits),
-            flavorText: x.flavorText,
-            flavorTextFormat: x.flavorTextFormat,
-          };
-        })[0] || {
-          flavorText: "",
-          flavorTextFormat: "",
-          flavorTraits: [],
-        };
-      },
-    },
-  },
-};
+const mapperConfig = buildConfig(config => {
+  config.props["class"] = config.utils.standardMap("class", x => {
+    if (!Array.isArray(x)) return undefined;
+    if (x.length !== 1) {
+      x = ["Classless"].concat(x);
+    }
+    return x;
+  }, null, x => (x && x.filter(c => c !== "Classless")) || []);
+  config.props["printInfos"] = config.utils.standardMap("printInfos", x => {
+    return [x];
+  }, "printInfo", x => {
+    if (!Array.isArray(x) || x[0] == null) return {};
+    return x[0];
+  });
+});
 
 function resizeDataUrl(dataUrl, width, height) {
   let img = document.createElement("img");
@@ -505,31 +391,15 @@ export default {
       infoCache: defaultInfoCache(),
       cardData: {},
       cardTemp: {
-        name: "",
-        text: "",
-        multiclass: null,
-        abilities: [],
-        textFormat: "",
-        type: "",
-        alignment: "",
-        attack: "",
-        armorClass: "",
-        skill: "",
-        hitPoints: "",
-        level: "",
-        classes: [],
-        factions: [],
+        class: [],
+        faction: [],
         traits: [],
-        selectedFeats: [],
-        featValues: {},
-        selectedMisc: [],
-        miscValues: {},
+        feats: [],
         printInfo: {
-          flavorText: "",
-          flavorTextFormat: "",
-          flavorTraits: [],
-        },
+          flavorText: ""
+        }
       },
+      abilities: [],
       formatText: {
         main: {
           isAuto: true,
@@ -561,11 +431,11 @@ export default {
     },
     classList() {
       if (!this.referenceLists || !this.referenceLists.classList) return [];
-      return this.referenceLists.classList.filter((t) => t !== "Classless" && !this.cardTemp.classes.includes(t));
+      return this.referenceLists.classList.filter((t) => t !== "Classless" && !this.cardTemp.class.includes(t));
     },
     factionList() {
       if (!this.referenceLists || !this.referenceLists.factionList) return [];
-      return this.referenceLists.factionList.filter((t) => !this.cardTemp.factions.includes(t));
+      return this.referenceLists.factionList.filter((t) => !this.cardTemp.faction.includes(t));
     },
     traitList() {
       if (!this.referenceLists || !this.referenceLists.traitList) return [];
@@ -573,11 +443,7 @@ export default {
     },
     featList() {
       if (!this.referenceLists || !this.referenceLists.featList) return [];
-      return this.referenceLists.featList.filter((f) => !this.cardTemp.selectedFeats.includes(f));
-    },
-    miscList() {
-      // I admit this is inelegant
-      return ["Challenge Rating", "Charges", "GP"].filter((f) => !this.cardTemp.selectedMisc.includes(f));
+      return this.referenceLists.featList.filter((f) => !this.cardTemp.feats.map(x => x && x.name).includes(f));
     },
     flavorTraitList() {
       return (this.referenceLists && this.referenceLists.flavorTraitList) || [];
@@ -600,7 +466,7 @@ export default {
     textOptions() {
       let textOptions = this.selectedRuleset && this.selectedRuleset.text && this.selectedRuleset.text.options;
       if (!textOptions) return [];
-      return textOptions.filter((x) => !this.cardTemp.abilities.map((y) => y.id).includes(x.id));
+      return textOptions.filter((x) => !this.abilities.map((y) => y.id).includes(x.id));
     },
     hasGuide: computeSetting("hasGuide"),
     restrictText: computeSetting("restrictText"),
@@ -673,7 +539,7 @@ export default {
       }
     },
 
-    "cardTemp.classes"(newVal) {
+    "cardTemp.class"(newVal) {
       if (!this.formatText.main.isAuto) return;
       let isMulticlass = newVal.length > 1;
       let match = this.cardTemp.text && this.cardTemp.text.match(this.multiclassRegex);
@@ -688,11 +554,11 @@ export default {
       }
       if (this.cardTemp.type === "Character" && isMulticlass) {
         if (!match) {
-          let ending = this.cardTemp.classes
+          let ending = this.cardTemp.class
             .map((x, i) => {
-              if (i < this.cardTemp.classes.length - 2) {
+              if (i < this.cardTemp.class.length - 2) {
                 return x.toLowerCase() + ",";
-              } else if (i === this.cardTemp.classes.length - 1) {
+              } else if (i === this.cardTemp.class.length - 1) {
                 return "and " + x.toLowerCase();
               }
               return x.toLowerCase();
@@ -713,7 +579,7 @@ export default {
       this.updateTemp();
       this.saveChanges();
     },
-    "cardTemp.abilities"() {
+    "abilities"() {
       this.mapFromAbilities();
     },
     "cardData.name"() {
@@ -739,41 +605,27 @@ export default {
     updateTemp() {
       this.mapper.sync();
     },
-    selectFeat(index) {
-      Vue.set(this.cardTemp.featValues, this.cardTemp.selectedFeats[index], 0);
-      this.refreshCache("feats");
+    selectFeat(val, index) {
+      Vue.set(this.cardTemp.feats, index, { name: val });
     },
     deselectFeat(index) {
-      this.cardTemp.featValues[this.cardTemp.selectedFeats[index]] = 0; // Force update
-      Vue.delete(this.cardTemp.featValues, this.cardTemp.selectedFeats[index]);
-      this.cardTemp.selectedFeats.splice(index, 1);
-      this.refreshCache("feats");
-    },
-    selectMisc(index) {
-      Vue.set(this.cardTemp.miscValues, this.cardTemp.selectedMisc[index], 0);
-      this.refreshCache("misc");
-    },
-    deselectMisc(index) {
-      this.cardTemp.miscValues[this.cardTemp.selectedMisc[index]] = 0; // Force update
-      Vue.delete(this.cardTemp.miscValues, this.cardTemp.selectedMisc[index]);
-      this.cardTemp.selectedMisc.splice(index, 1);
-      this.refreshCache("misc");
+      Vue.delete(this.cardTemp.feats, index);
     },
     updateTextEditor(newValue) {
       if (this.formatText.main.isAuto) {
-        this.cardTemp.text = newValue;
-        this.cardTemp.textFormat = "";
+        this.$set(this.cardTemp, "text", newValue);
+        this.$set(this.cardTemp, "textFormat", "");
       } else {
-        this.cardTemp.textFormat = newValue;
+        this.$set(this.cardTemp, "textFormat", newValue);
       }
       this.refreshCache("text");
     },
     updateFlavorTextEditor(newValue) {
       if (this.formatText.flavor.isAuto) {
-        this.cardTemp.printInfo.flavorText = newValue;
-        this.cardTemp.printInfo.flavorTextFormat = "";
+        this.$set(this.cardTemp.printInfo, "flavorText", newValue);
+        this.$set(this.cardTemp.printInfo, "flavorTextFormat", "");
       } else {
-        this.cardTemp.printInfo.flavorTextFormat = newValue;
+        this.$set(this.cardTemp.printInfo, "flavorTextFormat", newValue);
       }
       this.refreshCache("flavorText", this.cardTemp.printInfo.flavorText);
     },
@@ -856,7 +708,6 @@ export default {
         this.refreshCache("misc", null, !forceValidate),
         this.refreshCache("printInfos", null, !forceValidate),
         this.refreshCache("flavorText", this.cardTemp.printInfo.flavorText, !forceValidate),
-        this.refreshCache("flavorTraits", this.cardTemp.printInfo.flavorTraits.join("/"), !forceValidate),
       ];
       for (let i = 0; i < refresh.length; i++) await refresh[i];
     },
@@ -866,14 +717,14 @@ export default {
     },
     mapToAbilities() {
       if (this.restrictText) {
-        this.cardTemp.abilities = this.selectedRuleset.text.mapFrom(this.cardTemp.text, this.cardData);
+        this.abilities = this.selectedRuleset.text.mapFrom(this.cardTemp.text, this.cardData);
       } else {
-        this.cardTemp.abilities = [];
+        this.abilities = [];
       }
     },
     mapFromAbilities() {
       if (this.restrictText) {
-        this.cardTemp.text = this.selectedRuleset.text.mapTo(this.cardTemp.abilities, this.cardData);
+        this.cardTemp.text = this.selectedRuleset.text.mapTo(this.abilities, this.cardData);
       }
     },
 
@@ -889,7 +740,7 @@ export default {
       let settings = localStorage.getItem("cardBuilderSettings");
       if (settings) {
         let parsed = JSON.parse(settings);
-        this.cardData = parsed.cardData;
+        this.cardData = upgradeCard(parsed.cardData, parsed.cardSchema);
         this.cardUserImageDataUrl = parsed.cardUserImageDataUrl;
         if (parsed.selectedRulesetOption && rulesetMap[parsed.selectedRulesetOption]) {
           this.selectedRulesetOption = parsed.selectedRulesetOption;
@@ -898,6 +749,7 @@ export default {
     },
     saveChanges() {
       let settings = {
+        cardSchema: currentCardSchema,
         cardData: this.cardData,
         cardUserImageDataUrl: this.cardUserImageDataUrl,
       }
@@ -959,7 +811,7 @@ export default {
       try {
         let allCard = JSON.parse(await utility.readText());
         this.cardUserImageDataUrl = allCard.image;
-        this.cardData = allCard.cardData;
+        this.cardData = upgradeCard(allCard.cardData, allCard.cardSchema);
         this.saveChanges();
         this.updateTemp();
         this.refreshCacheAll();
@@ -970,6 +822,7 @@ export default {
     exportCard() {
       let filename = (this.cardData.name || "Untitled").replace(/[^a-z0-9]/gi, "_") + ".card";
       let allCard = {
+        cardSchema: currentCardSchema,
         cardData: this.cardData,
         image: this.cardUserImageDataUrl,
       };
