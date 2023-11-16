@@ -158,6 +158,21 @@
                   </info-helper>
                 </div>
               </div>
+              <!-- Damage Type -->
+              <!-- This needs card template support, so for now it is irrelevant
+              <div class="clearfix">
+                <div class="card-stat-label"><span>Damage Type:</span></div>
+                <div class="card-stat-value">
+                  <info-helper :info-cache="infoCache" property="damageType" @focusout="refreshCache('damageType')">
+                    <b-form-select v-model="cardTemp.damageType" :options="damageTypeList" @input="refreshCache('damageType')">
+                      <template #first>
+                        <b-form-select-option :value="undefined"></b-form-select-option>
+                      </template>
+                    </b-form-select>
+                  </info-helper>
+                </div>
+              </div>
+              -->
               <!-- Armor Class -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Armor Class:</span></div>
@@ -493,6 +508,9 @@ export default {
       if (!this.referenceLists || !this.referenceLists.factionList) return [];
       return this.referenceLists.factionList.filter((t) => !this.cardTemp.faction.includes(t));
     },
+    damageTypeList() {
+      return (this.referenceLists && this.referenceLists.damageTypeList) || [];
+    },
     traitList() {
       if (!this.referenceLists || !this.referenceLists.traitList) return [];
       return this.referenceLists.traitList.filter((t) => !this.cardTemp.traits.includes(t));
@@ -724,6 +742,7 @@ export default {
       this.setInitialValue("class");
       this.setInitialValue("faction");
       this.setInitialValue("attack");
+      this.setInitialValue("damageType");
       this.setInitialValue("armorClass");
       this.setInitialValue("skill");
       this.setInitialValue("hitPoints");
@@ -772,6 +791,7 @@ export default {
         this.refreshCache("class", null, !forceValidate),
         this.refreshCache("faction", null, !forceValidate),
         this.refreshCache("attack", null, !forceValidate),
+        this.refreshCache("damageType", null, !forceValidate),
         this.refreshCache("armorClass", null, !forceValidate),
         this.refreshCache("skill", null, !forceValidate),
         this.refreshCache("hitPoints", null, !forceValidate),

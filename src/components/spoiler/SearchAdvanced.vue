@@ -25,6 +25,13 @@
         <b-form-group label-cols="6" label="Exclude Keywords:" label-class="my-1">
           <v-select multiple v-model="excludeKeywords" :options="keywordList" />
         </b-form-group>
+        <b-form-group label-cols="6" label="Damage Type:">
+          <b-form-select v-model="damageType" :options="damageTypeList">
+            <template v-slot:first>
+              <b-form-select-option :value="null" />
+            </template>
+          </b-form-select>
+        </b-form-group>
         <b-form-group label-cols="6" label="Type:">
           <b-form-select v-model="type" :options="typeList">
             <template v-slot:first>
@@ -258,6 +265,7 @@ function initialState() {
     excludeTraits: [],
     keywords: [],
     excludeKeywords:[],
+    damageType: null,
     artist: null,
     type: null,
     characterType: null,
@@ -324,6 +332,9 @@ export default {
     },
     factionList() {
       return (this.referenceLists && this.referenceLists.factionList) || [];
+    },
+    damageTypeList() {
+      return (this.referenceLists && this.referenceLists.damageTypeList) || [];
     },
     traitList() {
       if (!this.referenceLists || !this.referenceLists.traitList) return [];
@@ -408,6 +419,10 @@ export default {
           if (this.excludeKeywords[0]) {
             if (this.excludeKeywords.filter((k) => keywords.includes(k))[0]) return false;
           }
+        }
+        // Damage Type
+        if (this.damageType && x.damageType !== this.damageType) {
+          return false;
         }
         // Type
         if (this.type && x.type !== this.type) {

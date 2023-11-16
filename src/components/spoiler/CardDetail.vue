@@ -71,6 +71,13 @@
                 <span>{{ cardData.attack | cardFormatter("attack", cardData) }}</span>
               </div>
             </div>
+            <!-- Damage Type -->
+            <div v-if="cardData.damageType" class="clearfix">
+              <div class="card-stat-label"><span>Damage Type:</span></div>
+              <div class="card-stat-value">
+                <span>{{ cardData.damageType }}</span>
+              </div>
+            </div>
             <!-- Armor Class -->
             <div v-if="cardData.armorClass" class="clearfix">
               <div class="card-stat-label"><span>Armor Class:</span></div>

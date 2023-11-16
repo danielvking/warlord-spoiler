@@ -114,6 +114,28 @@ export default {
       }
     }
   },
+  "damageType": {
+    validate(val, cardData) {
+      if (cardData.type) {
+        switch (cardData.type) {
+          case "Character":
+            // Damage type is not totally supported yet in the card builder
+            // if (!val) return "Damage type is required for this card type.";
+            break;
+          case "Action":
+          case "Battlefield":
+          case "Dungeon":
+          case "Epic Class":
+          case "Item":
+            if (val) return "Damage type is invalid for this card type.";
+            break;
+        }
+      }
+      if (val && referenceLists.damageType) {
+        if (!referenceLists.damageType.includes(val)) return `${val} is not a valid damage type.`;
+      }
+    }
+  },
   "armorClass": {
     validate(val, cardData) {
       if (cardData.type) {

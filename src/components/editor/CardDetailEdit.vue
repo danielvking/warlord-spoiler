@@ -99,6 +99,17 @@
                 <b-form-input v-model="cardTemp.attack" />
               </div>
             </div>
+            <!-- Damage Type -->
+            <div class="clearfix">
+              <div class="card-stat-label"><span>Damage Type:</span></div>
+              <div class="card-stat-value">
+                <b-form-select v-model="cardTemp.damageType" :options="damageTypeList">
+                  <template #first>
+                    <b-form-select-option :value="undefined"></b-form-select-option>
+                  </template>
+                </b-form-select>
+              </div>
+            </div>
             <!-- Armor Class -->
             <div class="clearfix">
               <div class="card-stat-label"><span>Armor Class:</span></div>
@@ -366,6 +377,9 @@ export default {
     factionList() {
       if (!this.referenceLists || !this.referenceLists.factionList) return [];
       return this.referenceLists.factionList.filter((t) => !this.cardTemp.faction || !this.cardTemp.faction.includes(t));
+    },
+    damageTypeList() {
+      return (this.referenceLists && this.referenceLists.damageTypeList) || [];
     },
     traitList() {
       if (!this.referenceLists || !this.referenceLists.traitList) return [];
