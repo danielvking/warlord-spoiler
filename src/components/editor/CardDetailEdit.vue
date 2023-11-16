@@ -414,6 +414,9 @@ export default {
   watch: {
     card() {
       this.imageUrlOverride = null;
+      this.$nextTick(() => {
+        this.updateTemp();
+      });
     },
     cardData: {
       handler() {
