@@ -21,8 +21,19 @@ export default {
     }
   },
   "type": {
-    validate(val) {
+    validate(val, _, referenceLists) {
       if (!val) return "A type is required.";
+      if (val && referenceLists.typeList) {
+        if (!referenceLists.typeList.includes(val)) return `${val} is not a valid type.`;
+      }
+    }
+  },
+  "subtype": {
+    validate(val, cardData, referenceLists) {
+      if (val) {
+        let subtypes = (referenceLists.subtypeLists && referenceLists.subtypeLists[cardData.type]) || [];
+        if (!subtypes.includes(val)) return `${val} is not a valid ${cardData.type} subtype.`;
+      }
     }
   },
   "alignment": {

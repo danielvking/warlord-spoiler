@@ -147,6 +147,10 @@ export default {
       if (this.cardData.faction) {
         headerText += bulletJoin(this.cardData.faction, true);
       }
+      if (this.cardData.subtype) {
+        if (headerText) headerText += " • ";
+        headerText += bulletJoin([this.cardData.subtype], true);
+      }
       if (this.cardData.traits) {
         if (headerText) headerText += " • ";
         headerText += bulletJoin(this.cardData.traits, true);

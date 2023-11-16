@@ -252,6 +252,7 @@ const standardConfig = {
     "text": standardMap("text", x => fromEmptyStringToUndefined(fixCarriageReturns(x))),
     "textFormat": standardMap("textFormat", fromEmptyStringToUndefined),
     "type": standardMap("type", fromEmptyStringToUndefined),
+    "subtype": standardMap("subtype", fromEmptyStringToUndefined),
     "alignment": standardMap("alignment", fromEmptyStringToUndefined),
     "class": standardMap("class", fromEmptyArrayToUndefined, null, x => x || []),
     "faction": standardMap("faction", fromEmptyArrayToUndefined, null, x => x || []),
@@ -266,6 +267,7 @@ const standardConfig = {
       if (!Array.isArray(x)) return x;
       return x.join("/");
     }),
+    "damageType": standardMap("damageType", fromEmptyStringToUndefined),
     "armorClass": standardMap("armorClass", fromStringToInteger),
     "skill": standardMap("skill", fromStringToInteger),
     "hitPoints": standardMap("hitPoints", fromStringToInteger),

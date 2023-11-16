@@ -74,6 +74,17 @@
                 <b-form-select v-model="cardTemp.type" :options="typeList" />
               </div>
             </div>
+            <!-- Subtype -->
+            <div class="clearfix">
+              <div class="card-stat-label"><span>Subtype:</span></div>
+              <div class="card-stat-value">
+                <b-form-select v-model="cardTemp.subtype" :options="subtypeList">
+                  <template #first>
+                    <b-form-select-option :value="undefined"></b-form-select-option>
+                  </template>
+                </b-form-select>
+              </div>
+            </div>
             <!-- Class -->
             <div class="clearfix">
               <div class="card-stat-label"><span>Class:</span></div>
@@ -336,6 +347,14 @@ export default {
     },
     typeList() {
       return (this.referenceLists && this.referenceLists.typeList) || [];
+    },
+    subtypeList() {
+      let subtypeList = (this.referenceLists && this.referenceLists.subtypeLists && this.referenceLists.subtypeLists[this.cardTemp.type]) || [];
+      if (this.cardTemp.subtype && !subtypeList.includes(this.cardTemp.subtype)) {
+        subtypeList = subtypeList.slice();
+        subtypeList.splice(0, 0, this.cardTemp.subtype);
+      }
+      return subtypeList;
     },
     alignmentList() {
       return (this.referenceLists && this.referenceLists.alignmentList) || [];

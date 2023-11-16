@@ -37,16 +37,16 @@ function upgradeV1ToV2(cardData) {
   let traits = cardData.traits && split(cardData.traits) || []
 
   // Map to keywords
-  if (traits.indexOf("Epic") >= 0) {
+  if (traits.includes("Epic")) {
     keywords.push({ name: "Epic" })
   }
-  if (traits.indexOf("Astral") >= 0 || traits.indexOf("Ethereal") >= 0 || traits.indexOf("Planar") >= 0) {
+  if (traits.includes("Astral") || traits.includes("Ethereal") || traits.includes("Planar")) {
     keywords.push({ name: "Planar" })
   }
-  if (traits.indexOf("Unique") >= 0) {
+  if (traits.includes("Unique")) {
     keywords.push({ name: "Unique" })
   }
-  if (traits.indexOf("Cursed") >= 0) {
+  if (traits.includes("Cursed")) {
     keywords.push({ name: "Cursed" })
   }
   let search = misc.find(x => x.name == "Challenge Rating")
@@ -56,22 +56,22 @@ function upgradeV1ToV2(cardData) {
 
   // Map to subtype
   let subtype = undefined
-  if (traits.indexOf("Warlord") >= 0) {
+  if (traits.includes("Warlord")) {
     newData.subtype = "Warlord"
   }
-  if (traits.indexOf("Medusan Lord") >= 0) {
-    newData.subtype = "Medusan Lord"
+  if (traits.includes("Overlord")) {
+    newData.subtype = "Overlord"
   }
-  if (traits.indexOf("Dragon Lord") >= 0) {
+  if (traits.includes("Dragon Lord")) {
     newData.subtype = "Dragon Lord"
   }
-  if (traits.indexOf("Overlord") >= 0) {
-    newData.subtype = "Overlord"
+  if (traits.includes("Medusan Lord")) {
+    newData.subtype = "Medusan Lord"
   }
 
   // There are a lot of trait and flavor trait changes, but we are just going to ignore most of them
   let notTraits = ["Epic", "Astral", "Ethereal", "Planar", "Unique", "Cursed", "Warlord", "Medusan Lord", "Dragon Lord", "Overlord"]
-  let newTraits = traits.filter(x => notTraits.indexOf(x) < 0)
+  let newTraits = traits.filter(x => !notTraits.includes(x))
   newTraits = [...new Set(newTraits)]
 
   newData.name = cardData.name

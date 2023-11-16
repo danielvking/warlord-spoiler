@@ -50,6 +50,13 @@
                 <span>{{ cardData.type }}</span>
               </div>
             </div>
+            <!-- Subtype -->
+            <div v-if="cardData.subtype" class="clearfix">
+              <div class="card-stat-label"><span>{{ cardData.type != null ? `${cardData.type} Type` : "Subtype" }}:</span></div>
+              <div class="card-stat-value">
+                <span>{{ cardData.subtype }}</span>
+              </div>
+            </div>
             <!-- Class -->
             <div v-if="cardData.class" class="clearfix">
               <div class="card-stat-label"><span>Class:</span></div>

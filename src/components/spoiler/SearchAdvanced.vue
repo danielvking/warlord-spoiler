@@ -32,6 +32,13 @@
             </template>
           </b-form-select>
         </b-form-group>
+        <b-form-group label-cols="6" label="Character Type:">
+          <b-form-select v-model="characterType" :options="characterTypeList">
+            <template v-slot:first>
+              <b-form-select-option :value="null" />
+            </template>
+          </b-form-select>
+        </b-form-group>
         <b-form-group label-cols="6" label="Alignment:">
           <b-form-select v-model="alignment" :options="alignmentList">
             <template v-slot:first>
@@ -50,6 +57,10 @@
         <!-- Exclude -->
         <b-form-group label-cols="6" label="Exclude:" class="my-2">
           <b-form-checkbox v-model="excludeExclusiveLordCards" stacked>Exclusive Lord Cards</b-form-checkbox>
+          <b-form-checkbox v-model="excludeWarlords" stacked>Warlords</b-form-checkbox>
+          <b-form-checkbox v-model="excludeOverlords" stacked>Overlords</b-form-checkbox>
+          <b-form-checkbox v-model="excludeDragonLords" stacked>Dragon Lords</b-form-checkbox>
+          <b-form-checkbox v-model="excludeMedusanLords" stacked>Medusan Lords</b-form-checkbox>
         </b-form-group>
       </b-col>
     </b-row>
@@ -249,6 +260,7 @@ function initialState() {
     excludeKeywords:[],
     artist: null,
     type: null,
+    characterType: null,
     alignment: null,
     classes: [],
     factions: [],
@@ -275,6 +287,10 @@ function initialState() {
     miscOps: {},
     miscValues: {},
     excludeExclusiveLordCards: false,
+    excludeWarlords: false,
+    excludeOverlords: false,
+    excludeDragonLords: false,
+    excludeMedusanLords: false,
     isBusy: false,
   };
 }
@@ -296,6 +312,9 @@ export default {
     },
     typeList() {
       return (this.referenceLists && this.referenceLists.typeList) || [];
+    },
+    characterTypeList() {
+      return (this.referenceLists && this.referenceLists.subtypeLists && this.referenceLists.subtypeLists["Character"]) || [];
     },
     alignmentList() {
       return (this.referenceLists && this.referenceLists.alignmentList) || [];
@@ -394,6 +413,13 @@ export default {
         if (this.type && x.type !== this.type) {
           return false;
         }
+        // Subtype
+        if (this.characterType) {
+          // Only characters have subtypes... at the moment
+          if (x.type !== "Character" || x.subtype !== this.characterType) {
+            return false;
+          }
+        }
         // Alignment
         if (this.alignment && x.alignment !== this.alignment) {
           return false;
@@ -406,6 +432,22 @@ export default {
         // Exclude Exclusive Lord Cards
         if (this.excludeExclusiveLordCards) {
           if (x.exclusiveLordCard) return false;
+        }
+        // Exclude Warlords
+        if (this.excludeWarlords) {
+          if (x.type === "Character" && x.subtype === "Warlord") return false;
+        }
+        // Exclude Overlords
+        if (this.excludeOverlords) {
+          if (x.type === "Character" && x.subtype === "Overlord") return false;
+        }
+        // Exclude Dragon Lords
+        if (this.excludeDragonLords) {
+          if (x.type === "Character" && x.subtype === "Dragon Lord") return false;
+        }
+        // Exclude Medusan Lords
+        if (this.excludeMedusanLords) {
+          if (x.type === "Character" && x.subtype === "Medusan Lord") return false;
         }
         // Faction
         if (this.factions[0]) {

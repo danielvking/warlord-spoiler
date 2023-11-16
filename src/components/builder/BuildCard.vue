@@ -121,6 +121,19 @@
                   </info-helper>
                 </div>
               </div>
+              <!-- Subtype -->
+              <div class="clearfix">
+                <div class="card-stat-label"><span>Subtype:</span></div>
+                <div class="card-stat-value">
+                  <info-helper :info-cache="infoCache" property="subtype" @focusout="refreshCache('subtype')">
+                    <b-form-select v-model="cardTemp.subtype" :options="subtypeList" @input="refreshCache('subtype')">
+                      <template #first>
+                        <b-form-select-option :value="undefined"></b-form-select-option>
+                      </template>
+                    </b-form-select>
+                  </info-helper>
+                </div>
+              </div>
               <!-- Class -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Class:</span></div>
@@ -461,6 +474,14 @@ export default {
     typeList() {
       return ((this.referenceLists && this.referenceLists.typeList) || []).filter((x) => x === "Action" || x === "Character" || x === "Item");
     },
+    subtypeList() {
+      let subtypeList = (this.referenceLists && this.referenceLists.subtypeLists && this.referenceLists.subtypeLists[this.cardTemp.type]) || [];
+      if (this.cardTemp.subtype && !subtypeList.includes(this.cardTemp.subtype)) {
+        subtypeList = subtypeList.slice();
+        subtypeList.splice(0, 0, this.cardTemp.subtype);
+      }
+      return subtypeList;
+    },
     alignmentList() {
       return (this.referenceLists && this.referenceLists.alignmentList) || [];
     },
@@ -698,6 +719,7 @@ export default {
       this.setInitialValue("name");
       this.setInitialValue("text");
       this.setInitialValue("type");
+      this.setInitialValue("subtype");
       this.setInitialValue("alignment");
       this.setInitialValue("class");
       this.setInitialValue("faction");
@@ -745,6 +767,7 @@ export default {
         this.refreshCache("name", null, !forceValidate),
         this.refreshCache("text", null, !forceValidate),
         this.refreshCache("type", null, !forceValidate),
+        this.refreshCache("subtype", null, !forceValidate),
         this.refreshCache("alignment", null, !forceValidate),
         this.refreshCache("class", null, !forceValidate),
         this.refreshCache("faction", null, !forceValidate),

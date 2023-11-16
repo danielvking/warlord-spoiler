@@ -1073,6 +1073,12 @@ const textOptions = [{
         if (val !== "Character") return "The card must be a character in this ruleset.";
       }
     },
+    "subtype": {
+      initialValue: "Warlord",
+      validate(val) {
+        if (val !== "Warlord") return "The card must be a warlord in this ruleset.";
+      }
+    },
     "class": {
       pointInfo: "Classless is 0 points. Any single class is 10 points. Additional classes are 40 points each." +
         "\r\nBeing both multiclass and at least level 5 costs an additional 30 points.",
@@ -1175,18 +1181,16 @@ const textOptions = [{
       }
     },
     "traits": {
-      //initialValue: "Warlord",
       validate(val) {
         val = val || [];
-        //if (!val.includes("Warlord")) return "Warlord is required in this ruleset.";
         for (let i = 0; i < val.length; i++) {
           let trait = val[i];
           if (traitMap[trait] == null) return `${trait} is not permitted in this ruleset.`;
         }
       },
-      pointInfo: "The cost of individual traits varies. Warlord is free. Having 2 or more positive-cost traits is an additional 15 points per additional trait.\r\n" +
+      pointInfo: "The cost of individual traits varies. Having 2 or more positive-cost traits is an additional 15 points per additional trait.\r\n" +
         traitDescList,
-      pointInfoDetail: "<p>The cost of individual traits varies. Warlord is free. Having 2 or more positive-cost traits is an additional 15 points per additional trait.</p>" +
+      pointInfoDetail: "<p>The cost of individual traits varies. Having 2 or more positive-cost traits is an additional 15 points per additional trait.</p>" +
         traitDetailTable,
       computePoints(val, cardData) {
         if (val) {
