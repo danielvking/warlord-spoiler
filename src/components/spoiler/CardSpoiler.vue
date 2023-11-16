@@ -188,7 +188,7 @@ export default {
 
       this.$nextTick(() => {
         let scrollRegion = document.documentElement;
-        let searchResults = document.documentElement;
+        let searchResults = document.getElementById("searchResults");
 
         utility.smoothScrollTo(scrollRegion, searchResults.offsetTop, 300);
       });
