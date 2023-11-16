@@ -25,7 +25,6 @@ const keyOrder = [
   "traits",
   "keywords",
   "feats",
-  "misc",
   "editions",
   "errata",
   "exclusiveLordCard",
@@ -272,6 +271,15 @@ const standardConfig = {
     "hitPoints": standardMap("hitPoints", fromStringToInteger),
     "level": standardMap("level", fromStringToInteger),
     "traits": standardMap("traits", fromEmptyArrayToUndefined, null, x => x || []),
+    "keywords": standardMap("keywords", x => {
+      if (!Array.isArray(x) || x[0] == null) return undefined;
+      return x.map(y => {
+        return {
+          name: y.name,
+          value: fromStringToInteger(y.value)
+        };
+      });
+    }, null, x => x || []),
     "feats": standardMap("feats", x => {
       if (!Array.isArray(x) || x[0] == null) return undefined;
       return x.map(y => {

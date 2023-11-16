@@ -101,6 +101,13 @@
                 <span>{{ cardData.traits | arrayToLineBreak }}</span>
               </div>
             </div>
+            <!-- Keywords -->
+            <div v-if="cardData.keywords" class="clearfix">
+              <div class="card-stat-label"><span>Keywords:</span></div>
+              <div class="card-stat-value">
+                <div v-for="keyword in cardData.keywords" :key="keyword.name">{{ keyword | cardFormatter("keyword", cardData) }}</div>
+              </div>
+            </div>
             <!-- Feats -->
             <div v-if="cardData.feats" class="clearfix">
               <div class="card-stat-label"><span>Feats:</span></div>

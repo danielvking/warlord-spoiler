@@ -777,7 +777,6 @@ const textOptions = [{
     "Necromancer": 8,
     "Nymph": 3,
     "Paladin": 5,
-    "Planar": 30,
     "Ranger": 5,
     "Reaver": 5,
     "Reindeer": 3,
@@ -793,7 +792,10 @@ const textOptions = [{
     "Troll": 1,
     "Undead": 5,
     "Vampire": 3,
-    "Warlord": 0,
+  }
+
+  const keywordMap = {
+    "Planar": 30,
   }
   
   const featMap = {
@@ -937,6 +939,10 @@ const textOptions = [{
   const traitDescList = Object.entries(traitMap).map(x => `(${x[0]}: ${x[1]})`).join(" ");
   
   const traitDetailTable = toTable(Object.keys(traitMap).map(x => ({ trait: x, points: traitMap[x] })));
+  
+  const keywordDescList = Object.entries(keywordMap).map(x => `(${x[0]}: ${x[1]})`).join(" ");
+  
+  const keywordDetailTable = toTable(Object.keys(keywordMap).map(x => ({ keyword: x, points: keywordMap[x] })));
   
   const featDescList = Object.entries(featMap).map(x => `${x[0]} is ${x[1]} points, plus 3 for each level`).join("\r\n");
   
@@ -1107,10 +1113,10 @@ const textOptions = [{
       }
     },
     "traits": {
-      initialValue: "Warlord",
+      //initialValue: "Warlord",
       validate(val) {
         val = val || [];
-        if (!val.includes("Warlord")) return "Warlord is required in this ruleset.";
+        //if (!val.includes("Warlord")) return "Warlord is required in this ruleset.";
         for (let i = 0; i < val.length; i++) {
           let trait = val[i];
           if (traitMap[trait] == null) return `${trait} is not permitted in this ruleset.`;
@@ -1120,9 +1126,8 @@ const textOptions = [{
         traitDescList,
       pointInfoDetail: "<p>The cost of individual traits varies. Warlord is free. Having 2 or more positive-cost traits is an additional 15 points per additional trait.</p>" +
         traitDetailTable,
-      computePoints(val) {
+      computePoints(val, cardData) {
         if (val) {
-									 
           let sum = 0;
           let positiveTraits = 0;
           for (let i = 0; i < val.length; i++) {
@@ -1131,7 +1136,42 @@ const textOptions = [{
             sum += points;
             if (points > 0) positiveTraits++;
           }
+          if (cardData.keywords) {
+            for (let i = 0; i < cardData.keywords.length; i++) {
+              let keyword = cardData.keywords[i].name;
+              if (keywordMap[keyword] > 0) positiveTraits++;
+            }
+          }
           if (positiveTraits > 1) sum += (positiveTraits - 1) * 15;
+          return sum;
+        }
+      }
+    },
+    "keywords": {
+      validate(val) {
+        val = val || [];
+        for (let i = 0; i < val.length; i++) {
+          let keyword = val[i].name;
+          if (keyword !== "Charges" && keywordMap[keyword] == null) return `${keyword} is not permitted in this ruleset.`;
+        }
+      },
+      pointInfo: "Having charges costs 1 point, plus 3 points per charge. Other keywords are counted with traits.\r\n" +
+        keywordDescList,
+      pointInfoDetail: "<p>Having charges costs 1 point, plus 3 points per charge. Other keywords are counted with traits.</p>" +
+        keywordDetailTable,
+      computePoints(val) {
+        if (val) {
+          let sum = 0;
+          for (let i = 0; i < val.length; i++) {
+            let keyword = val[i];
+            if (keyword.name === "Charges") {
+              sum += 1;
+              if (keyword.value > 0) sum += 3 * keyword.value;
+            } else {
+              let points = +keywordMap[keyword.name];
+              sum += points;
+            }
+          }
           return sum;
         }
       }
@@ -1151,37 +1191,12 @@ const textOptions = [{
         return sum;
       }
     },
-    "misc": {
-      pointInfo: "Having charges costs 1 point, plus 3 points per charge.",
-      computePoints(val) {
-        if (val == null) return null;
-        let sum = 0;
-								  
-        for (let i = 0; i < val.length; i++) {
-          if (val[i].name === "Charges") {
-            let charges = val[i].val;
-            sum += 1 + charges * 3;
-          }
-        }
-        return sum;
-      }
-    },
     "flavorText": {
       validate(_val, cardData) {
         // Coerce
         if (cardData.printInfos) {
           cardData.printInfos.forEach(x => {
             x.flavorText = null;
-          })
-        }
-      }
-    },
-    "flavorTraits": {
-      validate(_val, cardData) {
-        // Coerce
-        if (cardData.printInfos) {
-          cardData.printInfos.forEach(x => {
-            x.flavorTraits = null;
           })
         }
       }

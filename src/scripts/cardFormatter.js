@@ -43,6 +43,15 @@ const props = {
     }
     return val
   },
+  "keyword": function(value) {
+    if (value.value == null) return value.name
+    if (value.name === "Charges") {
+      let name = value.name
+      if (value.value == 1) name = "Charge"
+      return `${value.value} ${name}`
+    }
+    return value.name + " " + value.value
+  },
   "feat": function(value) {
     if (value.value == null) return value.name
     let val = String(value.value)

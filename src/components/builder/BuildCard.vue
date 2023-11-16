@@ -197,6 +197,40 @@
                   </info-helper>
                 </div>
               </div>
+              <!-- Keywords -->
+              <div class="clearfix">
+                <div class="card-stat-label"><span>Keywords:</span></div>
+                <div class="card-stat-value">
+                  <info-helper :info-cache="infoCache" property="keywords" @focusout="refreshCache('keywords')">
+                    <b-form-row v-for="i in cardTemp.keywords.length + Math.min(1, keywordList.length)" :key="'Keyword' + i">
+                      <template v-if="i - 1 >= cardTemp.keywords.length">
+                        <b-col cols="12">
+                          <b-select :options="keywordList" @input="x => selectKeyword(x, i - 1)">
+                            <template v-slot:first>
+                              <b-form-select-option :value="undefined">- Select Keyword -</b-form-select-option>
+                            </template>
+                          </b-select>
+                        </b-col>
+                      </template>
+                      <template v-else>
+                        <label class="col-7 col-form-label">{{ cardTemp.keywords[i - 1].name }}{{ keywordHasValueSet[cardTemp.keywords[i - 1].name] ? ":" : "" }}</label>
+                        <b-col cols="1">
+                          <a href="#" @click.prevent="deselectKeyword(i - 1)"><span class="font-default">✘</span></a>
+                        </b-col>
+                        <b-col v-if="keywordHasValueSet[cardTemp.keywords[i - 1].name]" cols="4">
+                          <b-input-group>
+                            <b-form-input
+                              :id="'txtKeyword' + i"
+                              type="number"
+                              v-model.number="cardTemp.keywords[i - 1].value"
+                            />
+                          </b-input-group>
+                        </b-col>
+                      </template>
+                    </b-form-row>
+                  </info-helper>
+                </div>
+              </div>
               <!-- Feats -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Feats:</span></div>
@@ -204,7 +238,7 @@
                   <info-helper :info-cache="infoCache" property="feats" @focusout="refreshCache('feats')">
                     <b-form-row v-for="i in cardTemp.feats.length + Math.min(1, featList.length)" :key="'Feat' + i">
                       <template v-if="cardTemp.feats[i - 1] == null">
-                        <b-col cols="8">
+                        <b-col cols="12">
                           <b-select :options="featList" @input="x => selectFeat(x, i - 1)">
                             <template v-slot:first>
                               <b-form-select-option :value="undefined">- Select Feat -</b-form-select-option>
@@ -394,6 +428,7 @@ export default {
         class: [],
         faction: [],
         traits: [],
+        keywords: [],
         feats: [],
         printInfo: {
           flavorText: ""
@@ -441,12 +476,21 @@ export default {
       if (!this.referenceLists || !this.referenceLists.traitList) return [];
       return this.referenceLists.traitList.filter((t) => !this.cardTemp.traits.includes(t));
     },
+    keywordList() {
+      if (!this.referenceLists || !this.referenceLists.keywordList) return [];
+      return this.referenceLists.keywordList.map((k) => k.name).filter((k) => !this.cardTemp.keywords || !this.cardTemp.keywords.map(x => x.name).includes(k));
+    },
+    keywordHasValueSet() {
+      if (!this.referenceLists || !this.referenceLists.keywordList) return [];
+      let keywordHasValue = {}
+      this.referenceLists.keywordList.forEach((k) => {
+        if (k.hasValue) keywordHasValue[k.name] = true;
+      });
+      return keywordHasValue;
+    },
     featList() {
       if (!this.referenceLists || !this.referenceLists.featList) return [];
       return this.referenceLists.featList.filter((f) => !this.cardTemp.feats.map(x => x && x.name).includes(f));
-    },
-    flavorTraitList() {
-      return (this.referenceLists && this.referenceLists.flavorTraitList) || [];
     },
 
     multiclassRegex() {
@@ -605,6 +649,12 @@ export default {
     updateTemp() {
       this.mapper.sync();
     },
+    selectKeyword(val, index) {
+      Vue.set(this.cardTemp.keywords, index, { name: val });
+    },
+    deselectKeyword(index) {
+      Vue.delete(this.cardTemp.keywords, index);
+    },
     selectFeat(val, index) {
       Vue.set(this.cardTemp.feats, index, { name: val });
     },
@@ -657,8 +707,8 @@ export default {
       this.setInitialValue("hitPoints");
       this.setInitialValue("level");
       this.setInitialValue("traits");
+      this.setInitialValue("keywords");
       this.setInitialValue("feats");
-      this.setInitialValue("misc");
     },
     refreshCache(prop, val, suppressValidation) {
       return new Promise((resolve) => {
@@ -704,8 +754,8 @@ export default {
         this.refreshCache("hitPoints", null, !forceValidate),
         this.refreshCache("level", null, !forceValidate),
         this.refreshCache("traits", null, !forceValidate),
+        this.refreshCache("keywords", null, !forceValidate),
         this.refreshCache("feats", null, !forceValidate),
-        this.refreshCache("misc", null, !forceValidate),
         this.refreshCache("printInfos", null, !forceValidate),
         this.refreshCache("flavorText", this.cardTemp.printInfo.flavorText, !forceValidate),
       ];

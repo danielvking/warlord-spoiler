@@ -19,6 +19,12 @@
         <b-form-group label-cols="6" label="Exclude Traits:" label-class="my-1">
           <v-select multiple v-model="excludeTraits" :options="traitList" />
         </b-form-group>
+        <b-form-group label-cols="6" label="Keywords:" label-class="my-1">
+          <v-select multiple v-model="keywords" :options="keywordList" />
+        </b-form-group>
+        <b-form-group label-cols="6" label="Exclude Keywords:" label-class="my-1">
+          <v-select multiple v-model="excludeKeywords" :options="keywordList" />
+        </b-form-group>
         <b-form-group label-cols="6" label="Type:">
           <b-form-select v-model="type" :options="typeList">
             <template v-slot:first>
@@ -239,6 +245,8 @@ function initialState() {
     text: null,
     traits: [],
     excludeTraits: [],
+    keywords: [],
+    excludeKeywords:[],
     artist: null,
     type: null,
     alignment: null,
@@ -300,15 +308,19 @@ export default {
     },
     traitList() {
       if (!this.referenceLists || !this.referenceLists.traitList) return [];
-      return this.referenceLists.traitList.filter((t) => !this.traits.includes(t));
+      return this.referenceLists.traitList.filter((t) => !this.traits.includes(t) && !this.excludeTraits.includes(t));
+    },
+    keywordList() {
+      if (!this.referenceLists || !this.referenceLists.keywordList) return [];
+      return this.referenceLists.keywordList.map((k) => k.name).filter((k) => !this.keywords.includes(k) && !this.excludeKeywords.includes(k));
     },
     featList() {
       if (!this.referenceLists || !this.referenceLists.featList) return [];
       return this.referenceLists.featList.filter((f) => !this.selectedFeats.includes(f));
     },
     miscList() {
-      // I admit this is inelegant
-      return ["Challenge Rating", "Charges"].filter((f) => !this.selectedMisc.includes(f));
+      if (!this.referenceLists || !this.referenceLists.keywordList) return [];
+      return this.referenceLists.keywordList.filter((k) => k.hasValue).map((k) => k.name).filter((k) => !this.selectedMisc.includes(k));
     },
     editionList() {
       return (this.referenceLists && this.referenceLists.editionList) || [];
@@ -366,6 +378,16 @@ export default {
           }
           if (this.excludeTraits[0]) {
             if (this.excludeTraits.filter((t) => traits.includes(t))[0]) return false;
+          }
+        }
+        // Keywords
+        if (this.keywords[0] || this.excludeKeywords[0]) {
+          let keywords = x.keywords && x.keywords.map(x => x.name) || [];
+          if (this.keywords[0]) {
+            if (this.keywords.filter((k) => !keywords.includes(k))[0]) return false;
+          }
+          if (this.excludeKeywords[0]) {
+            if (this.excludeKeywords.filter((k) => keywords.includes(k))[0]) return false;
           }
         }
         // Type

@@ -151,6 +151,10 @@ export default {
         if (headerText) headerText += " • ";
         headerText += bulletJoin(this.cardData.traits, true);
       }
+      if (this.cardData.keywords) {
+        if (headerText) headerText += " • ";
+        headerText += bulletJoin(this.cardData.keywords.map(x => formatCardProperty("keyword", x, this.cardData)), true);
+      }
       if (this.cardData.feats) {
         if (headerText) headerText += " • ";
         headerText += bulletJoin(this.cardData.feats.map(x => formatCardProperty("feat", x, this.cardData)), true);

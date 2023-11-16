@@ -88,7 +88,7 @@ function upgradeV1ToV2(cardData) {
   newData.hitPoints = parseStat(cardData.hitPoints)
   newData.level = parseStat(cardData.level)
   newData.traits = newTraits.length > 0 ? newTraits : undefined
-  newData.keywords = newTraits.length > 0 ? newTraits : undefined
+  newData.keywords = keywords.length > 0 ? keywords : undefined
   newData.feats = cardData.feats && split(cardData.feats).map(x => parseFeat(x)) || undefined
   newData.editions = cardData.editions
   newData.errata = cardData.errata || undefined

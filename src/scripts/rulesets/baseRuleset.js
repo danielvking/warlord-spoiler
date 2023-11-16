@@ -212,6 +212,31 @@ export default {
       }
     }
   },
+  "keywords": {
+    validate(val, cardData, referenceLists) {
+      if (val && referenceLists.keywordList) {
+        for (let i = 0; i < val.length; i++) {
+          let keywordInfo = referenceLists.keywordList.find(x => x.name === val[i].name);
+          if (keywordInfo == null) return `${val[i].name} is not a valid keyword.`;
+          if (keywordInfo.hasValue) {
+            if (val[i].value == null) return `${val[i].name} must have a value.`;
+            if (val[i].value < 0) return `${val[i].name} cannot be negative.`;
+          } else {
+            if (val[i].value != null) return `${val[i].name} cannot have a value.`;
+          }
+        }
+      }
+      let flattened = val && val.map(k => k.name);
+      if (cardData.type) {
+        if ((!flattened || !flattened.includes("Challenge Rating")) && cardData.type === "Dungeon") {
+          return "Challenge Rating is required for this card type.";
+        }
+        if (flattened && flattened.includes("Challenge Rating") && cardData.type !== "Dungeon") {
+          return "Challenge Rating is invalid for this card type.";
+        }
+      }
+    }
+  },
   "feats": {
     validate(val, cardData, referenceLists) {
       if (cardData.type) {
@@ -231,34 +256,5 @@ export default {
         }
       }
     }
-  },
-  "misc": {
-    validate(val, cardData) {
-      if (val) {
-        if (val.includes("Charge")) {
-          let miscValue = val.split(" ");
-          if (+miscValue[0] < 0) return "Charges cannot be negative.";
-        }
-        if (val.includes("gp")) {
-          let miscValue = val.split(" ");
-          if (+miscValue[0] < 0) return "GP cannot be negative.";
-        }
-        if (val.includes("Challenge Rating")) {
-          let miscValue = val.split(" ");
-          if (+miscValue[2] < 0) return "Challenge Rating cannot be negative.";
-        }
-      }
-      if (cardData.type) {
-        if ((!val || !val.includes("Challenge Rating")) && cardData.type === "Dungeon") {
-          return "Challenge Rating is required for this card type.";
-        }
-        if (val && val.includes("Challenge Rating") && cardData.type !== "Dungeon") {
-          return "Challenge Rating is invalid for this card type.";
-        }
-        if (val && val.includes("gp") && cardData.type !== "Item") {
-          return "GP is invalid for this card type.";
-        }
-      }
-    }
-  },
+  }
 }
