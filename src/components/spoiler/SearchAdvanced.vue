@@ -466,8 +466,8 @@ export default {
         }
         // Faction
         if (this.factions[0]) {
-          if (!x.factions) return false;
-          if (this.factions.filter((f) => !x.factions.includes(f))[0]) return false;
+          if (!x.faction) return false;
+          if (this.factions.filter((f) => !x.faction.includes(f))[0]) return false;
         }
         // Level
         if (typeof this.level === "number") {
