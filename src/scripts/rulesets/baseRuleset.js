@@ -115,7 +115,7 @@ export default {
     }
   },
   "damageType": {
-    validate(val, cardData) {
+    validate(val, cardData, referenceLists) {
       if (cardData.type) {
         switch (cardData.type) {
           case "Character":
