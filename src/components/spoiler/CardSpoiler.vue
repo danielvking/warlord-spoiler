@@ -23,6 +23,8 @@
           @search-completed="searchCompleted"
         />
 
+        <hr/>
+
         <div id="searchResults">
           <template v-if="!isBusy">
             <template v-if="searchResults[0]">
