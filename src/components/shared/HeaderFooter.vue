@@ -8,7 +8,11 @@
           </b-button>
         </div>
       </div>
-      <h1>The Accordlands</h1>
+      <div class="site-header-middle p-2">
+        <router-link to="/">
+          <img class="site-logo" src="/images/TheAccordlands.svg" aria-label="The Accordlands"/>
+        </router-link>
+      </div>
       <div class="site-header-margin"></div>
     </b-row>
     <b-row class="flex-grow-1 content-region">
@@ -55,9 +59,15 @@
   display: inline;
 }
 
-.site-header .site-header-margin {
+.site-header .site-header-middle {
   flex-basis: 0;
   flex-grow: 1;
+  max-height: 64px;
+}
+
+.site-header .site-header-margin {
+  flex-basis: 50px;
+  flex-grow: 0;
   text-align: left;
 }
 
