@@ -453,13 +453,16 @@ export default {
       infoCache: defaultInfoCache(),
       cardData: {},
       cardTemp: {
+        text: "",
+        textFormat: "",
         class: [],
         faction: [],
         traits: [],
         keywords: [],
         feats: [],
         printInfo: {
-          flavorText: ""
+          flavorText: "",
+          flavorTextFormat: ""
         }
       },
       abilities: [],
