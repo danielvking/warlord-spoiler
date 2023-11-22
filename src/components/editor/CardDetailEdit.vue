@@ -218,11 +218,11 @@
                 <v-select multiple v-model="cardTemp.editions" :options="editionList" />
               </div>
             </div>
-            <!-- Exclusive Lord Card -->
+            <!-- Exclusive Promo -->
             <div class="clearfix">
               <div class="card-stat-label"></div>
               <div class="card-stat-value">
-                <b-checkbox v-model="cardTemp.exclusiveLordCard">Is Exclusive Lord Card</b-checkbox>
+                <b-checkbox v-model="cardTemp.exclusivePromo">Is Exclusive Promo</b-checkbox>
               </div>
             </div>
             <!-- Text -->

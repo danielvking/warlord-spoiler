@@ -63,7 +63,7 @@
 
         <!-- Exclude -->
         <b-form-group label-cols="6" label="Exclude:" class="my-2">
-          <b-form-checkbox v-model="excludeExclusiveLordCards" stacked>Exclusive Lord Cards</b-form-checkbox>
+          <b-form-checkbox v-model="excludeExclusiveLordCards" stacked>Exclusive Promos</b-form-checkbox>
           <b-form-checkbox v-model="excludeWarlords" stacked>Warlords</b-form-checkbox>
           <b-form-checkbox v-model="excludeOverlords" stacked>Overlords</b-form-checkbox>
           <b-form-checkbox v-model="excludeDragonLords" stacked>Dragon Lords</b-form-checkbox>
@@ -444,9 +444,9 @@ export default {
           if (!x.class) return false;
           if (this.classes.filter((c) => !x.class.includes(c))[0]) return false;
         }
-        // Exclude Exclusive Lord Cards
+        // Exclude Exclusive Promos
         if (this.excludeExclusiveLordCards) {
-          if (x.exclusiveLordCard) return false;
+          if (x.exclusivePromo) return false;
         }
         // Exclude Warlords
         if (this.excludeWarlords) {

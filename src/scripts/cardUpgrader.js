@@ -92,7 +92,7 @@ function upgradeV1ToV2(cardData) {
   newData.feats = cardData.feats && split(cardData.feats).map(x => parseFeat(x)) || undefined
   newData.editions = cardData.editions
   newData.errata = cardData.errata || undefined
-  newData.exclusiveLordCard = cardData.ehallengeLord
+  newData.exclusivePromo = cardData.ehallengeLord
   newData.printInfos = cardData.printInfos && cardData.printInfos.map(p => {
     return {
       set: p.set,

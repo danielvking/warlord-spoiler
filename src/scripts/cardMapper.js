@@ -27,7 +27,7 @@ const keyOrder = [
   "feats",
   "editions",
   "errata",
-  "exclusiveLordCard",
+  "exclusivePromo",
   "printInfos",
   // Print info properties
   "set",
@@ -293,7 +293,7 @@ const standardConfig = {
     }, null, x => x || []),
     "editions": standardMap("editions", fromEmptyStringToUndefined),
     "errata": standardMap("errata", x => fromEmptyStringToUndefined(fixCarriageReturns(x))),
-    "exclusiveLordCard": standardMap("exclusiveLordCard", x => !x ? undefined : x),
+    "exclusivePromo": standardMap("exclusivePromo", x => !x ? undefined : x),
     "printInfos": standardMap("printInfos", x => {
       if (!Array.isArray(x) || x[0] == null) return undefined;
       return x.map(y => {
