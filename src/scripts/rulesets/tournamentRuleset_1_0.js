@@ -786,13 +786,13 @@ const textOptions = [{
   })
   
   const factionTrait = {
-    "Elf": "Undead",
+    "Elven Branches": "Undead",
     "Free Kingdoms": "Lycanthrope",
-    "Deverenian": "Stormwraith",
-    "Dwarf": "Gargoyle",
-    "Mercenary": "Monster",
+    "Deverenian Empire": "Stormwraith",
+    "Dwarven Forges": "Gargoyle",
+    "Mercenary Guilds": "Monster",
     "The Chosen": "Thrall",
-    "Nothrog": "Siege"
+    "Nothrog Legions": "Siege"
   }
   
   function orJoin(arr) {

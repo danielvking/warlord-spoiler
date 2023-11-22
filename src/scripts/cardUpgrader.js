@@ -31,6 +31,21 @@ function upgradeV1ToV2(cardData) {
     return { name: key, value: value }
   }
 
+  // Map factions
+  let factions = split(cardData.faction)
+
+  if (factions != null)
+  {
+      var factionReplace = {
+        "Deverenian": "Deverenian Empire",
+        "Elf": "Elven Branches",
+        "Dwarf": "Dwarven Forges",
+        "Mercenary": "Mercenary Guilds",
+        "Nothrog": "Nothrog Legions"
+      }
+      factions = factions.map(faction =>  factionReplace[faction] || faction)
+  }
+
   let keywords = []
 
   let misc = cardData.misc && split(cardData.Misc).map(x => parseMisc(x)) || []
