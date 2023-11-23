@@ -8,9 +8,9 @@
           </b-button>
         </div>
       </div>
-      <div class="site-header-middle p-2">
+      <div class="site-header-middle">
         <router-link to="/">
-          <img class="site-logo" src="/images/TheAccordlands.svg" aria-label="The Accordlands"/>
+          <img class="site-logo" src="/images/TheAccordlands_Text.svg" aria-label="The Accordlands"/>
         </router-link>
       </div>
       <div class="site-header-margin"></div>
@@ -63,6 +63,7 @@
   flex-basis: 0;
   flex-grow: 1;
   max-height: 64px;
+  padding: .75rem;
 }
 
 .site-header .site-header-margin {

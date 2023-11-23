@@ -6,7 +6,7 @@
     <!-- Sidebar -->
     <b-sidebar v-model="showSidebar" id="sidebar" text-variant="light" bg-variant="dark" backdrop lazy>
       <template #title>
-        <img class="site-logo pr-3" src="/images/TheAccordlands.svg" aria-label="The Accordlands"/>
+        <img class="site-logo pr-3" src="/images/TheAccordlands_Text.svg" aria-label="The Accordlands"/>
       </template>
       <div>
         <b-button
