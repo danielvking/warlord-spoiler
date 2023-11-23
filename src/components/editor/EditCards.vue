@@ -33,7 +33,7 @@
           borderless
           striped
           hover
-          @row-clicked="(card) => viewCardDetail(card)"
+          @row-clicked="handleRowClicked"
         >
           <template #head(buttons)>
             <span>({{ typedCards[type].reduce((s) => s + 1, 0) }})</span>
@@ -142,6 +142,10 @@ export default {
     },
     exitEditing() {
       this.$store.commit("saveSettings", { isEditMode: false });
+    },
+    handleRowClicked(card, _, event) {
+      if (event.target.cellIndex !== 0) return;
+      this.viewCardDetail(card);
     },
   },
 };

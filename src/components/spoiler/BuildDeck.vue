@@ -44,7 +44,7 @@
           borderless
           striped
           hover
-          @row-clicked="(cardCount) => viewCardDetail(cardCount.card)"
+          @row-clicked="handleRowClicked"
         >
           <template v-if="showFormatValidator" #head(editionCheck)>
             <span>Legal</span>
@@ -191,6 +191,10 @@ export default {
         let cardTxt = this.cards.map((x) => `${x.count} ${x.card.name}`).join("\n");
         utility.saveText(cardTxt, "deck.txt");
       }
+    },
+    handleRowClicked(cardCount, _, event) {
+      if (event.target.cellIndex !== 0) return;
+      this.viewCardDetail(cardCount.card);
     },
     decrementCardToDeck(cardString) {
       this.$store.commit("decrementCardToDeck", cardString);
