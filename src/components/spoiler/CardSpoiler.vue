@@ -228,6 +228,18 @@ export default {
     $route: function (newVal, oldVal) {
       this.computeShowSearch(newVal, oldVal);
     },
+    "$store.state.deck": {
+      handler() {
+        this.sideMenuOpen = true;
+      },
+      deep: true
+    },
+    "$store.state.editedCards": {
+      handler() {
+        this.sideMenuOpen = true;
+      },
+      deep: true
+    },
   },
 };
 </script>
@@ -244,7 +256,8 @@ export default {
   max-width: 1024px;
 }
 
-.fixed-toolbar-btn {
+.fixed-toolbar-btn,
+.fixed-toolbar-btn:focus {
   background: #19191980 !important;
 }
 
