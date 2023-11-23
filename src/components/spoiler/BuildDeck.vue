@@ -22,7 +22,7 @@
       </div>
     </div>
     <template v-if="showFormatValidator">
-      <div class="flex-grow-1 p-1">
+      <div class="p-1">
         <v-select placeholder="Format validator" v-model="edition" :options="editionList" />
       </div>
     </template>
