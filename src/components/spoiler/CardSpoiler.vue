@@ -1,9 +1,18 @@
 <template>
   <div class="super-site-container">
-    <build-deck v-if="!isEditMode" class="align-self-start" />
-    <edit-cards v-else class="align-self-start" />
+    <side-menu v-model="sideMenuOpen" :title="sideMenuTitle">
+      <build-deck v-if="!isEditMode"/>
+      <edit-cards v-else/>
+    </side-menu>
     <header-footer class="flex-grow-1 mx-0">
+      <template #fixedToolbar>
+        <b-button variant="outline-light" class="fixed-toolbar-btn h-100 border-0 px-2 bg-dark" @click="sideMenuOpen = !sideMenuOpen">
+          <font-awesome-icon icon="hammer" :title="sideMenuTitle" />
+        </b-button>
+      </template>
+
       <router-view />
+
       <b-container v-show="showSearch" class="mt-2" fluid>
         <div class="text-center">
           <span>Need to find some information on Warlord cards? You've come to the right place:</span>
@@ -57,10 +66,10 @@
                   hover
                   :per-page="perPage"
                   :current-page="currentPage"
-                  @row-clicked="(card) => viewCardDetail(card)"
+                  @row-clicked="handleRowClicked"
                 >
                   <template v-slot:cell(buttons)="data">
-                    <a v-if="showSideMenus" href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
+                    <a href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
                       <font-awesome-icon icon="plus-square" />
                     </a>
                   </template>
@@ -77,10 +86,10 @@
                   hover
                   :per-page="perPage"
                   :current-page="currentPage"
-                  @row-clicked="(card) => viewCardDetail(card)"
+                  @row-clicked="handleRowClicked"
                 >
                   <template v-slot:cell(buttons)="data">
-                    <a v-if="showSideMenus" href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
+                    <a href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
                       <font-awesome-icon icon="plus-square" />
                     </a>
                   </template>
@@ -116,6 +125,7 @@
 
 <script>
 import HeaderFooter from "../shared/HeaderFooter.vue";
+import SideMenu from "../shared/SideMenu.vue";
 import BuildDeck from "./BuildDeck.vue";
 import EditCards from "../editor/EditCards.vue";
 import SearchSimple from "./SearchSimple.vue";
@@ -129,6 +139,7 @@ export default {
   name: "CardSpoiler",
   components: {
     HeaderFooter,
+    SideMenu,
     BuildDeck,
     EditCards,
     CardCompact,
@@ -147,6 +158,7 @@ export default {
       currentPage: 1,
       resultFields: [{ key: "buttons", class: "shrink", label: "" }, "name", "type", "class", "level"],
       lastScrollPostion: 0,
+      sideMenuOpen: false
     };
   },
   computed: {
@@ -164,6 +176,9 @@ export default {
     },
     isEditMode() {
       return this.$store.state.settings.isEditMode;
+    },
+    sideMenuTitle() {
+      return this.isEditMode ? "Edit Cards" : "Build Deck";
     },
   },
   methods: {
@@ -195,9 +210,15 @@ export default {
         utility.smoothScrollTo(scrollRegion, searchResults.offsetTop, 300);
       });
     },
+    handleRowClicked(card, _, event) {
+      if (event.target.cellIndex === 0) return;
+      this.viewCardDetail(card);
+    },
   },
   mounted() {
     this.computeShowSearch(this.$route);
+
+    this.sideMenuOpen = this.isEditMode || Object.keys(this.$store.state.deck).length > 0 && this.showSideMenus;
 
     this.$store.dispatch("loadCardData").then(() => {
       this.isBusy = false;
@@ -222,6 +243,15 @@ export default {
   width: 100%;
   max-width: 1024px;
 }
+
+.fixed-toolbar-btn {
+  background: #19191980 !important;
+}
+
+.fixed-toolbar-btn:hover {
+  background: #ffffff88 !important;
+}
+
 
 .overflow-x-auto {
   overflow-x: auto;

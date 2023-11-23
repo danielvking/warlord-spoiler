@@ -13,7 +13,11 @@
           <img class="site-logo" src="/images/TheAccordlands_Text.svg" aria-label="The Accordlands"/>
         </router-link>
       </div>
-      <div class="site-header-margin"></div>
+      <div class="site-header-margin">
+        <div class="site-header-margin-fixed p-2">
+          <slot name="fixedToolbar"/>
+        </div>
+      </div>
     </b-row>
     <b-row class="flex-grow-1 content-region">
       <div class="w-100">
@@ -31,7 +35,6 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  max-width: 768px;
 }
 
 .site-header,
@@ -47,6 +50,7 @@
 
 .site-header {
   text-align: center;
+  height: 50px;
 }
 
 .position-sticky {
@@ -54,22 +58,25 @@
   top: 0;
 }
 
-.site-header h1 {
-  margin: 5px;
-  display: inline;
-}
-
 .site-header .site-header-middle {
   flex-basis: 0;
   flex-grow: 1;
-  max-height: 64px;
+  height: 100%;
   padding: .75rem;
 }
 
 .site-header .site-header-margin {
   flex-basis: 50px;
   flex-grow: 0;
-  text-align: left;
+  text-align: center;
+}
+
+.site-header .site-header-margin .site-header-margin-fixed {
+  top: 0;
+  position: fixed;
+  height: 50px;
+  width: 50px;
+  z-index: 1000;
 }
 
 .site-subheader h6 {
