@@ -5,7 +5,7 @@ export default {
   },
   "name": {
     validate(val) {
-      if (!val) return "A name is required.";
+      if (val == null) return "A name is required.";
     }
   },
   "text": {
@@ -22,7 +22,7 @@ export default {
   },
   "type": {
     validate(val, _, referenceLists) {
-      if (!val) return "A type is required.";
+      if (val == null) return "A type is required.";
       if (val && referenceLists.typeList) {
         if (!referenceLists.typeList.includes(val)) return `${val} is not a valid type.`;
       }
@@ -30,7 +30,7 @@ export default {
   },
   "subtype": {
     validate(val, cardData, referenceLists) {
-      if (val) {
+      if (val != null) {
         let subtypes = (referenceLists.subtypeLists && referenceLists.subtypeLists[cardData.type]) || [];
         if (!subtypes.includes(val)) return `${val} is not a valid ${cardData.type} subtype.`;
       }
@@ -41,14 +41,14 @@ export default {
       if (cardData.type) {
         switch (cardData.type) {
           case "Character":
-            if (!val) return "Alignment is required for this card type.";
+            if (val == null) return "Alignment is required for this card type.";
             break;
           case "Action":
           case "Battlefield":
           case "Dungeon":
           case "Epic Class":
           case "Item":
-            if (val) return "Alignment is invalid for this card type.";
+            if (val != null) return "Alignment is invalid for this card type.";
             break;
         }
       }
@@ -59,7 +59,7 @@ export default {
   },
   "class": {
     validate(val, _cardData, referenceLists) {
-      if (!val) return "Class is required."
+      if (val == null) return "Class is required."
       if (referenceLists.classList) {
         for (let i = 0; i < val.length; i++) {
           if (!referenceLists.classList.includes(val[i])) return `${val[i]} is not a valid class.`;
@@ -79,7 +79,7 @@ export default {
           case "Dungeon":
           case "Epic Class":
           case "Item":
-            if (val) return "Faction is invalid for this card type.";
+            if (val != null) return "Faction is invalid for this card type.";
             break;
         }
       }
@@ -101,11 +101,11 @@ export default {
           case "Action":
           case "Battlefield":
           case "Dungeon":
-            if (val) return "Attack is invalid for this card type.";
+            if (val != null) return "Attack is invalid for this card type.";
             break;
         }
       }
-      if (val) {
+      if (val != null) {
         for (let i = 0; i < val.length; i++) {
           if (!/^[+-]?(\d+|\*|X)$/.test(val[i])) {
             return "Attack must be a number."
@@ -120,14 +120,14 @@ export default {
         switch (cardData.type) {
           case "Character":
             // Damage type is not totally supported yet in the card builder
-            // if (!val) return "Damage type is required for this card type.";
+            // if (val == null) return "Damage type is required for this card type.";
             break;
           case "Action":
           case "Battlefield":
           case "Dungeon":
           case "Epic Class":
           case "Item":
-            if (val) return "Damage type is invalid for this card type.";
+            if (val != null) return "Damage type is invalid for this card type.";
             break;
         }
       }
@@ -142,16 +142,16 @@ export default {
         switch (cardData.type) {
           case "Character":
           case "Epic Class":
-            if (!val) return "AC is required for this card type.";
+            if (val == null) return "AC is required for this card type.";
             break;
           case "Action":
           case "Battlefield":
           case "Dungeon":
-            if (val) return "AC is invalid for this card type.";
+            if (val != null) return "AC is invalid for this card type.";
             break;
         }
       }
-      if (val) {
+      if (val != null) {
         if (!/^[+-]?(\d+|\*|X)$/.test(val)) {
           return "AC must be a number.";
         }
@@ -164,17 +164,17 @@ export default {
         switch (cardData.type) {
           case "Character":
           case "Epic Class":
-            if (!val) return "Skill is required for this card type.";
+            if (val == null) return "Skill is required for this card type.";
             break;
           case "Action":
           case "Battlefield":
           case "Dungeon":
           case "Item":
-            if (val) return "Skill is invalid for this card type.";
+            if (val != null) return "Skill is invalid for this card type.";
             break;
         }
       }
-      if (val) {
+      if (val != null) {
         if (!/^[+-]?(\d+|\*|X)$/.test(val)) {
           return "Skill must be a number.";
         }
@@ -187,17 +187,17 @@ export default {
         switch (cardData.type) {
           case "Character":
           case "Epic Class":
-            if (!val) return "HP is required for this card type.";
+            if (val == null) return "HP is required for this card type.";
             break;
           case "Action":
           case "Battlefield":
           case "Dungeon":
           case "Item":
-            if (val) return "HP is invalid for this card type.";
+            if (val != null) return "HP is invalid for this card type.";
             break;
         }
       }
-      if (val) {
+      if (val != null) {
         if (!/^[+-]?(\d+|\*|X)$/.test(val)) {
           return "HP must be a number.";
         }
@@ -212,15 +212,15 @@ export default {
           case "Character":
           case "Epic Class":
           case "Item":
-            if (!val) return "Level is required for this card type.";
+            if (val == null) return "Level is required for this card type.";
             break;
           case "Battlefield":
           case "Dungeon":
-            if (val) return "Level is invalid for this card type.";
+            if (val != null) return "Level is invalid for this card type.";
             break;
         }
       }
-      if (val) {
+      if (val != null) {
         if (!/^[+-]?(\d+|\*|X)$/.test(val)) {
           return "Level must be a number.";
         }
@@ -234,7 +234,7 @@ export default {
         switch (cardData.type) {
           case "Battlefield":
           case "Dungeon":
-            if (val) return "Traits are invalid for this card type.";
+            if (val != null) return "Traits are invalid for this card type.";
             break;
         }
       }
@@ -277,7 +277,7 @@ export default {
           case "Action":
           case "Battlefield":
           case "Dungeon":
-            if (val) return "Feats are invalid for this card type.";
+            if (val != null) return "Feats are invalid for this card type.";
             break;
         }
       }

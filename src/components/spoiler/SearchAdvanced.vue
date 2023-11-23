@@ -537,6 +537,11 @@ export default {
             if (this.hitPoints != x.hitPoints) return false;
           }
         }
+        // Set
+        if (this.set) {
+          let sets = x.printInfos.map((y) => y.set).filter((y) => y);
+          if (!sets.includes(this.set)) return false;
+        }
         // Rarity
         if (this.rarity) {
           let rarities = x.printInfos.map((y) => y.rarity).filter((y) => y);

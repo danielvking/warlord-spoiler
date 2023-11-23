@@ -453,13 +453,16 @@ export default {
       infoCache: defaultInfoCache(),
       cardData: {},
       cardTemp: {
+        text: "",
+        textFormat: "",
         class: [],
         faction: [],
         traits: [],
         keywords: [],
         feats: [],
         printInfo: {
-          flavorText: ""
+          flavorText: "",
+          flavorTextFormat: ""
         }
       },
       abilities: [],
@@ -576,7 +579,7 @@ export default {
       if (newValue) {
         this.formatText.main.text = "";
       }
-      this.cardTemp.textFormat = this.formatText.main.text;
+      Vue.set(this.cardTemp, "textFormat", this.formatText.main.text);
     },
     "formatText.main.text"() {
       if (!this.formatText.main.isAuto) {
@@ -587,14 +590,14 @@ export default {
     "cardTemp.text"() {
       if (!this.formatText.main.isAuto) {
         // Coerce
-        this.cardTemp.text = dehtml(this.cardTemp.textFormat);
+        Vue.set(this.cardTemp, "text", dehtml(this.cardTemp.textFormat));
       }
       this.mapToAbilities();
     },
     "cardTemp.textFormat"(newValue) {
       if (!this.formatText.main.isAuto) {
         this.formatText.main.text = newValue;
-        this.cardTemp.text = dehtml(newValue);
+        Vue.set(this.cardTemp, "text", dehtml(newValue));
       }
     },
     "formatText.flavor.isAuto"(newValue) {
@@ -631,7 +634,7 @@ export default {
         let sameClass = new RegExp(`is(?=.*${newVal.join(")(?=.*")})`, "i");
         let otherClass = new RegExp(`(${this.classList.join("|")})`, "i");
         if (match[0].match(otherClass) || !match[0].match(sameClass)) {
-          this.cardTemp.text = this.cardTemp.text.replace(this.multiclassRegex, "");
+          Vue.set(this.cardTemp, "text", this.cardTemp.text.replace(this.multiclassRegex, ""));
           match = null;
         }
       }
@@ -647,7 +650,7 @@ export default {
               return x.toLowerCase();
             })
             .join(" ");
-          this.cardTemp.text = "This character is a " + ending + ".\r\n" + (this.cardTemp.text || "");
+          Vue.set(this.cardTemp, "text", "This character is a " + ending + ".\r\n" + (this.cardTemp.text || ""));
         }
       }
     },
@@ -817,7 +820,7 @@ export default {
     },
     mapFromAbilities() {
       if (this.restrictText) {
-        this.cardTemp.text = this.selectedRuleset.text.mapTo(this.abilities, this.cardData);
+        Vue.set(this.cardTemp, "text", this.selectedRuleset.text.mapTo(this.abilities, this.cardData));
       }
     },
 
