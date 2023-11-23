@@ -2,14 +2,16 @@ const props = {
   "attack": function(value) {
     if (!Array.isArray(value)) return value
     return value.map(x => {
-    let val = String(x)
-    if (/^\d+$/.test(val)) {
-      return "+" + val
-    }
-    return val
+      if (x == null) return ""
+      let val = String(x)
+      if (/^\d+$/.test(val)) {
+        return "+" + val
+      }
+      return val
     }).join("/")
   },
   "armorClass": function(value, cardData) {
+    if (value == null) return ""
     let val = String(value)
     if (/^\d+$/.test(val) && cardData.type !== "Character") {
       return "+" + val
@@ -19,6 +21,7 @@ const props = {
     return val
   },
   "skill": function(value) {
+    if (value == null) return ""
     let val = String(value)
     if (/^\d+$/.test(val)) {
       return "+" + val
@@ -26,6 +29,7 @@ const props = {
     return val
   },
   "hitPoints": function(value, cardData) {
+    if (value == null) return ""
     let val = String(value)
     if (/^\d+$/.test(val) && cardData.type !== "Character") {
       return "+" + val
@@ -35,6 +39,7 @@ const props = {
     return val
   },
   "level": function(value, cardData) {
+    if (value == null) return ""
     let val = String(value)
     if (/^\d+$/.test(val) && cardData.type === "Epic Class") {
       return "+" + val
