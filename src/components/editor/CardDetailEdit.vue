@@ -7,7 +7,7 @@
         >
       </div>
       <div class="float-right">
-        <a v-if="showSideMenus" href="#" @click.prevent="removeCard(card)" aria-label="Cancel changes"
+        <a href="#" @click.prevent="removeCard(card)" aria-label="Cancel changes"
           ><font-awesome-icon icon="minus-square" /> Cancel changes</a
         >
       </div>
@@ -341,9 +341,6 @@ export default {
     },
     cardData() {
       return this.cardIndex[this.card] || {};
-    },
-    showSideMenus() {
-      return this.$store.getters.showSideMenus;
     },
     imageUrl() {
       if (!this.cardData) return null;
