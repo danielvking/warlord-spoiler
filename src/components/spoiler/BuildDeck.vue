@@ -78,7 +78,7 @@
           hover
         >
           <template #head(buttons)>
-            <span>{{ cards.reduce((s, x) => s + x.count, 0) }}</span>
+            <span>{{ total }}</span>
           </template>
         </b-table>
       </div>
@@ -123,6 +123,9 @@ export default {
         }
         return map;
       }, {});
+    },
+    total() {
+      return this.$store.getters.deckTotal;
     },
     editionList() {
       return (this.referenceLists && this.referenceLists.editionList) || [];

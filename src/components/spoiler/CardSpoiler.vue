@@ -6,9 +6,12 @@
     </side-menu>
     <header-footer class="flex-grow-1 mx-0">
       <template #fixedToolbar>
-        <b-button variant="outline-light" class="fixed-toolbar-btn h-100 border-0 px-2 bg-dark" @click="sideMenuOpen = !sideMenuOpen">
+        <b-button ref="sideMenuButton" variant="outline-light" class="fixed-toolbar-btn h-100 border-0 px-2 bg-dark" @click="sideMenuOpen = !sideMenuOpen">
           <font-awesome-icon icon="hammer" :title="sideMenuTitle" />
         </b-button>
+        <b-popover placement="bottomleft" :target="() => $refs.sideMenuButton" triggers="" :show="sideMenuShowTooltip">
+          <span>{{ sideMenuTotal }}</span>
+        </b-popover>
       </template>
 
       <router-view />
@@ -135,6 +138,12 @@ import utility from "../../scripts/utility";
 import addRemoveCardMixin from "../../mixins/addRemoveCardMixin";
 import routeMixin from "../../mixins/routeMixin";
 
+let lastTimeout;
+function setUniqueTimeout(func, delay) {
+  clearTimeout(lastTimeout);
+  lastTimeout = setTimeout(func, delay);
+}
+
 export default {
   name: "CardSpoiler",
   components: {
@@ -158,7 +167,8 @@ export default {
       currentPage: 1,
       resultFields: [{ key: "buttons", class: "shrink", label: "" }, "name", "type", "class", "level"],
       lastScrollPostion: 0,
-      sideMenuOpen: false
+      sideMenuOpen: false,
+      sideMenuShowTooltip: false,
     };
   },
   computed: {
@@ -179,6 +189,9 @@ export default {
     },
     sideMenuTitle() {
       return this.isEditMode ? "Edit Cards" : "Build Deck";
+    },
+    sideMenuTotal() {
+      return this.isEditMode ? this.$store.getters.editedCardsTotal : this.$store.getters.deckTotal;
     },
   },
   methods: {
@@ -210,6 +223,15 @@ export default {
         utility.smoothScrollTo(scrollRegion, searchResults.offsetTop, 300);
       });
     },
+    handleSideMenuUpdate() {
+      if (this.showSideMenus) {
+        this.sideMenuOpen = true;
+      }
+      if (!this.sideMenuOpen) {
+        this.sideMenuShowTooltip = true;
+        setUniqueTimeout(() => this.sideMenuShowTooltip = false, 1500);
+      }
+    },
     handleRowClicked(card, _, event) {
       if (event.target.cellIndex === 0) return;
       this.viewCardDetail(card);
@@ -230,13 +252,13 @@ export default {
     },
     "$store.state.deck": {
       handler() {
-        this.sideMenuOpen = true;
+        this.handleSideMenuUpdate();
       },
       deep: true
     },
     "$store.state.editedCards": {
       handler() {
-        this.sideMenuOpen = true;
+        this.handleSideMenuUpdate();
       },
       deep: true
     },

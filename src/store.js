@@ -85,6 +85,12 @@ export default new Vuex.Store({
     showSideMenus(state) {
       return state.viewPortWidth >= 992; // Bootstrap "large" breakpoint;
     },
+    deckTotal(state) {
+      return Object.values(state.deck).reduce((a, x) => a + (x || 0), 0);
+    },
+    editedCardsTotal(state) {
+      return Object.values(state.editedCards).length;
+    },
     keywordRegex: createKeywordRegex(),
     keywordRegexExtended(state) {
       return additionalKeywords => createKeywordRegex(additionalKeywords)(state);
