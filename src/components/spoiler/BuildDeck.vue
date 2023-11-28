@@ -23,7 +23,11 @@
     </div>
     <template v-if="showFormatValidator">
       <div class="p-1">
-        <v-select placeholder="Format validator" v-model="edition" :options="editionList" />
+        <b-form-select v-model="edition" :options="editionList">
+          <template #first>
+            <b-form-select-option :value="null" disabled selected>Format Validator</b-form-select-option>
+          </template>
+        </b-form-select>
       </div>
     </template>
     <template v-if="$store.state.cardsLoaded">
@@ -52,7 +56,7 @@
 
           <template v-if="showFormatValidator && edition" #cell(editionCheck)="data">
             <span>
-              {{ data.item.card.editions.some((cardEdition) => cardEdition === edition) ? "yes" : "no" }}
+              {{ data.item.card.editions.some((cardEdition) => cardEdition === edition) ? "Yes" : "No" }}
             </span>
           </template>
 
@@ -98,6 +102,12 @@ import routeMixin from "../../mixins/routeMixin";
 export default {
   name: "BuildDeck",
   mixins: [routeMixin],
+  data() {
+    return {
+      edition: null,
+      showFormatValidator: false,
+    };
+  },
   computed: {
     cardIndex() {
       return this.$store.state.cardIndex;
@@ -205,12 +215,6 @@ export default {
     incrementCardToDeck(cardString) {
       this.$store.commit("incrementCardToDeck", cardString);
     },
-  },
-  data() {
-    return {
-      edition: undefined,
-      showFormatValidator: false,
-    };
   },
 };
 </script>
