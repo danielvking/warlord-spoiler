@@ -549,7 +549,7 @@ export default {
         }
         // Edition
         if (this.edition) {
-          if (!x.edition) return false;
+          if (!x.editions) return false;
           if (!x.editions.includes(this.edition)) return false;
         }
         // Artist
