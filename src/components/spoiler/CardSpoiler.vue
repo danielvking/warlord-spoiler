@@ -7,11 +7,9 @@
     <header-footer class="flex-grow-1 mx-0">
       <template #fixedToolbar>
         <b-button ref="sideMenuButton" variant="outline-light" class="fixed-toolbar-btn h-100 border-0 px-2 bg-dark" @click="sideMenuOpen = !sideMenuOpen">
-          <font-awesome-icon icon="hammer" :title="sideMenuTitle" />
+          <font-awesome-icon class="fa-flip-horizontal" icon="hammer" :title="sideMenuTitle" />
+          <div v-show="sideMenuTotal > 0" class="total-pill">{{ sideMenuTotal }}</div>
         </b-button>
-        <b-popover placement="bottomleft" :target="() => $refs.sideMenuButton" triggers="" :show="sideMenuShowTooltip">
-          <span>{{ sideMenuTotal }}</span>
-        </b-popover>
       </template>
 
       <router-view />
@@ -138,11 +136,7 @@ import utility from "../../scripts/utility";
 import addRemoveCardMixin from "../../mixins/addRemoveCardMixin";
 import routeMixin from "../../mixins/routeMixin";
 
-let lastTimeout;
-function setUniqueTimeout(func, delay) {
-  clearTimeout(lastTimeout);
-  lastTimeout = setTimeout(func, delay);
-}
+let toastIdCounter = 0;
 
 export default {
   name: "CardSpoiler",
@@ -167,8 +161,7 @@ export default {
       currentPage: 1,
       resultFields: [{ key: "buttons", class: "shrink", label: "" }, "name", "type", "class", "level"],
       lastScrollPostion: 0,
-      sideMenuOpen: false,
-      sideMenuShowTooltip: false,
+      sideMenuOpen: false
     };
   },
   computed: {
@@ -223,14 +216,26 @@ export default {
         utility.smoothScrollTo(scrollRegion, searchResults.offsetTop, 300);
       });
     },
-    handleSideMenuUpdate() {
+    handleCardAdded(cardString) {
       if (this.showSideMenus) {
         this.sideMenuOpen = true;
       }
       if (!this.sideMenuOpen) {
-        this.sideMenuShowTooltip = true;
-        setUniqueTimeout(() => this.sideMenuShowTooltip = false, 1500);
+        let toastIdPrefix = "cardSpoilerCardAddedToast_";
+        this.$bvToast.hide(toastIdPrefix + toastIdCounter);
+        let toastOptions = {
+          appendToast: true,
+          autoHideDelay: 1500,
+          id: toastIdPrefix + ++toastIdCounter,
+          noCloseButton: true,
+          noHoverPause: true,
+          toaster: "b-toaster-bottom-center"
+        };
+        this.$bvToast.toast("+1 " + cardString, toastOptions);
       }
+    },
+    handleSideMenuUpdate() {
+      this.sideMenuOpen = true;
     },
     handleRowClicked(card, _, event) {
       if (event.target.cellIndex === 0) return;
@@ -245,22 +250,15 @@ export default {
     this.$store.dispatch("loadCardData").then(() => {
       this.isBusy = false;
     });
+
+    this.$store.state.events.cardAdded.addListener(this.handleCardAdded);
+  },
+  beforeDestroy() {
+    this.$store.state.events.cardAdded.removeListener(this.handleCardAdded);
   },
   watch: {
     $route: function (newVal, oldVal) {
       this.computeShowSearch(newVal, oldVal);
-    },
-    "$store.state.deck": {
-      handler() {
-        this.handleSideMenuUpdate();
-      },
-      deep: true
-    },
-    "$store.state.editedCards": {
-      handler() {
-        this.handleSideMenuUpdate();
-      },
-      deep: true
     },
   },
 };
@@ -287,8 +285,26 @@ export default {
   background: #ffffff88 !important;
 }
 
-
 .overflow-x-auto {
   overflow-x: auto;
+}
+
+.btn .total-pill {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 4px;
+  padding: 0px 4px;
+  border-radius: 50rem;
+  font-size: 13px;
+  font-weight: bold;
+  background-color: white;
+  color: #191919;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out
+}
+
+.btn:hover .total-pill {
+  background-color: #191919;
+  color: white;
 }
 </style>

@@ -1,5 +1,6 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
+import CustomEvent from "./scripts/customEvent";
 import utility from "./scripts/utility";
 import axios from "axios";
 
@@ -79,7 +80,10 @@ export default new Vuex.Store({
       isEditMode: false,
       isEditTextWrapped: false,
       editViewOption: "Art"
-    }
+    },
+    events: {
+      cardAdded: new CustomEvent()
+    },
   },
   getters: {
     showSideMenus(state) {
@@ -139,6 +143,7 @@ export default new Vuex.Store({
       } else {
         state.deck[cardString]++;
       }
+      state.events.cardAdded.raiseEvent(cardString);
       localStorage.setItem("deck", JSON.stringify(state.deck));
     },
     decrementCardToDeck(state, cardString) {
@@ -163,6 +168,7 @@ export default new Vuex.Store({
         } else {
           Vue.set(state.editedCards, cardString, { name: "New Card", index: cardString });
         }
+        state.events.cardAdded.raiseEvent(cardString);
         localStorage.setItem("editedCards", JSON.stringify(state.editedCards));
       }
     },
