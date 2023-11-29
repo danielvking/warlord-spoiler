@@ -8,6 +8,7 @@ import {
   faExternalLinkAlt,
   faEye,
   faFolderOpen,
+  faHammer,
   faInfoCircle,
   faMinusSquare,
   faPlusSquare,
@@ -22,6 +23,7 @@ library.add(faCheck)
 library.add(faExclamationTriangle)
 library.add(faExternalLinkAlt)
 library.add(faEye)
+library.add(faHammer)
 library.add(faInfoCircle)
 library.add(faFolderOpen)
 library.add(faMinusSquare)

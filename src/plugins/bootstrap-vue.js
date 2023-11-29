@@ -14,7 +14,8 @@ import {
   PopoverPlugin,
   SidebarPlugin,
   SpinnerPlugin,
-  TablePlugin
+  TablePlugin,
+  ToastPlugin
 } from 'bootstrap-vue'
 import '../scss/bootstrapConfig.scss'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -33,3 +34,4 @@ Vue.use(PopoverPlugin)
 Vue.use(SidebarPlugin)
 Vue.use(SpinnerPlugin)
 Vue.use(TablePlugin)
+Vue.use(ToastPlugin)

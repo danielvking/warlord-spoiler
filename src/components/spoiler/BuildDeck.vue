@@ -1,100 +1,97 @@
 <template>
-  <div v-if="showSideMenus" class="deck-container-outer">
-    <div class="deck-container-middle">
-      <div class="deck-container-inner content-region">
-        <div class="site-subheader">
-          <h6>Build Deck</h6>
-        </div>
-        <div class="px-2 py-1">
-          <div class="float-left">
-            <a href="#" @click.prevent="clear"><span class="font-default">✘</span> Clear</a>
-          </div>
-          <div class="float-right">
-            <a href="#" @click.prevent="importCards" title="Load deck" class="mr-1">
-              <font-awesome-icon icon="folder-open" />
-            </a>
-            <a href="#" @click.prevent="exportCards" title="Save deck" class="mr-1">
-              <font-awesome-icon icon="save" />
-            </a>
+  <div class="d-flex flex-column flex-grow-1 overflow-hidden">
+    <div class="px-2 py-1">
+      <div class="float-left">
+        <a href="#" @click.prevent="clear"><span class="font-default">✘</span> Clear</a>
+      </div>
+      <div class="float-right">
+        <a href="#" @click.prevent="importCards" title="Load deck" class="mr-1">
+          <font-awesome-icon icon="folder-open" />
+        </a>
+        <a href="#" @click.prevent="exportCards" title="Save deck" class="mr-1">
+          <font-awesome-icon icon="save" />
+        </a>
 
-            <a href="#" title="Format Validator" class="mr-1" v-on:click="showFormatValidator = !showFormatValidator">
-              <font-awesome-icon icon="check" />
-            </a>
+        <a href="#" title="Format Validator" class="mr-1" v-on:click="showFormatValidator = !showFormatValidator">
+          <font-awesome-icon icon="check" />
+        </a>
 
-            <router-link :to="{ name: 'printDeck' }" target="_blank" title="Print">
-              <font-awesome-icon icon="print" />
-            </router-link>
-          </div>
-        </div>
-        <template v-if="showFormatValidator">
-          <div class="flex-grow-1 p-1">
-            <v-select placeholder="Format validator" v-model="edition" :options="editionList" />
-          </div>
-        </template>
-        <template v-if="$store.state.cardsLoaded">
-          <div class="flex-grow-1 p-1 overflow-auto">
-            <b-table
-              v-for="type in Object.keys(typedCards)
-                .map((x) => x) // Shallow copy
-                .sort()"
-              :key="type"
-              :items="typedCards[type]"
-              :fields="[
-                { key: 'card.name', label: type },
-                { key: 'editionCheck', label: '' },
-                { key: 'count', label: '', class: 'text-right shrink' },
-                { key: 'buttons', class: 'text-right shrink' },
-              ]"
-              small
-              borderless
-              striped
-              hover
-              @row-clicked="(cardCount) => viewCardDetail(cardCount.card)"
-            >
-              <template v-if="showFormatValidator" #head(editionCheck)>
-                <span>Legal</span>
-              </template>
-
-              <template v-if="showFormatValidator && edition" #cell(editionCheck)="data">
-                <span>
-                  {{ data.item.card.editions.some((cardEdition) => cardEdition === edition) ? "yes" : "no" }}
-                </span>
-              </template>
-
-              <template #head(buttons)>
-                <span>({{ typedCards[type].reduce((s, x) => s + x.count, 0) }})</span>
-              </template>
-
-              <template v-slot:cell(buttons)="data">
-                <a href="#" @click.prevent="decrementCardToDeck(data.item.card.index)" title="Minus one" class="mr-1">
-                  <font-awesome-icon icon="minus-square" />
-                </a>
-                <a href="#" @click.prevent="incrementCardToDeck(data.item.card.index)" title="Plus one">
-                  <font-awesome-icon icon="plus-square" />
-                </a>
-              </template>
-            </b-table>
-            <b-table
-              class="mb-0"
-              :fields="[{ label: 'Total' }, { key: 'buttons', class: 'text-right shrink' }]"
-              small
-              borderless
-              striped
-              hover
-            >
-              <template #head(buttons)>
-                <span>{{ cards.reduce((s, x) => s + x.count, 0) }}</span>
-              </template>
-            </b-table>
-          </div>
-        </template>
-        <template v-else>
-          <div class="text-center m-5">
-            <b-spinner />
-          </div>
-        </template>
+        <router-link :to="{ name: 'printDeck' }" target="_blank" title="Print">
+          <font-awesome-icon icon="print" />
+        </router-link>
       </div>
     </div>
+    <template v-if="showFormatValidator">
+      <div class="p-1">
+        <b-form-select v-model="edition" :options="editionList">
+          <template #first>
+            <b-form-select-option :value="null" disabled selected>Format Validator</b-form-select-option>
+          </template>
+        </b-form-select>
+      </div>
+    </template>
+    <template v-if="$store.state.cardsLoaded">
+      <div class="flex-grow-1 p-1 overflow-auto">
+        <b-table
+          v-for="type in Object.keys(typedCards)
+            .map((x) => x) // Shallow copy
+            .sort()"
+          :key="type"
+          :items="typedCards[type]"
+          :fields="[
+            { key: 'card.name', label: type },
+            { key: 'editionCheck', label: '' },
+            { key: 'count', label: '', class: 'text-right shrink' },
+            { key: 'buttons', class: 'text-right shrink' },
+          ]"
+          small
+          borderless
+          striped
+          hover
+          @row-clicked="handleRowClicked"
+        >
+          <template v-if="showFormatValidator" #head(editionCheck)>
+            <span>Legal</span>
+          </template>
+
+          <template v-if="showFormatValidator && edition" #cell(editionCheck)="data">
+            <span>
+              {{ data.item.card.editions.some((cardEdition) => cardEdition === edition) ? "Yes" : "No" }}
+            </span>
+          </template>
+
+          <template #head(buttons)>
+            <span>({{ typedCards[type].reduce((s, x) => s + x.count, 0) }})</span>
+          </template>
+
+          <template v-slot:cell(buttons)="data">
+            <a href="#" @click.prevent="decrementCardToDeck(data.item.card.index)" title="Minus one" class="mr-1">
+              <font-awesome-icon icon="minus-square" />
+            </a>
+            <a href="#" @click.prevent="incrementCardToDeck(data.item.card.index)" title="Plus one">
+              <font-awesome-icon icon="plus-square" />
+            </a>
+          </template>
+        </b-table>
+        <b-table
+          class="mb-0"
+          :fields="[{ label: 'Total' }, { key: 'buttons', class: 'text-right shrink' }]"
+          small
+          borderless
+          striped
+          hover
+        >
+          <template #head(buttons)>
+            <span>{{ total }}</span>
+          </template>
+        </b-table>
+      </div>
+    </template>
+    <template v-else>
+      <div class="text-center m-5">
+        <b-spinner />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -105,12 +102,15 @@ import routeMixin from "../../mixins/routeMixin";
 export default {
   name: "BuildDeck",
   mixins: [routeMixin],
+  data() {
+    return {
+      edition: null,
+      showFormatValidator: false,
+    };
+  },
   computed: {
     cardIndex() {
       return this.$store.state.cardIndex;
-    },
-    showSideMenus() {
-      return Object.keys(this.$store.state.deck).length && this.$store.getters.showSideMenus;
     },
     cards() {
       let deck = this.$store.state.deck;
@@ -133,6 +133,9 @@ export default {
         }
         return map;
       }, {});
+    },
+    total() {
+      return this.$store.getters.deckTotal;
     },
     editionList() {
       return (this.referenceLists && this.referenceLists.editionList) || [];
@@ -202,6 +205,10 @@ export default {
         utility.saveText(cardTxt, "deck.txt");
       }
     },
+    handleRowClicked(cardCount, _, event) {
+      if (event.target.cellIndex !== 0) return;
+      this.viewCardDetail(cardCount.card);
+    },
     decrementCardToDeck(cardString) {
       this.$store.commit("decrementCardToDeck", cardString);
     },
@@ -209,30 +216,5 @@ export default {
       this.$store.commit("incrementCardToDeck", cardString);
     },
   },
-  data() {
-    return {
-      edition: undefined,
-      showFormatValidator: false,
-    };
-  },
 };
 </script>
-
-<style scoped>
-.deck-container-outer {
-  min-width: 256px;
-}
-
-.deck-container-middle {
-  position: relative;
-}
-
-.deck-container-inner {
-  position: fixed;
-  display: flex;
-  width: 250px;
-  margin-right: 6px;
-  flex-direction: column;
-  max-height: 100%;
-}
-</style>

@@ -1,9 +1,19 @@
 <template>
   <div class="super-site-container">
-    <build-deck v-if="!isEditMode" class="align-self-start" />
-    <edit-cards v-else class="align-self-start" />
+    <side-menu v-model="sideMenuOpen" :title="sideMenuTitle">
+      <build-deck v-if="!isEditMode"/>
+      <edit-cards v-else/>
+    </side-menu>
     <header-footer class="flex-grow-1 mx-0">
+      <template #fixedToolbar>
+        <b-button ref="sideMenuButton" variant="outline-light" class="fixed-toolbar-btn h-100 border-0 px-2 bg-dark" @click="sideMenuOpen = !sideMenuOpen">
+          <font-awesome-icon class="fa-flip-horizontal" icon="hammer" :title="sideMenuTitle" />
+          <div v-show="sideMenuTotal > 0" class="total-pill">{{ sideMenuTotal }}</div>
+        </b-button>
+      </template>
+
       <router-view />
+
       <b-container v-show="showSearch" class="mt-2" fluid>
         <div class="text-center">
           <span>Need to find some information on Warlord cards? You've come to the right place:</span>
@@ -22,6 +32,8 @@
           @search-started="searchStarted"
           @search-completed="searchCompleted"
         />
+
+        <hr/>
 
         <div id="searchResults">
           <template v-if="!isBusy">
@@ -55,10 +67,10 @@
                   hover
                   :per-page="perPage"
                   :current-page="currentPage"
-                  @row-clicked="(card) => viewCardDetail(card)"
+                  @row-clicked="handleRowClicked"
                 >
                   <template v-slot:cell(buttons)="data">
-                    <a v-if="showSideMenus" href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
+                    <a href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
                       <font-awesome-icon icon="plus-square" />
                     </a>
                   </template>
@@ -75,10 +87,10 @@
                   hover
                   :per-page="perPage"
                   :current-page="currentPage"
-                  @row-clicked="(card) => viewCardDetail(card)"
+                  @row-clicked="handleRowClicked"
                 >
                   <template v-slot:cell(buttons)="data">
-                    <a v-if="showSideMenus" href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
+                    <a href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
                       <font-awesome-icon icon="plus-square" />
                     </a>
                   </template>
@@ -114,6 +126,7 @@
 
 <script>
 import HeaderFooter from "../shared/HeaderFooter.vue";
+import SideMenu from "../shared/SideMenu.vue";
 import BuildDeck from "./BuildDeck.vue";
 import EditCards from "../editor/EditCards.vue";
 import SearchSimple from "./SearchSimple.vue";
@@ -123,10 +136,13 @@ import utility from "../../scripts/utility";
 import addRemoveCardMixin from "../../mixins/addRemoveCardMixin";
 import routeMixin from "../../mixins/routeMixin";
 
+let toastIdCounter = 0;
+
 export default {
   name: "CardSpoiler",
   components: {
     HeaderFooter,
+    SideMenu,
     BuildDeck,
     EditCards,
     CardCompact,
@@ -145,6 +161,7 @@ export default {
       currentPage: 1,
       resultFields: [{ key: "buttons", class: "shrink", label: "" }, "name", "type", "class", "level"],
       lastScrollPostion: 0,
+      sideMenuOpen: false
     };
   },
   computed: {
@@ -162,6 +179,12 @@ export default {
     },
     isEditMode() {
       return this.$store.state.settings.isEditMode;
+    },
+    sideMenuTitle() {
+      return this.isEditMode ? "Edit Cards" : "Build Deck";
+    },
+    sideMenuTotal() {
+      return this.isEditMode ? this.$store.getters.editedCardsTotal : this.$store.getters.deckTotal;
     },
   },
   methods: {
@@ -193,13 +216,45 @@ export default {
         utility.smoothScrollTo(scrollRegion, searchResults.offsetTop, 300);
       });
     },
+    handleCardAdded(cardString) {
+      if (this.showSideMenus) {
+        this.sideMenuOpen = true;
+      }
+      if (!this.sideMenuOpen) {
+        let toastIdPrefix = "cardSpoilerCardAddedToast_";
+        this.$bvToast.hide(toastIdPrefix + toastIdCounter);
+        let toastOptions = {
+          appendToast: true,
+          autoHideDelay: 1500,
+          id: toastIdPrefix + ++toastIdCounter,
+          noCloseButton: true,
+          noHoverPause: true,
+          toaster: "b-toaster-bottom-center"
+        };
+        this.$bvToast.toast("+1 " + cardString, toastOptions);
+      }
+    },
+    handleSideMenuUpdate() {
+      this.sideMenuOpen = true;
+    },
+    handleRowClicked(card, _, event) {
+      if (event.target.cellIndex === 0) return;
+      this.viewCardDetail(card);
+    },
   },
   mounted() {
     this.computeShowSearch(this.$route);
 
+    this.sideMenuOpen = this.isEditMode || Object.keys(this.$store.state.deck).length > 0 && this.showSideMenus;
+
     this.$store.dispatch("loadCardData").then(() => {
       this.isBusy = false;
     });
+
+    this.$store.state.events.cardAdded.addListener(this.handleCardAdded);
+  },
+  beforeDestroy() {
+    this.$store.state.events.cardAdded.removeListener(this.handleCardAdded);
   },
   watch: {
     $route: function (newVal, oldVal) {
@@ -221,7 +276,35 @@ export default {
   max-width: 1024px;
 }
 
+.fixed-toolbar-btn,
+.fixed-toolbar-btn:focus {
+  background: #19191980 !important;
+}
+
+.fixed-toolbar-btn:hover {
+  background: #ffffff88 !important;
+}
+
 .overflow-x-auto {
   overflow-x: auto;
+}
+
+.btn .total-pill {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 4px;
+  padding: 0px 4px;
+  border-radius: 50rem;
+  font-size: 13px;
+  font-weight: bold;
+  background-color: white;
+  color: #191919;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out
+}
+
+.btn:hover .total-pill {
+  background-color: #191919;
+  color: white;
 }
 </style>
