@@ -90,6 +90,7 @@ export default {
       let filter = (x) => {
         // Edition
         if (this.edition) {
+          if (!x.editions) return false;
           if (!x.editions.includes(this.edition)) return false;
         }
         if (this.byName && x.name && utility.includesTokens(x.name, searchText)) {
