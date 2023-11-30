@@ -40,11 +40,7 @@
           </b-form-select>
         </b-form-group>
         <b-form-group label-cols="6" label="Character Type:">
-          <b-form-select v-model="characterType" :options="characterTypeList">
-            <template v-slot:first>
-              <b-form-select-option :value="null" />
-            </template>
-          </b-form-select>
+          <v-select multiple v-model="characterType" :options="characterTypeList" />
         </b-form-group>
         <b-form-group label-cols="6" label="Alignment:">
           <b-form-select v-model="alignment" :options="alignmentList">
@@ -268,7 +264,7 @@ function initialState() {
     damageType: null,
     artist: null,
     type: null,
-    characterType: null,
+    characterType: [],
     alignment: null,
     classes: [],
     factions: [],
@@ -322,7 +318,8 @@ export default {
       return (this.referenceLists && this.referenceLists.typeList) || [];
     },
     characterTypeList() {
-      return (this.referenceLists && this.referenceLists.subtypeLists && this.referenceLists.subtypeLists["Character"]) || [];
+      let subtypeList = (this.referenceLists && this.referenceLists.subtypeLists && this.referenceLists.subtypeLists["Character"]) || [];
+      return subtypeList.filter(s => !this.characterType.includes(s));
     },
     alignmentList() {
       return (this.referenceLists && this.referenceLists.alignmentList) || [];
@@ -429,9 +426,9 @@ export default {
           return false;
         }
         // Subtype
-        if (this.characterType) {
+        if (this.characterType[0]) {
           // Only characters have subtypes... at the moment
-          if (x.type !== "Character" || x.subtype == null || !x.subtype.includes(this.characterType)) {
+          if (x.type !== "Character" || x.subtype == null || this.characterType.filter(s => !x.subtype.includes(s))[0]) {
             return false;
           }
         }
