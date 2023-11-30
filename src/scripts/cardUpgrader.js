@@ -1,6 +1,7 @@
 const schemaV1 = "https://theaccordlands.com/schemas/v1/card"
 const schemaV2 = "https://theaccordlands.com/schemas/v2/card"
-const latest = schemaV2
+const schemaV3 = "https://theaccordlands.com/schemas/v3/card"
+const latest = schemaV3
 
 function upgradeV1ToV2(cardData) {
   let newData = {}
@@ -133,6 +134,13 @@ function upgradeV1ToV2(cardData) {
   return newData
 }
 
+function upgradeV2ToV3(cardData) {
+  if (cardData.subtype != null) {
+    cardData.subtype = [cardData.subtype]
+  }
+  return cardData
+}
+
 export const currentCardSchema = latest
 
 /**
@@ -148,6 +156,12 @@ export function upgradeCard(cardData, cardSchema) {
   if (cardSchema === schemaV1) {
     cardData = upgradeV1ToV2(cardData)
     cardSchema = schemaV2
+  }
+
+  // Upgrade v2 to v3
+  if (cardSchema === schemaV2) {
+    cardData = upgradeV2ToV3(cardData)
+    cardSchema = schemaV3
   }
 
   // etc...

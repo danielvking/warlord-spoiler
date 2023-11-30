@@ -431,7 +431,7 @@ export default {
         // Subtype
         if (this.characterType) {
           // Only characters have subtypes... at the moment
-          if (x.type !== "Character" || x.subtype !== this.characterType) {
+          if (x.type !== "Character" || x.subtype == null || !x.subtype.includes(this.characterType)) {
             return false;
           }
         }
@@ -450,19 +450,19 @@ export default {
         }
         // Exclude Warlords
         if (this.excludeWarlords) {
-          if (x.type === "Character" && x.subtype === "Warlord") return false;
+          if (x.type === "Character" && x.subtype && x.subtype.includes("Warlord")) return false;
         }
         // Exclude Overlords
         if (this.excludeOverlords) {
-          if (x.type === "Character" && x.subtype === "Overlord") return false;
+          if (x.type === "Character" && x.subtype && x.subtype.includes("Overlord")) return false;
         }
         // Exclude Dragon Lords
         if (this.excludeDragonLords) {
-          if (x.type === "Character" && x.subtype === "Dragon Lord") return false;
+          if (x.type === "Character" && x.subtype && x.subtype.includes("Dragon Lord")) return false;
         }
         // Exclude Medusan Lords
         if (this.excludeMedusanLords) {
-          if (x.type === "Character" && x.subtype === "Medusan Lord") return false;
+          if (x.type === "Character" && x.subtype && x.subtype.includes("Medusan Lord")) return false;
         }
         // Faction
         if (this.factions[0]) {

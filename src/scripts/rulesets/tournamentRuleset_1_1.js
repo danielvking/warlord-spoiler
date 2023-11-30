@@ -1074,9 +1074,9 @@ const textOptions = [{
       }
     },
     "subtype": {
-      initialValue: "Warlord",
+      initialValue: ["Warlord"],
       validate(val) {
-        if (val !== "Warlord") return "The card must be a warlord in this ruleset.";
+        if (val == null || val.length != 1 || val[0] !== "Warlord") return "The card must be a warlord in this ruleset.";
       }
     },
     "class": {

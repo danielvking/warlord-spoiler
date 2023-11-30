@@ -32,7 +32,9 @@ export default {
     validate(val, cardData, referenceLists) {
       if (val != null) {
         let subtypes = (referenceLists.subtypeLists && referenceLists.subtypeLists[cardData.type]) || [];
-        if (!subtypes.includes(val)) return `${val} is not a valid ${cardData.type} subtype.`;
+        for (let i = 0; i < val.length; i++) {
+          if (!subtypes.includes(val[i])) return `${val[i]} is not a valid ${cardData.type} subtype.`;
+        }
       }
     }
   },

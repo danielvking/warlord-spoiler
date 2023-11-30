@@ -149,7 +149,7 @@ export default {
       }
       if (this.cardData.subtype) {
         if (headerText) headerText += " • ";
-        headerText += bulletJoin([this.cardData.subtype], true);
+        headerText += bulletJoin(this.cardData.subtype, true);
       }
       if (this.cardData.traits) {
         if (headerText) headerText += " • ";

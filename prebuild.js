@@ -24,7 +24,7 @@ const createStaticLists = function (content) {
                 set = {};
                 subtypeSets[card.type] = set;
             }
-            set[card.subtype] = true;
+            card.subtype.forEach(s => set[s] = true);
         }
         if (card.alignment) alignmentSet[card.alignment] = true;
         if (card.class) {

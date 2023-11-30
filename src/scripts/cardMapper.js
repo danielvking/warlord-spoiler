@@ -252,7 +252,7 @@ const standardConfig = {
     "text": standardMap("text", x => fromEmptyStringToUndefined(fixCarriageReturns(x))),
     "textFormat": standardMap("textFormat", fromEmptyStringToUndefined),
     "type": standardMap("type", fromEmptyStringToUndefined),
-    "subtype": standardMap("subtype", fromEmptyStringToUndefined),
+    "subtype": standardMap("subtype", fromEmptyArrayToUndefined, null, x => x || []),
     "alignment": standardMap("alignment", fromEmptyStringToUndefined),
     "class": standardMap("class", fromEmptyArrayToUndefined, null, x => x || []),
     "faction": standardMap("faction", fromEmptyArrayToUndefined, null, x => x || []),
