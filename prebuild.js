@@ -77,4 +77,4 @@ const createStaticLists = function (content) {
     });
 }
 
-fs.writeFileSync('./public/resources/referenceLists.json', createStaticLists(fs.readFileSync('./public/resources/cards.json')))
+fs.writeFileSync('./src/resources/referenceLists.json', createStaticLists(fs.readFileSync('./src/resources/cards.json')))

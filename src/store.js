@@ -4,6 +4,9 @@ import CustomEvent from "./scripts/customEvent";
 import utility from "./scripts/utility";
 import axios from "axios";
 
+import cardsUrl from './resources/cards.json?url';
+import referenceListsUrl from './resources/referenceLists.json?url';
+
 Vue.use(Vuex)
 
 function constructCardIndex(cards) {
@@ -198,7 +201,7 @@ export default new Vuex.Store({
       if (cardPromise === undefined) {
         let cardsJson = axios({
           method: "get",
-          url: "/resources/cards.json"
+          url: cardsUrl
         }).then(response => {
           context.commit("setCards", response.data);
           context.commit("setCardIndex", constructCardIndex(response.data));
@@ -206,7 +209,7 @@ export default new Vuex.Store({
 
         let referenceListsJson = axios({
           method: "get",
-          url: "/resources/referenceLists.json"
+          url: referenceListsUrl
         }).then(response => {
           context.commit("setReferenceLists", response.data);
         });
