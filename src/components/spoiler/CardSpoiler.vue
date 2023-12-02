@@ -247,7 +247,7 @@ export default {
   mounted() {
     this.computeShowSearch(this.$route);
 
-    this.sideMenuOpen = this.isEditMode || Object.keys(this.$store.state.deck).length > 0 && this.showSideMenus;
+    this.sideMenuOpen = (this.isEditMode || Object.keys(this.$store.state.deck).length > 0) && this.showSideMenus;
 
     this.$store.dispatch("loadCardData").then(() => {
       this.isBusy = false;
