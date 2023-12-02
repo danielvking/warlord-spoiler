@@ -5,6 +5,7 @@ const Show404 = () => import('./components/Show404.vue')
 const PrintDeck = () => import('./components/spoiler/PrintDeck.vue')
 const CardSpoiler = () => import('./components/spoiler/CardSpoiler.vue')
 const CardDetailParent = () => import('./components/spoiler/CardDetailParent.vue')
+const FullCardList = () => import('./components/spoiler/FullCardList.vue')
 const EnableEdit = () => import('./components/editor/EnableEdit.vue')
 const BuildCard = () => import('./components/builder/BuildCard.vue')
 const RulesetGuide = () => import('./components/builder/RulesetGuide.vue')
@@ -52,6 +53,13 @@ export default new Router({
           props: (route) => ({ card: route.query.card })
         }
       ]
+    },
+    {
+      // This is here for the benefit of SEO
+      // To be honest, IDK if it will work
+      path: '/card-list',
+      name: 'cardList',
+      component: FullCardList,
     }
   ],
   scrollBehavior(to) {

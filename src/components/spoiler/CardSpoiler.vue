@@ -12,6 +12,8 @@
         </b-button>
       </template>
 
+      <router-link class="d-none" :to="{ name: 'cardList' }"/>
+
       <router-view />
 
       <b-container v-show="showSearch" class="mt-2" fluid>
