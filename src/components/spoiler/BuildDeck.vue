@@ -39,7 +39,7 @@
           :key="type"
           :items="typedCards[type]"
           :fields="[
-            { key: 'card.name', label: type },
+            { key: 'card', label: type },
             { key: 'editionCheck', label: '' },
             { key: 'count', label: '', class: 'text-right shrink' },
             { key: 'buttons', class: 'text-right shrink' },
@@ -48,15 +48,14 @@
           borderless
           striped
           hover
-          @row-clicked="handleRowClicked"
         >
           <template v-if="showFormatValidator" #head(editionCheck)>
             <span>Legal</span>
           </template>
 
-          <template v-if="showFormatValidator && edition" #cell(editionCheck)="data">
+          <template v-if="showFormatValidator && edition" #cell(editionCheck)="{ item }">
             <span>
-              {{ data.item.card.editions.some((cardEdition) => cardEdition === edition) ? "Yes" : "No" }}
+              {{ item.card.editions.some((cardEdition) => cardEdition === edition) ? "Yes" : "No" }}
             </span>
           </template>
 
@@ -71,6 +70,10 @@
             <a href="#" @click.prevent="incrementCardToDeck(data.item.card.index)" title="Plus one">
               <font-awesome-icon icon="plus-square" />
             </a>
+          </template>
+
+          <template v-slot:cell(card)="{ value }">
+            <card-link block :card="value">{{ value.name }}</card-link>
           </template>
         </b-table>
         <b-table
@@ -96,12 +99,14 @@
 </template>
 
 <script>
+import CardLink from "../shared/CardLink.vue";
 import utility from "../../scripts/utility";
-import routeMixin from "../../mixins/routeMixin";
 
 export default {
   name: "BuildDeck",
-  mixins: [routeMixin],
+  components: {
+    CardLink
+  },
   data() {
     return {
       edition: null,
@@ -204,10 +209,6 @@ export default {
         let cardTxt = this.cards.map((x) => `${x.count} ${x.card.name}`).join("\n");
         utility.saveText(cardTxt, "deck.txt");
       }
-    },
-    handleRowClicked(cardCount, _, event) {
-      if (event.target.cellIndex !== 0) return;
-      this.viewCardDetail(cardCount.card);
     },
     decrementCardToDeck(cardString) {
       this.$store.commit("decrementCardToDeck", cardString);

@@ -89,7 +89,6 @@
                   hover
                   :per-page="perPage"
                   :current-page="currentPage"
-                  @row-clicked="handleRowClicked"
                 >
                   <template v-slot:cell(buttons)="data">
                     <a href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
@@ -97,7 +96,9 @@
                     </a>
                   </template>
                   <template v-slot:cell(details)="data">
-                    <card-compact :card="data.item" />
+                    <card-link block :card="data.item">
+                      <card-compact :card="data.item" />
+                    </card-link>
                   </template>
                 </b-table>
               </template>
@@ -127,6 +128,7 @@
 </template>
 
 <script>
+import CardLink from "../shared/CardLink.vue";
 import HeaderFooter from "../shared/HeaderFooter.vue";
 import SideMenu from "../shared/SideMenu.vue";
 import BuildDeck from "./BuildDeck.vue";
@@ -136,13 +138,13 @@ import SearchAdvanced from "./SearchAdvanced.vue";
 import CardCompact from "./CardCompact.vue";
 import utility from "../../scripts/utility";
 import addRemoveCardMixin from "../../mixins/addRemoveCardMixin";
-import routeMixin from "../../mixins/routeMixin";
 
 let toastIdCounter = 0;
 
 export default {
   name: "CardSpoiler",
   components: {
+    CardLink,
     HeaderFooter,
     SideMenu,
     BuildDeck,
@@ -151,7 +153,7 @@ export default {
     SearchSimple,
     SearchAdvanced,
   },
-  mixins: [addRemoveCardMixin, routeMixin],
+  mixins: [addRemoveCardMixin],
   data() {
     return {
       isBusy: true,
@@ -238,10 +240,6 @@ export default {
     },
     handleSideMenuUpdate() {
       this.sideMenuOpen = true;
-    },
-    handleRowClicked(card, _, event) {
-      if (event.target.cellIndex === 0) return;
-      this.viewCardDetail(card);
     },
   },
   mounted() {

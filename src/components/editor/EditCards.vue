@@ -33,7 +33,6 @@
           borderless
           striped
           hover
-          @row-clicked="handleRowClicked"
         >
           <template #head(buttons)>
             <span>({{ typedCards[type].reduce((s) => s + 1, 0) }})</span>
@@ -43,6 +42,10 @@
             <a href="#" @click.prevent="removeCard(data.item.index)" title="Cancel changes">
               <font-awesome-icon icon="minus-square" />
             </a>
+          </template>
+
+          <template v-slot:cell(name)="{ item }">
+            <card-link block :card="item">{{ item.name }}</card-link>
           </template>
         </b-table>
         <b-table
@@ -68,12 +71,16 @@
 </template>
 
 <script>
+import CardLink from "../shared/CardLink.vue";
 import utility from "../../scripts/utility";
 import routeMixin from "../../mixins/routeMixin";
 import addRemoveCardMixin from "../../mixins/addRemoveCardMixin";
 
 export default {
   name: "EditCards",
+  components: {
+    CardLink
+  },
   mixins: [addRemoveCardMixin, routeMixin],
   computed: {
     cardIndex() {
@@ -145,10 +152,6 @@ export default {
     },
     exitEditing() {
       this.$store.commit("saveSettings", { isEditMode: false });
-    },
-    handleRowClicked(card, _, event) {
-      if (event.target.cellIndex !== 0) return;
-      this.viewCardDetail(card);
     },
   },
 };
