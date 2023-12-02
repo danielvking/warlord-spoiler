@@ -1,6 +1,15 @@
 {
   "headers": [
     {
+      "source": "/assets/resources/(.*)",
+      "headers": [
+        {
+          "key": "cache-control",
+          "value": "public,max-age=604800,s-maxage=31536000"
+        }
+      ]
+    },
+    {
       "source": "/images/(.*)",
       "headers": [
         {
@@ -15,15 +24,6 @@
         {
           "key": "cache-control",
           "value": "public,max-age=31536000,s-maxage=31536000,immutable"
-        }
-      ]
-    },
-    {
-      "source": "/resources/(.*)",
-      "headers": [
-        {
-          "key": "cache-control",
-          "value": "public,max-age=604800,s-maxage=31536000"
         }
       ]
     },
