@@ -41,16 +41,31 @@
           <template v-if="!isBusy">
             <template v-if="searchResults[0]">
               <b-row>
-                <b-col cols="12" md="6">
-                  <b-form-select v-model="resultStyle" class="my-2">
+                <b-col cols="12">
+                  <b-form-select class="my-2" v-model="resultStyle">
                     <b-form-select-option value="table">Table</b-form-select-option>
                     <b-form-select-option value="detailed">Detailed</b-form-select-option>
                   </b-form-select>
                 </b-col>
-                <b-col>
+              </b-row>
+              <b-row class="my-2">
+                <b-col cols="12" class="d-block d-md-none">
                   <b-pagination
                     v-model="currentPage"
-                    class="font-default"
+                    class="font-default my-0"
+                    :total-rows="searchResults.length"
+                    :per-page="perPage"
+                    size="sm"
+                    align="fill"
+                  />
+                </b-col>
+                <b-col cols="12" md="6" class="d-flex align-items-center">
+                  <span class="text-muted my-2">{{ paginationText }}</span>
+                </b-col>
+                <b-col cols="6" class="d-none d-md-block">
+                  <b-pagination
+                    v-model="currentPage"
+                    class="font-default my-0"
                     :total-rows="searchResults.length"
                     :per-page="perPage"
                     size="sm"
@@ -69,7 +84,6 @@
                   hover
                   :per-page="perPage"
                   :current-page="currentPage"
-                  @row-clicked="handleRowClicked"
                 >
                   <template v-slot:cell(buttons)="data">
                     <a href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
@@ -103,14 +117,31 @@
                 </b-table>
               </template>
 
-              <b-pagination
-                v-model="currentPage"
-                class="font-default"
-                :total-rows="searchResults.length"
-                :per-page="perPage"
-                size="sm"
-                align="right"
-              />
+              <b-row class="my-2">
+                <b-col cols="12" md="6" class="d-flex align-items-center">
+                  <span class="text-muted my-2">{{ paginationText }}</span>
+                </b-col>
+                <b-col cols="12" class="d-block d-md-none">
+                  <b-pagination
+                    v-model="currentPage"
+                    class="font-default my-0"
+                    :total-rows="searchResults.length"
+                    :per-page="perPage"
+                    size="sm"
+                    align="fill"
+                  />
+                </b-col>
+                <b-col cols="6" class="d-none d-md-block">
+                  <b-pagination
+                    v-model="currentPage"
+                    class="font-default my-0"
+                    :total-rows="searchResults.length"
+                    :per-page="perPage"
+                    size="sm"
+                    align="right"
+                  />
+                </b-col>
+              </b-row>
             </template>
             <template v-else>
               <div class="text-center m-5">No results</div>
@@ -178,6 +209,13 @@ export default {
     referenceLists() {
       return this.$store.state.referenceLists;
     },
+    paginationText() {
+      let startPage = (this.currentPage - 1) * this.perPage + 1;
+      let endPage = this.currentPage * this.perPage;
+      let total = this.searchResults.length;
+      if (endPage > total) endPage = total;
+      return `Showing ${startPage}-${endPage} of ${total} results`
+    },
     showSideMenus() {
       return this.$store.getters.showSideMenus;
     },
@@ -213,6 +251,9 @@ export default {
       this.currentPage = 1;
       this.isBusy = false;
 
+      this.scrollToSearch();
+    },
+    scrollToSearch() {
       this.$nextTick(() => {
         let scrollRegion = document.documentElement;
         let searchResults = document.getElementById("searchResults");
@@ -259,6 +300,9 @@ export default {
   watch: {
     $route: function (newVal, oldVal) {
       this.computeShowSearch(newVal, oldVal);
+    },
+    currentPage() {
+      this.scrollToSearch();
     },
   },
 };
