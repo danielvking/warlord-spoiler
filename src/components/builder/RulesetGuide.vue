@@ -4,7 +4,7 @@
       <p class="mt-2">This is a breakdown of the {{ id }} ruleset. You can use the page navigation to jump to specific sections.</p>
       <div v-for="key in Object.keys(rs)" :key="key">
         <template v-if="showSection(key)">
-          <h3 :id="key + 'Section'" class="my-2">{{ humanify(key) }}</h3>
+          <h1 :id="key + 'Section'" class="my-0">{{ humanify(key) }}</h1>
           <template v-if="key === 'general'">
             <p v-if="rs[key].genInfo" class="general-text">{{ rs[key].genInfo }}</p>
             <p v-if="rs[key].pointMaximum" class="general-text">The maximum point value is {{ rs[key].pointMaximum }}.</p>

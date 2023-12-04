@@ -10,7 +10,7 @@
       </div>
       <div class="site-header-middle">
         <router-link to="/">
-          <img class="site-logo" src="/images/TheAccordlands_Text.svg" aria-label="The Accordlands"/>
+          <img class="site-logo" src="/images/TheAccordlands_Text_2.svg" aria-label="The Accordlands"/>
         </router-link>
       </div>
       <div class="site-header-margin">
@@ -79,9 +79,9 @@
   z-index: 1000;
 }
 
-.site-subheader h6 {
+.site-subheader h3 {
   width: 100%;
-  margin: 3px;
+  margin: 0;
   text-align: center;
 }
 </style>

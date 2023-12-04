@@ -3,9 +3,9 @@
     <div v-if="value && showSideMenus" class="side-menu-container-outer">
       <div class="side-menu-container-middle">
         <div class="side-menu-container-inner content-region">
-          <div class="site-subheader">
-            <b-button-close text-variant="light" class="px-1 pull-right" @click="$emit('input', false)"/>
-            <h6>{{ title }}</h6>
+          <div class="site-subheader d-flex align-items-center">
+            <h3>{{ title }}</h3>
+            <b-button-close text-variant="light" class="px-1" @click="$emit('input', false)"/>
           </div>
           <slot/>
         </div>
@@ -13,9 +13,9 @@
     </div>
     <b-sidebar :visible="value && !showSideMenus" @change="x => $emit('input', x)" bg-variant="transparent" backdrop lazy no-header width="250px">
       <div class="side-menu-container-inner h-100 content-region">
-        <div class="site-subheader">
-          <b-button-close text-variant="light" class="px-1 pull-right" @click="$emit('input', false)"/>
-          <h6>{{ title }}</h6>
+        <div class="site-subheader d-flex align-items-center">
+          <h3>{{ title }}</h3>
+          <b-button-close text-variant="light" class="px-1" @click="$emit('input', false)"/>
         </div>
           <slot/>
       </div>

@@ -429,41 +429,41 @@ export default {
 
 .image-name {
   left: 101px;
-  top: 33px;
+  top: 34px;
   width: 200px;
   height: 36px;
-  line-height: 38px;
-  font-size: 20pt;
+  line-height: 36px;
+  font-size: 28pt;
   white-space: nowrap;
 }
 
 .image-atk {
   left: 26px;
-  top: 32px;
+  top: 34px;
   width: 66px;
   height: 32px;
-  line-height: 34px;
-  font-size: 20pt;
+  line-height: 32px;
+  font-size: 28pt;
   white-space: nowrap;
 }
 
 .image-ac {
   left: 304px;
-  top: 32px;
+  top: 34px;
   width: 40px;
   height: 32px;
-  line-height: 34px;
-  font-size: 20pt;
+  line-height: 32px;
+  font-size: 28pt;
   white-space: nowrap;
 }
 
 .image-lvl {
   left: 42px;
-  top: 283px;
+  top: 285px;
   width: 19px;
   height: 36px;
-  line-height: 38px;
-  font-size: 18pt;
+  line-height: 36px;
+  font-size: 26pt;
   white-space: nowrap;
 }
 
@@ -472,8 +472,8 @@ export default {
   top: 446px;
   width: 30px;
   height: 41px;
-  line-height: 43px;
-  font-size: 16pt;
+  line-height: 41px;
+  font-size: 23pt;
   white-space: nowrap;
 }
 
@@ -482,19 +482,19 @@ export default {
   top: 451px;
   width: 22px;
   height: 37px;
-  line-height: 39px;
-  font-size: 16pt;
+  line-height: 37px;
+  font-size: 23pt;
   white-space: nowrap;
   text-shadow: 2px 1px 1px #ba4224;
 }
 
 .image-set {
   left: 145px;
-  top: 475px;
+  top: 476px;
   width: 85px;
   height: 16px;
-  line-height: 18px;
-  font-size: 8.5pt;
+  line-height: 16px;
+  font-size: 12pt;
   transform: scaleY(0.8);
 }
 
@@ -542,7 +542,8 @@ export default {
 }
 
 .card-title {
-  font-family: "Vhatis Warlord Title";
+  font-weight: bold;
+  font-family: "mezz-std";
 }
 
 .card-text {
