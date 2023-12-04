@@ -6,7 +6,7 @@
     <!-- Sidebar -->
     <b-sidebar v-model="showSidebar" id="sidebar" text-variant="light" bg-variant="dark" backdrop lazy>
       <template #title>
-        <img class="site-logo pr-3" src="/images/TheAccordlands_Text.svg" aria-label="The Accordlands"/>
+        <img class="site-logo pr-3" src="/images/TheAccordlands_Text_2.svg" aria-label="The Accordlands"/>
       </template>
       <div>
         <b-button
@@ -22,7 +22,7 @@
 
         <template v-if="localRoutes[0]">
           <hr class="m-2 border-light" />
-          <h4 class="mx-3 my-1">This Page</h4>
+          <h2 class="mx-3 my-0">This Page</h2>
 
           <b-button
             v-for="link in localRoutes"
@@ -158,7 +158,8 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Vhatis Warlord Title", "Georgia", "serif";
+  font-weight: bold;
+  font-family: "mezz-std", "Georgia", "serif";
 }
 
 .shrink {

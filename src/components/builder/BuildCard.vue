@@ -17,7 +17,7 @@
         </b-col>
       </b-row>
       <template v-if="cardsLoaded">
-        <h3 class="my-2">{{ cardTemp.name || "Untitled" }}</h3>
+        <h1 class="my-0">{{ cardTemp.name || "Untitled" }}</h1>
         <b-row>
           <b-col cols="12" md="6" class="d-flex flex-column">
             <div class="card-view d-flex flex-column pb-2 align-items-center">
@@ -45,7 +45,7 @@
                 </b-row>
                 <!-- Points Desktop -->
                 <div v-if="infoCache.hasPoints" class="point-display d-none d-md-block border-secondary mt-2">
-                  <h3 class="my-0 text-center">
+                  <h2 class="my-0 text-center">
                     {{ infoCache.pointTotal }} Points
                     <font-awesome-icon
                       v-if="infoCache.pointTotal > infoCache.pointMaximum"
@@ -53,7 +53,7 @@
                       size="sm"
                       icon="exclamation-triangle"
                     />
-                  </h3>
+                  </h2>
                 </div>
               </div>
             </div>
@@ -62,7 +62,7 @@
           <b-col cols="12" md="6">
             <!-- Points Mobile -->
             <div v-if="infoCache.hasPoints" class="point-display d-block d-md-none border-secondary mb-2">
-              <h3 class="my-0 text-center">
+              <h2 class="my-0 text-center">
                 {{ infoCache.pointTotal }} Points
                 <font-awesome-icon
                   v-if="infoCache.pointTotal > infoCache.pointMaximum"
@@ -70,7 +70,7 @@
                   size="sm"
                   icon="exclamation-triangle"
                 />
-              </h3>
+              </h2>
             </div>
 
             <!-- Reset -->
