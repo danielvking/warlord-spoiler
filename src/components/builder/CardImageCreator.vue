@@ -23,7 +23,7 @@
           <div v-show="hasBottomStats" class="image-hp card-title text-white">
             {{ cardData.hitPoints | cardFormatter("hitPoints", cardData) }}
           </div>
-          <div v-if="points" class="image-set card-title">
+          <div v-if="points" class="image-set card-subtitle">
             {{ points }}
           </div>
           <div class="image-text card-text">
@@ -490,12 +490,11 @@ export default {
 
 .image-set {
   left: 145px;
-  top: 476px;
+  top: 482px;
   width: 85px;
   height: 16px;
   line-height: 16px;
-  font-size: 12pt;
-  transform: scaleY(0.8);
+  font-size: 8pt;
 }
 
 .image-text {
@@ -548,6 +547,10 @@ export default {
 
 .card-text {
   font-family: "Vhatis Warlord Text";
+}
+
+.card-subtitle {
+  font-family: "totally-glyphic"
 }
 
 /* Horrible dark mode hack */
