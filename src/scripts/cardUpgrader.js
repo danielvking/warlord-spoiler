@@ -44,7 +44,7 @@ function upgradeV1ToV2(cardData) {
         "Mercenary": "Mercenary Guilds",
         "Nothrog": "Nothrog Legions"
       }
-      factions = factions.map(faction =>  factionReplace[faction] || faction)
+      factions = factions.map(faction => factionReplace[faction] || faction)
   }
 
   let keywords = []
@@ -96,7 +96,7 @@ function upgradeV1ToV2(cardData) {
   newData.subtype = subtype
   newData.alignment = cardData.alignment
   newData.class = split(cardData.class)
-  newData.faction = split(cardData.faction)
+  newData.faction = faction
   newData.attack = cardData.attack && split(cardData.attack).map(x => parseStat(x))
   newData.damageType = cardData.Type === "Character" ? "Physical" : undefined
   newData.armorClass = parseStat(cardData.armorClass)
