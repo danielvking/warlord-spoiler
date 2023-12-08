@@ -87,18 +87,21 @@ export default {
     let timestamp = 0;
     let isTimeout = false;
 
+    let args;
+
     return function () {
+      args = [...arguments];
       if (!isTimeout) {
         let currTimestamp = new Date().getTime();
         let timeDiff = currTimestamp - timestamp;
         if (timeDiff >= time) {
           timestamp = currTimestamp;
-          func.apply(this, arguments);
+          func.apply(this, args);
         } else {
           isTimeout = true;
           setTimeout(() => {
             timestamp = new Date().getTime();
-            func.apply(this, arguments);
+            func.apply(this, args);
             isTimeout = false;
           }, time - timeDiff);
         }
