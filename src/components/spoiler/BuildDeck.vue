@@ -73,7 +73,7 @@
           </template>
 
           <template v-slot:cell(card)="{ value }">
-            <card-link block :card="value">{{ value.name }}</card-link>
+            <card-link block decorate :card="value">{{ value.name }}</card-link>
           </template>
         </b-table>
         <b-table

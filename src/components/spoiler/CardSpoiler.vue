@@ -90,6 +90,9 @@
                       <font-awesome-icon icon="plus-square" />
                     </a>
                   </template>
+                  <template v-slot:cell(name)="{ item, value }">
+                    <card-link block decorate :card="item">{{ value }}</card-link>
+                  </template>
                 </b-table>
               </div>
 
