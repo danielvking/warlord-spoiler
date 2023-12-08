@@ -75,6 +75,7 @@ export default {
   },
   mounted() {
     this.fixBackgroundHeight();
+    this.watchForHover();
 
     this.$router.afterEach((to, from) => {
       if (to.path !== from.path) {
@@ -92,6 +93,31 @@ export default {
       }
       this.$refs.backgroundAnchor.style.height = `max(100vh, ${height}px)`;
     },
+    watchForHover() {
+      // lastTouchTime is used for ignoring emulated mousemove events
+      let lastTouchTime = 0
+
+      let enableHover = () => {
+        if (new Date() - lastTouchTime < 500) return
+        document.body.classList.add('hasHover')
+        this.$store.commit("setHasHover", true)
+      }
+
+      let disableHover = () => {
+        document.body.classList.remove('hasHover')
+        this.$store.commit("setHasHover", false)
+      }
+
+      let updateLastTouchTime = () => {
+        lastTouchTime = new Date()
+      }
+
+      document.addEventListener('touchstart', updateLastTouchTime, true)
+      document.addEventListener('touchstart', disableHover, true)
+      document.addEventListener('mousemove', enableHover, true)
+
+      enableHover()
+    }
   },
 };
 </script>

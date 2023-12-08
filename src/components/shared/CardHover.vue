@@ -1,13 +1,15 @@
 <template>
-  <b-popover v-if="targetInternal != null"
-              :show="showInternal"
-              custom-class="popover-wide"
-              :target="targetInternal"
-              boundary="window"
-              triggers="manual"
-              placement="bottomleft"
-              @shown="handleShown"
-              @hidden="handleHidden">
+  <b-popover
+    v-if="targetInternal != null"
+    :show="showInternal"
+    custom-class="popover-wide"
+    :target="targetInternal"
+    boundary="window"
+    triggers="manual"
+    placement="bottomleft"
+    @shown="handleShown"
+    @hidden="handleHidden"
+  >
     <img :src="image.src"
         :style="{ width: width + 'px', height: height + 'px' }"/>
   </b-popover>
@@ -82,8 +84,11 @@ export default {
         }
       }
     },
-    target() {
+    target(val) {
       this.state = 'hiding';
+      if (val == null) {
+        this.actuallyShowing = false;
+      }
     },
     card() {
       this.state = 'hiding';
@@ -92,6 +97,9 @@ export default {
       if (this.state === 'loaded') {
         this.showInternal = val;
       }
+    },
+    $route() {
+      this.state = 'destroying';
     }
   },
   mounted() {

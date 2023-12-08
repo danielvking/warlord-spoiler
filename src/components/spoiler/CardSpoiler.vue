@@ -318,6 +318,7 @@ export default {
       }
     },
     handleRowHovered: utility.debounce(function (item, index, e) {
+      if (!this.$store.state.hasHover) return;
       if (e.target.matches(':hover')) {
         this.cardHover.show = true;
         this.cardHover.target = this.$refs['card_' + index];
