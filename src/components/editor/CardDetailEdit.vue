@@ -13,7 +13,7 @@
       </div>
     </div>
     <template v-if="cardIndex">
-      <h3 class="my-2">{{ cardTemp.name }}</h3>
+      <h3 class="my-0">{{ cardTemp.name }}</h3>
       <b-row>
         <b-col cols="12" md="6" class="d-flex flex-column">
           <div
