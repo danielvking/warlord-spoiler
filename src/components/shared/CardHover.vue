@@ -1,18 +1,16 @@
 <template>
-  <div>
-    <b-popover v-if="targetInternal != null"
-               :show="showInternal"
-               custom-class="popover-wide"
-               :target="targetInternal"
-               boundary="window"
-               triggers="manual"
-               placement="bottomleft"
-               @shown="handleShown"
-               @hidden="handleHidden">
-      <img :src="image.src"
-          :style="{ width: width + 'px', height: height + 'px' }"/>
-    </b-popover>
-  </div>
+  <b-popover v-if="targetInternal != null"
+              :show="showInternal"
+              custom-class="popover-wide"
+              :target="targetInternal"
+              boundary="window"
+              triggers="manual"
+              placement="bottomleft"
+              @shown="handleShown"
+              @hidden="handleHidden">
+    <img :src="image.src"
+        :style="{ width: width + 'px', height: height + 'px' }"/>
+  </b-popover>
 </template>
 
 <script>
@@ -97,7 +95,6 @@ export default {
     }
   },
   mounted() {
-    console.time('timer');
     this.state = 'loading';
   },
   methods: {
