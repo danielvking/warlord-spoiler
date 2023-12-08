@@ -232,7 +232,8 @@ export default {
       cardHover: {
         show: false,
         target: null,
-        card: null
+        card: null,
+        disabled: false,
       },
       sideMenuOpen: false
     };
@@ -296,7 +297,10 @@ export default {
         let scrollRegion = document.documentElement;
         let searchResults = document.getElementById("searchResults");
 
-        utility.smoothScrollTo(scrollRegion, searchResults.offsetTop, 300);
+        this.cardHover.disabled = true;
+        utility.smoothScrollTo(scrollRegion, searchResults.offsetTop, 300, () => {
+          this.cardHover.disabled = false;
+        });
       });
     },
     handleCardAdded(cardString) {
@@ -318,6 +322,7 @@ export default {
       }
     },
     handleRowHovered: utility.debounce(function (item, index, e) {
+      if (this.cardHover.disabled) return this.handleRowHovered(...arguments); // Try again later
       if (!this.$store.state.hasHover) return;
       if (e.target.matches(':hover')) {
         this.cardHover.show = true;

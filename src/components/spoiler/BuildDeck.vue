@@ -228,6 +228,13 @@ export default {
     },
     decrementCardToDeck(cardString) {
       this.$store.commit("decrementCardToDeck", cardString);
+      if ((this.$store.state.deck[cardString] || 0) <= 0) {
+        this.$nextTick(() => {
+          // The card hover has a mutation observer to remove it from the document when its parent disappears
+          // If we don't wait for a tick, we beat the observer, and then the visual disabling takes priority
+          this.cardHover.show = false;
+        });
+      }
     },
     incrementCardToDeck(cardString) {
       this.$store.commit("incrementCardToDeck", cardString);

@@ -65,7 +65,7 @@ export default {
       setTimeout(doChunk, 1);
     });
   },
-  smoothScrollTo(element, to, duration) {
+  smoothScrollTo(element, to, duration, callback) {
     let start = element.scrollTop;
     let difference = to - element.scrollTop;
 
@@ -73,6 +73,7 @@ export default {
     function scrollABit() {
       if (soFar >= duration) {
         element.scrollTop = to;
+        if (callback) callback();
       } else {
         let percent = soFar / duration;
         let curve = (1 - Math.cos(Math.PI * percent)) / 2;
