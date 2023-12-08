@@ -1,14 +1,13 @@
 import { defineConfig } from 'vite'
-import { splitVendorChunkPlugin } from 'vite'
 import { createVuePlugin } from 'vite-plugin-vue2'
 
 const resourcesReg = /\/resources\/[^\/\.]*\.[^\/\.]+$/i;
+const pluginsReg = /\/plugins\/([^\/\.]*)\.[^\/\.]+$/i;
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    createVuePlugin(),
-    splitVendorChunkPlugin()
+    createVuePlugin()
   ],
   build: {
     assetsInlineLimit: 0, // We want to control of the caching of files
@@ -22,8 +21,9 @@ export default defineConfig({
           }
         },
         manualChunks(id) {
-          if (resourcesReg.test(id)) {
-            //return "derp";
+          let pluginMatch = id.match(pluginsReg);
+          if (pluginMatch != null) {
+            return "vendor." + pluginMatch[1];
           }
         }
       }
