@@ -4,9 +4,9 @@
     :show="showInternal"
     custom-class="popover-wide"
     :target="targetInternal"
-    boundary="window"
+    boundary="viewport"
     triggers="manual"
-    placement="bottomleft"
+    :placement="placement"
     @shown="handleShown"
     @hidden="handleHidden"
   >
@@ -20,7 +20,11 @@ export default {
   props: {
     show: Boolean,
     target: null,
-    card: Object
+    card: Object,
+    placement: {
+      type: String,
+      default: 'bottomleft'
+    }
   },
   data() {
     return {
@@ -91,6 +95,9 @@ export default {
       }
     },
     card() {
+      this.state = 'hiding';
+    },
+    placement() {
       this.state = 'hiding';
     },
     show(val) {
