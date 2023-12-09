@@ -1,7 +1,7 @@
 <template>
   <div class="card-body d-flex">
     <div style="min-width: 80px">
-      <img :src="defaultImage" :key="defaultImage" />
+      <b-img-lazy :src="defaultImage" :key="defaultImage" />
     </div>
     <div class="flex-grow-1">
       <span class="font-weight-bold">{{ card.name }}</span>
