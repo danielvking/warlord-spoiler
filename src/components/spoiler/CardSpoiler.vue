@@ -136,7 +136,7 @@
                   <template v-slot:cell(details)="data">
                     <div class="d-flex">
                       <card-link block :card="data.item" class="flex-grow-1">
-                        <card-compact :card="data.item" />
+                        <card-compact :card="data.item" :hide-images="scrolling" />
                       </card-link>
 
                       <div class="card-hover-anchor">
@@ -223,6 +223,7 @@ export default {
       isBusy: true,
       searchType: "Simple",
       showSearch: false,
+      scrolling: false,
       resultStyle: "detailed",
       searchResults: [],
       perPage: 100,
@@ -233,7 +234,6 @@ export default {
         show: false,
         target: null,
         card: null,
-        disabled: false,
       },
       sideMenuOpen: false
     };
@@ -293,13 +293,13 @@ export default {
       this.scrollToSearch();
     },
     scrollToSearch() {
+      this.scrolling = true;
       this.$nextTick(() => {
         let scrollRegion = document.documentElement;
         let searchResults = document.getElementById("searchResults");
 
-        this.cardHover.disabled = true;
         utility.smoothScrollTo(scrollRegion, searchResults.offsetTop, 300, () => {
-          this.cardHover.disabled = false;
+          this.scrolling = false;
         });
       });
     },
@@ -322,7 +322,7 @@ export default {
       }
     },
     handleRowHovered: utility.debounce(function (item, index, e) {
-      if (this.cardHover.disabled) return this.handleRowHovered(...arguments); // Try again later
+      if (this.scrolling) return this.handleRowHovered(...arguments); // Try again later
       if (!this.$store.state.hasHover) return;
       if (e.target.matches(':hover')) {
         this.cardHover.show = true;
