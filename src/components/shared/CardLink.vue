@@ -1,5 +1,5 @@
 <template>
-  <router-link class="unanchor" :class="{ 'd-block': block }" :to="link">
+  <router-link class="unanchor" :class="{ 'd-block': block, 'undecorate': !decorate }" :to="link">
     <slot/>
   </router-link>
 </template>
@@ -7,6 +7,7 @@
 export default {
   props: {
     block: Boolean,
+    decorate: Boolean,
     card: Object
   },
   computed: {
@@ -19,6 +20,9 @@ export default {
 <style scoped>
 .unanchor {
   color: inherit;
+}
+
+.undecorate {
   text-decoration: inherit;
 }
 </style>

@@ -21,3 +21,7 @@ $form-group-margin-bottom: 0.4rem;
     background-color: $input-bg;
     border-radius: $input-border-radius;
 }
+
+.popover.popover-wide {
+    max-width: 2 * $popover-max-width;
+}

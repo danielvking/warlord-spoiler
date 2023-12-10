@@ -31,6 +31,7 @@
       </div>
     </template>
     <template v-if="$store.state.cardsLoaded">
+      <card-hover :show="cardHover.show" :target="cardHover.target" :card="cardHover.card" placement="right"/>
       <div class="flex-grow-1 p-1 overflow-auto">
         <b-table
           v-for="type in Object.keys(typedCards)
@@ -48,6 +49,7 @@
           borderless
           striped
           hover
+          @row-hovered="handleRowHovered"
         >
           <template v-if="showFormatValidator" #head(editionCheck)>
             <span>Legal</span>
@@ -64,16 +66,23 @@
           </template>
 
           <template v-slot:cell(buttons)="data">
-            <a href="#" @click.prevent="decrementCardToDeck(data.item.card.index)" title="Minus one" class="mr-1">
-              <font-awesome-icon icon="minus-square" />
-            </a>
-            <a href="#" @click.prevent="incrementCardToDeck(data.item.card.index)" title="Plus one">
-              <font-awesome-icon icon="plus-square" />
-            </a>
+            <div class="d-flex">
+              <a href="#" @click.prevent="decrementCardToDeck(data.item.card.index)" title="Minus one" class="mr-1">
+                <font-awesome-icon icon="minus-square" />
+              </a>
+              <a href="#" @click.prevent="incrementCardToDeck(data.item.card.index)" title="Plus one">
+                <font-awesome-icon icon="plus-square" />
+              </a>
+
+              <div class="card-hover-anchor">
+                <div :ref="'card_' + type + '_' + data.index" :class="'card_'+ type + '_' + data.index">
+                </div>
+              </div>
+            </div>
           </template>
 
           <template v-slot:cell(card)="{ value }">
-            <card-link block :card="value">{{ value.name }}</card-link>
+            <card-link block decorate :card="value">{{ value.name }}</card-link>
           </template>
         </b-table>
         <b-table
@@ -99,18 +108,25 @@
 </template>
 
 <script>
+import CardHover from "../shared/CardHover.vue";
 import CardLink from "../shared/CardLink.vue";
 import utility from "../../scripts/utility";
 
 export default {
   name: "BuildDeck",
   components: {
+    CardHover,
     CardLink
   },
   data() {
     return {
       edition: null,
       showFormatValidator: false,
+      cardHover: {
+        show: false,
+        target: null,
+        card: null
+      },
     };
   },
   computed: {
@@ -212,10 +228,50 @@ export default {
     },
     decrementCardToDeck(cardString) {
       this.$store.commit("decrementCardToDeck", cardString);
+      if ((this.$store.state.deck[cardString] || 0) <= 0) {
+        this.$nextTick(() => {
+          // The card hover has a mutation observer to remove it from the document when its parent disappears
+          // If we don't wait for a tick, we beat the observer, and then the visual disabling takes priority
+          this.cardHover.show = false;
+        });
+      }
     },
     incrementCardToDeck(cardString) {
       this.$store.commit("incrementCardToDeck", cardString);
     },
+    handleRowHovered: utility.debounce(function (item, index, e) {
+      if (!this.$store.state.hasHover) return;
+      if (e.target.matches(':hover')) {
+        this.cardHover.show = true;
+        this.cardHover.target = this.$refs['card_' + item.card.type + '_' + index][0];
+        this.cardHover.card = item.card;
+
+        let handleRowUnhovered = () => {
+          e.target.removeEventListener('mouseleave', handleRowUnhovered);
+          this.cardHover.show = false;
+          this.cardHover.target = null;
+          this.cardHover.card = null;
+        }
+        e.target.addEventListener('mouseleave', handleRowUnhovered);
+      }
+    }, 500),
   },
 };
 </script>
+
+<style scoped>
+.card-hover-anchor {
+  position: relative;
+  width: 1px;
+  min-height: 1px;
+  margin-left: -1px;
+}
+
+.card-hover-anchor > * {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+</style>

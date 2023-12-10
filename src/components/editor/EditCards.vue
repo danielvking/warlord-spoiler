@@ -45,7 +45,7 @@
           </template>
 
           <template v-slot:cell(name)="{ item }">
-            <card-link block :card="item">{{ item.name }}</card-link>
+            <card-link block decorate :card="item">{{ item.name }}</card-link>
           </template>
         </b-table>
         <b-table

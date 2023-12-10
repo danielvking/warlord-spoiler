@@ -3,6 +3,7 @@ import { splitVendorChunkPlugin } from 'vite'
 import { createVuePlugin } from 'vite-plugin-vue2'
 
 const resourcesReg = /\/resources\/[^\/\.]*\.[^\/\.]+$/i;
+const pluginsReg = /\/plugins\/([^\/\.]*)\.[^\/\.]+$/i;
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -22,8 +23,8 @@ export default defineConfig({
           }
         },
         manualChunks(id) {
-          if (resourcesReg.test(id)) {
-            //return "derp";
+          if (pluginsReg.test(id)) {
+            return "vendor";
           }
         }
       }

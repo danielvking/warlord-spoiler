@@ -37,6 +37,8 @@
 
         <hr/>
 
+        <card-hover :show="cardHover.show" :target="cardHover.target" :card="cardHover.card"/>
+
         <div id="searchResults">
           <template v-if="!isBusy">
             <template v-if="searchResults[0]">
@@ -84,11 +86,31 @@
                   hover
                   :per-page="perPage"
                   :current-page="currentPage"
+                  @row-hovered="handleRowHovered"
                 >
                   <template v-slot:cell(buttons)="data">
                     <a href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
                       <font-awesome-icon icon="plus-square" />
                     </a>
+                  </template>
+
+                  <template v-slot:cell(name)="{ item, value }">
+                    <card-link block decorate :card="item">{{ value }}</card-link>
+                  </template>
+
+                  <template v-slot:cell(class)="{ value }">
+                    <span>{{ value && value.join('/\u200B') }}</span>
+                  </template>
+
+                  <template v-slot:cell(level)="data">
+                    <div class="d-flex">
+                      <div class="flex-grow-1">{{ data.value || "\xA0" }}</div>
+                      
+                      <div class="card-hover-anchor">
+                        <div :ref="'card_' + data.index" :class="'card_' + data.index">
+                        </div>
+                      </div>
+                    </div>
                   </template>
                 </b-table>
               </div>
@@ -103,16 +125,25 @@
                   hover
                   :per-page="perPage"
                   :current-page="currentPage"
+                  @row-hovered="handleRowHovered"
                 >
                   <template v-slot:cell(buttons)="data">
                     <a href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
                       <font-awesome-icon icon="plus-square" />
                     </a>
                   </template>
+
                   <template v-slot:cell(details)="data">
-                    <card-link block :card="data.item">
-                      <card-compact :card="data.item" />
-                    </card-link>
+                    <div class="d-flex">
+                      <card-link block :card="data.item" class="flex-grow-1">
+                        <card-compact :card="data.item" :hide-images="scrolling" />
+                      </card-link>
+
+                      <div class="card-hover-anchor">
+                        <div :ref="'card_' + data.index" :class="'card_' + data.index">
+                        </div>
+                      </div>
+                    </div>
                   </template>
                 </b-table>
               </template>
@@ -159,6 +190,7 @@
 </template>
 
 <script>
+import CardHover from "../shared/CardHover.vue";
 import CardLink from "../shared/CardLink.vue";
 import HeaderFooter from "../shared/HeaderFooter.vue";
 import SideMenu from "../shared/SideMenu.vue";
@@ -175,6 +207,7 @@ let toastIdCounter = 0;
 export default {
   name: "CardSpoiler",
   components: {
+    CardHover,
     CardLink,
     HeaderFooter,
     SideMenu,
@@ -190,12 +223,18 @@ export default {
       isBusy: true,
       searchType: "Simple",
       showSearch: false,
+      scrolling: false,
       resultStyle: "detailed",
       searchResults: [],
       perPage: 100,
       currentPage: 1,
       resultFields: [{ key: "buttons", class: "shrink", label: "" }, "name", "type", "class", "level"],
       lastScrollPostion: 0,
+      cardHover: {
+        show: false,
+        target: null,
+        card: null,
+      },
       sideMenuOpen: false
     };
   },
@@ -254,11 +293,14 @@ export default {
       this.scrollToSearch();
     },
     scrollToSearch() {
+      this.scrolling = true;
       this.$nextTick(() => {
         let scrollRegion = document.documentElement;
         let searchResults = document.getElementById("searchResults");
 
-        utility.smoothScrollTo(scrollRegion, searchResults.offsetTop, 300);
+        utility.smoothScrollTo(scrollRegion, searchResults.offsetTop, 300, () => {
+          this.scrolling = false;
+        });
       });
     },
     handleCardAdded(cardString) {
@@ -279,6 +321,23 @@ export default {
         this.$bvToast.toast("+1 " + cardString, toastOptions);
       }
     },
+    handleRowHovered: utility.debounce(function (item, index, e) {
+      if (this.scrolling) return this.handleRowHovered(...arguments); // Try again later
+      if (!this.$store.state.hasHover) return;
+      if (e.target.matches(':hover')) {
+        this.cardHover.show = true;
+        this.cardHover.target = this.$refs['card_' + index];
+        this.cardHover.card = item;
+
+        let handleRowUnhovered = () => {
+          e.target.removeEventListener('mouseleave', handleRowUnhovered);
+          this.cardHover.show = false;
+          this.cardHover.target = null;
+          this.cardHover.card = null;
+        }
+        e.target.addEventListener('mouseleave', handleRowUnhovered);
+      }
+    }, 500),
     handleSideMenuUpdate() {
       this.sideMenuOpen = true;
     },
@@ -350,5 +409,20 @@ export default {
 .btn:hover .total-pill {
   background-color: #191919;
   color: white;
+}
+
+.card-hover-anchor {
+  position: relative;
+  width: 1px;
+  min-height: 1px;
+  margin-left: -1px;
+}
+
+.card-hover-anchor > * {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 </style>
