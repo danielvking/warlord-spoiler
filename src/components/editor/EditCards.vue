@@ -8,6 +8,9 @@
         <a href="#" @click.prevent="newCard" title="New card" class="mr-1">
           <font-awesome-icon icon="plus-square" />
         </a>
+        <a href="#" @click.prevent="exportCsv" title="Export cards as CSV" class="mr-1">
+          <font-awesome-icon icon="file-csv" />
+        </a>
         <a href="#" @click.prevent="exportCards" title="Save cards" class="mr-1">
           <font-awesome-icon icon="save" />
         </a>
@@ -72,6 +75,7 @@
 
 <script>
 import CardLink from "../shared/CardLink.vue";
+import { toCsv } from "../../scripts/cardCsvExporter";
 import utility from "../../scripts/utility";
 import routeMixin from "../../mixins/routeMixin";
 import addRemoveCardMixin from "../../mixins/addRemoveCardMixin";
@@ -123,25 +127,34 @@ export default {
       this.$store.commit("editCard", index);
       this.viewCardDetail({ index });
     },
+    getCards() {
+      // Get existing card or its edited version
+      let cardArray = this.$store.state.cards.map((x) => {
+        // Might make some sense to have a sort of delete condition for existing cards
+        let editedCard = this.editedCards[x.index];
+        if (editedCard) {
+          return editedCard;
+        }
+        return x;
+      });
+      // Append all new cards
+      this.cards.forEach((x) => {
+        if (!this.cardIndex[x.index]) {
+          cardArray.push(x);
+        }
+      });
+      return cardArray;
+    },
+    exportCsv() {
+      if (this.$store.state.cardsLoaded) {
+        let csv = toCsv(this.getCards())
+        utility.saveText(csv, "cards.csv");
+      }
+    },
     exportCards() {
       if (this.$store.state.cardsLoaded) {
-        // Get existing card or its edited version
-        let cardArray = this.$store.state.cards.map((x) => {
-          // Might make some sense to have a sort of delete condition for existing cards
-          let editedCard = this.editedCards[x.index];
-          if (editedCard) {
-            return editedCard;
-          }
-          return x;
-        });
-        // Append all new cards
-        this.cards.forEach((x) => {
-          if (!this.cardIndex[x.index]) {
-            cardArray.push(x);
-          }
-        });
-        var json = JSON.stringify(
-          cardArray,
+        let json = JSON.stringify(
+          this.getCards(),
           (key, value) => {
             if (key !== "index") return value;
           },
