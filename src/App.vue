@@ -9,28 +9,19 @@
         <img class="site-logo pr-3" src="/images/TheAccordlands_Text_2.svg" aria-label="The Accordlands"/>
       </template>
       <div>
-        <b-button
-          v-for="link in links"
-          :key="link.display"
-          class="text-left border-0 rounded-0 my-1 px-4 py-1"
-          block
-          variant="outline-light"
-          :to="link.to"
-          @click="showSidebar = false"
-          >{{ link.display }}</b-button
-        >
-
-        <template v-if="localRoutes[0]">
-          <hr class="m-2 border-light" />
-          <h2 class="mx-3 my-0">This Page</h2>
-
+        <template v-for="(link, i) in computedLinks">
+          <template v-if="link.isHeader">
+            <hr class="m-2 border-light" :key="i + '_hr'"/>
+            <h3 class="mx-3 my-0" :key="i">{{ link.display }}</h3>
+          </template>
           <b-button
-            v-for="link in localRoutes"
-            :key="link.display"
+            v-else
+            :key="i"
             class="text-left border-0 rounded-0 my-1 px-4 py-1"
             block
             variant="outline-light"
             :to="link.to"
+            :href="link.href"
             @click="showSidebar = false"
             >{{ link.display }}</b-button
           >
@@ -57,10 +48,23 @@ export default {
       links: [
         { display: "Home", to: "/" },
         { display: "Card Builder", to: "/build-card" },
+        { display: "This Page", isHeader: true },
+        { display: "Resources", isHeader: true },
+        { display: "Warlord: Saga of the Storm", href: "https://www.warlordsots.com/" },
       ],
     };
   },
   computed: {
+    computedLinks() {
+      let links = this.links.slice();
+      let thisPageIndex = links.findIndex(x => x.display === "This Page" && x.isHeader);
+      if (this.localRoutes.length > 0) {
+        links.splice(thisPageIndex + 1, 0, ...this.localRoutes);
+      } else {
+        links.splice(thisPageIndex, 1);
+      }
+      return links;
+    },
     show404() {
       return this.$store.state.show404;
     },
