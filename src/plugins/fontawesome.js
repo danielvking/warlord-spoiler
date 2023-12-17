@@ -7,6 +7,7 @@ import {
   faExclamationTriangle,
   faExternalLinkAlt,
   faEye,
+  faFileArrowUp,
   faFileCsv,
   faFolderOpen,
   faHammer,
@@ -25,6 +26,7 @@ library.add(faExclamationTriangle)
 library.add(faExternalLinkAlt)
 library.add(faEye)
 library.add(faFolderOpen)
+library.add(faFileArrowUp)
 library.add(faFileCsv)
 library.add(faHammer)
 library.add(faInfoCircle)

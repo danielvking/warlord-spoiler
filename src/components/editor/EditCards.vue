@@ -8,6 +8,9 @@
         <a href="#" @click.prevent="newCard" title="New card" class="mr-1">
           <font-awesome-icon icon="plus-square" />
         </a>
+        <a href="#" @click.prevent="importCsv" title="Import cards from CSV" class="mr-1">
+          <font-awesome-icon icon="file-arrow-up" />
+        </a>
         <a href="#" @click.prevent="exportCsv" title="Export cards as CSV" class="mr-1">
           <font-awesome-icon icon="file-csv" />
         </a>
@@ -75,7 +78,7 @@
 
 <script>
 import CardLink from "../shared/CardLink.vue";
-import { toCsv } from "../../scripts/cardCsvExporter";
+import { fromCsv, toCsv } from "../../scripts/cardCsvExporter";
 import utility from "../../scripts/utility";
 import routeMixin from "../../mixins/routeMixin";
 import addRemoveCardMixin from "../../mixins/addRemoveCardMixin";
@@ -144,6 +147,16 @@ export default {
         }
       });
       return cardArray;
+    },
+    async importCsv() {
+      if (this.$store.state.cardsLoaded) {
+        try {
+          let cards = fromCsv(await utility.readText())
+          this.$store.commit("setEditedCards", cards);
+        } catch (error) {
+          alert("An error occurred reading the CSV: " + error);
+        }
+      }
     },
     exportCsv() {
       if (this.$store.state.cardsLoaded) {

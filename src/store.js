@@ -185,9 +185,60 @@ export default new Vuex.Store({
     saveEditedCards(state) {
       localStorage.setItem("editedCards", JSON.stringify(state.editedCards))
     },
+    setEditedCards(state, cards) {
+      let newCardIndex = constructCardIndex(cards);
+      let editedCards = {};
+      Object.keys(newCardIndex).forEach(cardString => {
+        // We'll not handle deletes for now
+        let existing = state.cardIndex[cardString];
+        let card = newCardIndex[cardString];
+
+        function matchValue(from, to) {
+          if (from == null) return to == null;
+          else if (Array.isArray(from) && Array.isArray(to)) {
+            if (from.length !== to.length) return false;
+            for (let i = 0; i < from.length; i++) {
+              if (!matchValue(from[i], to[i])) return false;
+            }
+            return true;
+          } else if (typeof(from) === 'object' && typeof(to) === 'object') {
+            let keys = Object.keys(from);
+            for (let i = 0; i < keys.length; i++) {
+              if (!matchValue(from[keys[i]], to[keys[i]])) return false;
+            }
+            return true;
+          }
+          return from === to;
+        }
+
+        function copyProperties(from, to) {
+          Object.keys(from).forEach(key => {
+            if (from[key] == null) {
+              delete to[key];
+            } else if (typeof(from[key]) === 'object' && typeof(to[key]) === 'object') {
+              copyProperties(from[key], to[key]);
+            } else {
+              to[key] = from[key];
+            }
+          });
+        }
+
+        if (!matchValue(card, existing)) {
+          if (existing != null) {
+            let lazyCopy = JSON.parse(JSON.stringify(existing));
+            copyProperties(card, lazyCopy);
+            editedCards[cardString] = lazyCopy;
+          } else {
+            editedCards[cardString] = JSON.parse(JSON.stringify(card));
+          }
+        }
+      });
+      state.editedCards = editedCards;
+      localStorage.setItem("editedCards", JSON.stringify(state.editedCards));
+    },
     clearEditedCards(state) {
       state.editedCards = {};
-      localStorage.removeItem("editedCards", JSON.stringify(state.editedCards))
+      localStorage.removeItem("editedCards", JSON.stringify(state.editedCards));
     },
     setLocalRoutes(state, localRoutes) {
       state.localRoutes = localRoutes;
