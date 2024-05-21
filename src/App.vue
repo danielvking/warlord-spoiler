@@ -6,12 +6,12 @@
     <!-- Sidebar -->
     <b-sidebar v-model="showSidebar" id="sidebar" text-variant="light" bg-variant="dark" backdrop lazy>
       <template #title>
-        <img class="site-logo pr-3" src="/images/TheAccordlands_Text_2.svg" aria-label="The Accordlands"/>
+        <img class="site-logo pr-3" src="/images/TheAccordlands_Text_2.svg" aria-label="The Accordlands" />
       </template>
       <div>
         <template v-for="(link, i) in computedLinks">
           <template v-if="link.isHeader">
-            <hr class="m-2 border-light" :key="i + '_hr'"/>
+            <hr class="m-2 border-light" :key="i + '_hr'" />
             <h3 class="mx-3 my-0" :key="i">{{ link.display }}</h3>
           </template>
           <b-button
@@ -28,12 +28,20 @@
         </template>
       </div>
     </b-sidebar>
-    
+
     <!-- 404 -->
-    <page-not-found v-if="show404"/>
+    <page-not-found v-if="show404" />
 
     <!-- View -->
-    <router-view v-else/>
+    <router-view v-else />
+
+    <!-- Cookie Policy -->
+    <b-alert v-model="showCookieAlert" variant="warning" class="position-fixed fixed-bottom m-0 rounded-0" dismissible>
+      <span>
+        We use cookies to ensure you get the best experience on our website. By using this site, you agree to our
+        <a href="/static/cookie_policy.html" target="_blank">cookie policy</a>.
+      </span>
+    </b-alert>
   </div>
 </template>
 
@@ -57,7 +65,7 @@ export default {
   computed: {
     computedLinks() {
       let links = this.links.slice();
-      let thisPageIndex = links.findIndex(x => x.display === "This Page" && x.isHeader);
+      let thisPageIndex = links.findIndex((x) => x.display === "This Page" && x.isHeader);
       if (this.localRoutes.length > 0) {
         links.splice(thisPageIndex + 1, 0, ...this.localRoutes);
       } else {
@@ -67,6 +75,14 @@ export default {
     },
     show404() {
       return this.$store.state.show404;
+    },
+    showCookieAlert: {
+      get() {
+        return this.$store.state.showCookieAlert;
+      },
+      set(newVal) {
+        this.$store.commit("setShowCookieAlert", newVal);
+      },
     },
     localRoutes() {
       return this.$store.state.localRoutes;
@@ -86,7 +102,7 @@ export default {
         this.$store.commit("setShow404", false);
         this.$store.commit("setLocalRoutes", []);
       }
-    })
+    });
   },
   methods: {
     fixBackgroundHeight() {
@@ -99,29 +115,29 @@ export default {
     },
     watchForHover() {
       // lastTouchTime is used for ignoring emulated mousemove events
-      let lastTouchTime = 0
+      let lastTouchTime = 0;
 
       let enableHover = () => {
-        if (new Date() - lastTouchTime < 500) return
-        document.body.classList.add('hasHover')
-        this.$store.commit("setHasHover", true)
-      }
+        if (new Date() - lastTouchTime < 500) return;
+        document.body.classList.add("hasHover");
+        this.$store.commit("setHasHover", true);
+      };
 
       let disableHover = () => {
-        document.body.classList.remove('hasHover')
-        this.$store.commit("setHasHover", false)
-      }
+        document.body.classList.remove("hasHover");
+        this.$store.commit("setHasHover", false);
+      };
 
       let updateLastTouchTime = () => {
-        lastTouchTime = new Date()
-      }
+        lastTouchTime = new Date();
+      };
 
-      document.addEventListener('touchstart', updateLastTouchTime, true)
-      document.addEventListener('touchstart', disableHover, true)
-      document.addEventListener('mousemove', enableHover, true)
+      document.addEventListener("touchstart", updateLastTouchTime, true);
+      document.addEventListener("touchstart", disableHover, true);
+      document.addEventListener("mousemove", enableHover, true);
 
-      enableHover()
-    }
+      enableHover();
+    },
   },
 };
 </script>

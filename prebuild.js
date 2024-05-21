@@ -74,7 +74,7 @@ const createStaticLists = function (content) {
         editionList: Object.keys(editionSet).sort(),
         setList: Object.keys(setSet).sort(),
         rarityList: Object.keys(raritySet).sort()
-    });
+    }, null, 2);
 }
 
 fs.writeFileSync('./src/resources/referenceLists.json', createStaticLists(fs.readFileSync('./src/resources/cards.json')))

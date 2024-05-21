@@ -10,12 +10,12 @@
       </div>
       <div class="site-header-middle">
         <router-link to="/">
-          <img class="site-logo" src="/images/TheAccordlands_Text_2.svg" aria-label="The Accordlands"/>
+          <img class="site-logo" src="/images/TheAccordlands_Text_2.svg" aria-label="The Accordlands" />
         </router-link>
       </div>
       <div class="site-header-margin">
         <div class="site-header-margin-fixed p-2">
-          <slot name="fixedToolbar"/>
+          <slot name="fixedToolbar" />
         </div>
       </div>
     </b-row>
@@ -25,7 +25,13 @@
       </div>
     </b-row>
     <b-row class="site-footer d-block">
-      <div class="my-1 text-muted text-center">© Kingswood Games {{ new Date().getFullYear() }}</div>
+      <div class="my-1 text-muted text-center">
+        © Kingswood Games {{ new Date().getFullYear() }}
+      </div>
+      <div class="my-1 text-muted text-center">
+        <a class="text-muted" href="/static/privacy_policy.html" target="_blank">Privacy Policy</a> •
+        <a class="text-muted" href="/static/cookie_policy.html" target="_blank">Cookie Policy</a> 
+      </div>
     </b-row>
   </b-container>
 </template>
@@ -62,7 +68,7 @@
   flex-basis: 0;
   flex-grow: 1;
   height: 100%;
-  padding: .75rem;
+  padding: 0.75rem;
 }
 
 .site-header .site-header-margin {

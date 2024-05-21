@@ -1,6 +1,7 @@
 import Vue from 'vue'
 
 import {
+  AlertPlugin,
   ButtonPlugin,
   FormCheckboxPlugin,
   FormInputPlugin,
@@ -21,6 +22,7 @@ import {
 import '../scss/bootstrapConfig.scss'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+Vue.use(AlertPlugin)
 Vue.use(ButtonPlugin)
 Vue.use(FormCheckboxPlugin)
 Vue.use(FormInputPlugin)

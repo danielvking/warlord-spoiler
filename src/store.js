@@ -66,9 +66,13 @@ function createKeywordRegex(additionalKeywords) {
   }
 }
 
+let showCookieAlert = localStorage.getItem("showCookieAlert");
+if (showCookieAlert == null) showCookieAlert = true;
+
 export default new Vuex.Store({
   state: {
     show404: false,
+    showCookieAlert: showCookieAlert,
     hasHover: false,
     cardsLoaded: false,
     cards: [],
@@ -107,6 +111,10 @@ export default new Vuex.Store({
   mutations: {
     setShow404(state, val) {
       state.show404 = val;
+    },
+    setShowCookieAlert(state, val) {
+      state.showCookieAlert = val;
+      localStorage.setItem("showCookieAlert", val);
     },
     setHasHover(state, val) {
       state.hasHover = val;
