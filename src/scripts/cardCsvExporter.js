@@ -51,6 +51,7 @@ function toNameValue(value) {
 }
 
 const header = [
+  "Index",
   "Name",
   "Text",
   "Type",
@@ -85,6 +86,7 @@ function cardToCsvLines(card) {
   printInfos.forEach(p => {
     let cols = []
 
+    cols.push(fromWhatever(card.index))
     cols.push(fromWhatever(card.name))
     cols.push(fromWhatever(card.text))
     cols.push(fromWhatever(card.type))
@@ -120,6 +122,9 @@ function cardToCsvLines(card) {
 function csvTextToArrays(text) {
   let arrays = []
 
+  // Normalize line endings
+  text = text.replaceAll(/\r?\n/g, '\r\n')
+
   // Basically, break up the string on commas
   // If the substring looks like a properly escaped sequence, treat it as such, otherwise, treat it as literal
   let matchIt = text.matchAll(/(^|\r?\n|,)(?:("[^"]*(?:""[^"]*)*")|([^\r\n,]*))(?=$|\r?\n|,)/g)
@@ -143,6 +148,8 @@ function csvArraysToCards(arrays) {
   let headers = arrays[0]
   let cardMap = {}
 
+  let hasIndex = headers.includes("Index")
+
   arrays.forEach((arr, i) => {
     if (i === 0 || arr.length === 0) return;
     let obj = {}
@@ -154,12 +161,13 @@ function csvArraysToCards(arrays) {
       obj[val] = arr[j] || undefined
     })
 
-    let key = `${obj["Name"]}|${obj["Text"]}`
+    let key = hasIndex ? obj["Index"] : obj["Name"]
     let card = cardMap[key]
 
     // Create the card, if necessary, from the first instance of it in the CSV
     if (card == null) {
       card = {
+        index: obj["Index"],
         name: obj["Name"],
         text: obj["Text"],
         type: obj["Type"],
