@@ -33,7 +33,7 @@ function createKeywordRegex(additionalKeywords) {
     if (!state.cardsLoaded) return /(?!)/; // Nothing
 
     // Basic keywords
-    let keywords = (additionalKeywords || []).concat(["Spend Order:", "Order:", "Spend React:", "React:", "Limited React:", "Limited Spend React:", "Limited Order:", "Limited Spend Order:"]);
+    let keywords = (additionalKeywords || []).concat(["Limited Spend Order:", "Limited Order:", "Spend Order:", "Order:", "Limited Spend React:", "Spend React:", "Limited React:", "React:"]);
 
     function addConjecturedPlurals(word) {
       keywords.push(word + "s");
