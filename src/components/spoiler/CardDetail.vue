@@ -138,7 +138,7 @@
               <div v-else class="card-stat-value"><div>Open</div></div>
             </div>
             <!-- Text -->
-            <div class="my-3" v-html="$options.filters.formatCardText(cardData.text)"></div>
+            <div class="my-3" v-html="formattedCardText"></div>
             <!-- Print Info -->
             <div v-for="(printInfo, i) in cardData.printInfos" :key="i">
               <!-- Image Link (Set, Set Number) -->
@@ -209,16 +209,17 @@ export default {
       if (!printInfos[0]) return null;
       return printInfos[0].imageUrl;
     },
-  },
-  filters: {
-    formatCardText(value) {
+    formattedCardText() {
+      let value = this.cardData.text;
       if (!value) return value;
-      let hashReg = /(Spend Order:|Order:|Spend React:|React:)/gm;
+      let hashReg = this.$store.getters.keywordRegex;
       value = value.replace(hashReg, "<b>$&</b>");
       hashReg = /\r\n/gm;
       value = value.replace(hashReg, "<br>");
       return value;
-    },
+    }
+  },
+  filters: {
     arrayToLineBreak(value) {
       if (!Array.isArray(value)) return value;
       return value.join("\r\n");
