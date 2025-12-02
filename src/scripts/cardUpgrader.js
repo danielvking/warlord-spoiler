@@ -112,7 +112,7 @@ function upgradeV1ToV2(cardData) {
   newData.printInfos = cardData.printInfos && cardData.printInfos.map(p => {
     return {
       set: p.set,
-      setNumber: parseInt(p.setNumber),
+      setNumber: p.setNumber,
       rarity: p.rarity,
       flavorText: p.flavorText || undefined,
       artist: p.artist || undefined,

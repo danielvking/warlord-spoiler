@@ -299,7 +299,7 @@ const standardConfig = {
       return x.map(y => {
         return {
           set: y.set,
-          setNumber: fromStringToInteger(y.setNumber),
+          setNumber: fromEmptyStringToUndefined(y.setNumber),
           rarity: y.rarity,
           flavorText: fromEmptyStringToUndefined(fixCarriageReturns(y.flavorText)),
           flavorTextFormat: fromEmptyStringToUndefined(y.flavorTextFormat),
