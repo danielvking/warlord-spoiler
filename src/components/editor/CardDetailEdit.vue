@@ -252,7 +252,7 @@
               <div class="clearfix">
                 <div class="card-stat-label"><span>Set Number:</span></div>
                 <div class="card-stat-value">
-                  <b-input type="number" v-model.number="printInfo.setNumber" />
+                  <b-input v-model="printInfo.setNumber" />
                 </div>
               </div>
               <!-- Rarity -->

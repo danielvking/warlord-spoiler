@@ -140,7 +140,7 @@
           </b-form-select>
         </b-form-group>
         <b-form-group label-cols="6" label="Set Number:">
-          <b-form-input type="number" v-model.number="setNumber" @keypress.enter="onSearch" />
+          <b-form-input v-model="setNumber" @keypress.enter="onSearch" />
         </b-form-group>
         <b-form-group label-cols="6" label="Rarity:">
           <b-form-select v-model="rarity" :options="rarityList">
@@ -545,8 +545,8 @@ export default {
         }
         // Set Number
         if (this.setNumber) {
-          let setNumbers = x.printInfos.map((y) => y.setNumber).filter((y) => y);
-          if (!setNumbers.includes(this.setNumber)) return false;
+          let setNumbers = x.printInfos.map((y) => y.setNumber).filter((y) => y).map((y) => y.replace(/^0+/, ""));
+          if (!setNumbers.includes(this.setNumber.replace(/^0+/, ""))) return false;
         }
         // Rarity
         if (this.rarity) {

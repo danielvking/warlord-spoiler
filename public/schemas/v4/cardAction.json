@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://theaccordlands.com/schemas/v3/cardAction",
+  "$ref": "https://theaccordlands.com/schemas/v3/cardBase",
+  "title": "Action Card",
+  "description": "Represents a action card in Warlord",
+  "properties": {
+    "type": { "const": "Action" },
+    "alignment": { "not": {} },
+    "faction": { "not": {} },
+    "attack": { "not": {} },
+    "damageType": { "not": {} },
+    "armorClass": { "not": {} },
+    "skill": { "not": {} },
+    "hitPoints": { "not": {} },
+    "feats": { "not": {} }
+  },
+  "required": [
+    "class",
+    "level"
+  ]
+}

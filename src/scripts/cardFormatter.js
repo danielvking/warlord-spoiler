@@ -66,7 +66,7 @@ const props = {
     return value.name + " " + val
   },
   "setNumber": function(value) {
-    return String(value).padStart(3, '0')
+    return value // We were formatting this back when it was a number, but it's a string now
   }
 }
 
