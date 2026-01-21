@@ -39,6 +39,7 @@
 
 <script>
 import PageNotFound from "./components/PageNotFound.vue";
+import lzString from "lz-string";
 
 export default {
   components: { PageNotFound },
@@ -87,8 +88,27 @@ export default {
         this.$store.commit("setLocalRoutes", []);
       }
     })
+
+    if (this.$route.query.deck) {
+      this.loadDeckFromUrl();
+      this.showSidebar = true;
+    }
   },
   methods: {
+    loadDeckFromUrl() {
+      this.$store.commit("clearDeck");
+      let deckString = this.$route.query.deck;
+      let deck = lzString.decompressFromEncodedURIComponent(deckString);
+      let parsedDeck = JSON.parse(deck);
+
+      Object.entries(parsedDeck).forEach(([cardName, count]) => {
+        while (count--) {
+          this.$store.commit("incrementCardToDeck", cardName);
+        }
+      });
+
+      this.$router.replace({ query: null });
+    },
     fixBackgroundHeight() {
       // Because CSS doesn't play well with all the crazy of mobile viewports...
       let height = 0;
@@ -122,7 +142,7 @@ export default {
 
       enableHover()
     }
-  },
+  }
 };
 </script>
 

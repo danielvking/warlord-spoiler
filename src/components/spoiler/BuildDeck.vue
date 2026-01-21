@@ -5,6 +5,11 @@
         <a href="#" @click.prevent="clear"><span class="font-default">✘</span> Clear</a>
       </div>
       <div class="float-right">
+
+        <a href="#" title="Share deck" class="mr-1" @click.prevent="shareDeck">
+          <font-awesome-icon icon="share" />
+        </a>
+
         <a href="#" @click.prevent="importCards" title="Load deck" class="mr-1">
           <font-awesome-icon icon="folder-open" />
         </a>
@@ -111,6 +116,7 @@
 import CardHover from "../shared/CardHover.vue";
 import CardLink from "../shared/CardLink.vue";
 import utility from "../../scripts/utility";
+import lzString from "lz-string";
 
 export default {
   name: "BuildDeck",
@@ -166,6 +172,13 @@ export default {
     },
   },
   methods: {
+    async shareDeck() {
+      let deck = this.$store.state.deck;
+      let encodedDeck = lzString.compressToEncodedURIComponent(JSON.stringify(deck));
+      let searchParams = new URLSearchParams({ deck: encodedDeck });
+      let newUrl = new URL(`${document.location.origin}?${searchParams}`);
+      await navigator.clipboard.writeText(newUrl);
+    },
     clear() {
       this.$store.commit("clearDeck");
     },
