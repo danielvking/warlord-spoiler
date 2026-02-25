@@ -202,7 +202,7 @@ function csvArraysToCards(arrays) {
     // Add the print info, if any
     let printInfo = {
       set: obj["Set"],
-      setNumber: toMaybeNumber(obj["Set Number"]),
+      setNumber: obj["Set Number"],
       rarity: obj["Rarity"],
       flavorText: obj["Flavor Text"],
       artist: obj["Artist"],
