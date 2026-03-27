@@ -16,9 +16,13 @@ Vue.filter('cardFormatter', function(value, prop, cardData) {
 })
 
 
-new Vue({
+let app = new Vue({
   router,
   render: h => h(App),
   store: store,
   beforeCreate() { this.$store.commit('initialize'); }
-}).$mount('#app')
+});
+
+router.onReady(() => {
+  app.$mount('#app');
+});
