@@ -179142,5 +179142,43 @@
         "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/IntotheAccordlands/132+-+ITA+-+Z_adok%2C+Prey+Herder.png"
       }
     ]
+  },
+  {
+    "name": "Diabolus Ryden",
+    "text": "Burnt Offering - Limited Order: Target Character in a first rank must succeed with a reflex save (DC 18) or suffer a wound. If the target is killed this way, you may put a character into play from your hand in their former location. It permanently gains the Stormwraith trait.",
+    "type": "Character",
+    "subtype": [
+      "Overlord"
+    ],
+    "alignment": "Evil",
+    "class": [
+      "Cleric",
+      "Wizard"
+    ],
+    "faction": [
+      "Deverenian Empire"
+    ],
+    "attack": [
+      8,
+      4
+    ],
+    "damageType": "Fire",
+    "armorClass": 16,
+    "skill": 11,
+    "hitPoints": 4,
+    "level": 7,
+    "traits": [
+      "Human",
+      "Summoner"
+    ],
+    "printInfos": [
+      {
+        "set": "Overlord (OL)",
+        "setNumber": "001",
+        "rarity": "Promo",
+        "artist": "Craig Maher",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/OL/001+-+OL+-+Diabolus+Ryden+(EA).png"
+      }
+    ]
   }
 ]
