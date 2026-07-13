@@ -179184,5 +179184,54 @@
         "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/OL/001+-+OL+-+Diabolus+Ryden+(EA).png"
       }
     ]
+  },
+  {
+    "name": "Dreq Qor-Teth",
+    "text": "Your Dragons enter play ready in your third rank, lose Unique, and gain the Abyssal trait.\r\nLimited Order: Attach a fighter or wizard action to your Abyssal character. While attached, they may perform it once per turn as if from hand.",
+    "type": "Character",
+    "subtype": [
+      "Dragon Lord"
+    ],
+    "alignment": "Evil",
+    "class": [
+      "Fighter",
+      "Wizard"
+    ],
+    "faction": [
+      "Mercenary Guilds"
+    ],
+    "attack": [
+      9,
+      6,
+      6
+    ],
+    "damageType": "Fire",
+    "armorClass": 14,
+    "skill": 12,
+    "hitPoints": 4,
+    "level": 8,
+    "traits": [
+      "Abyssal"
+    ],
+    "keywords": [
+      {
+        "name": "Planar"
+      }
+    ],
+    "feats": [
+      {
+        "name": "Magic Resistance",
+        "value": 0
+      }
+    ],
+    "printInfos": [
+      {
+        "set": "Dragon Lord (DL)",
+        "setNumber": "011",
+        "rarity": "Promo",
+        "artist": "Jason Engle",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/DL/011+-+DL+-+Dreq+Qor-Teth+(EA).png"
+      }
+    ]
   }
 ]
