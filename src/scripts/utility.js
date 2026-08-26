@@ -128,12 +128,8 @@ export default {
     });
   },
   saveText(text, filename) {
-    let a = document.createElement('a');
-    a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-    a.setAttribute('download', filename);
-    document.body.append(a);
-    a.click();
-    a.remove();
+    let blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    this.saveBlob(blob, filename);
   },
   readImage() {
     if (input) input.remove();
@@ -160,12 +156,34 @@ export default {
     });
   },
   saveImage(dataUrl, filename) {
+    // Safari won't honor the download attribute on a data: URL, so go through a blob
+    let commaIndex = dataUrl.indexOf(',');
+    let meta = dataUrl.substring(5, commaIndex);
+    let data = dataUrl.substring(commaIndex + 1);
+    let isBase64 = meta.endsWith(';base64');
+    let mimeType = (isBase64 ? meta.substring(0, meta.length - 7) : meta) || 'image/png';
+
+    let bytes;
+    if (isBase64) {
+      let binary = atob(data);
+      bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    } else {
+      bytes = new TextEncoder().encode(decodeURIComponent(data));
+    }
+
+    this.saveBlob(new Blob([bytes], { type: mimeType }), filename);
+  },
+  saveBlob(blob, filename) {
+    let url = URL.createObjectURL(blob);
     let a = document.createElement('a');
-    a.setAttribute('href', dataUrl);
+    a.setAttribute('href', url);
     a.setAttribute('download', filename);
     document.body.append(a);
     a.click();
     a.remove();
+    // Safari starts the download asynchronously; revoking in the same tick cancels it
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
   },
   stringCompare(a, b) {
     return (a || "").localeCompare(b || "");
