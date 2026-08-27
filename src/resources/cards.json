@@ -904,7 +904,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -945,7 +944,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -1726,7 +1724,6 @@
     "alignment": "Evil",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -1776,7 +1773,8 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Rogue"
+      "Rogue",
+      "Wizard"
     ],
     "faction": [
       "Elven Branches"
@@ -2717,7 +2715,6 @@
     "alignment": "Good",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -2805,7 +2802,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -2967,7 +2963,6 @@
     "type": "Item",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "level": 7,
@@ -4514,7 +4509,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -4657,7 +4651,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -5181,7 +5174,6 @@
     "alignment": "Evil",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -5576,7 +5568,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -6658,7 +6649,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 1,
@@ -7472,7 +7462,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "attack": [
@@ -12388,7 +12377,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 8,
@@ -13471,7 +13459,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "armorClass": 3,
@@ -13518,7 +13505,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 6,
@@ -13658,7 +13644,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "attack": [
@@ -13823,7 +13808,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 5,
@@ -13867,7 +13851,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 6,
@@ -14210,7 +14193,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "attack": [
@@ -14268,7 +14250,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "attack": [
@@ -14347,7 +14328,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "attack": [
@@ -14462,7 +14442,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "attack": [
@@ -17195,7 +17174,8 @@
     ],
     "level": 6,
     "traits": [
-      "Weapon Dagger"
+      "Weapon",
+      "Dagger"
     ],
     "editions": [
       "Alliance",
@@ -19415,7 +19395,6 @@
     "type": "Action",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "level": 5,
@@ -19500,7 +19479,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 2,
@@ -19576,7 +19554,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 1,
@@ -26143,7 +26120,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -26502,7 +26478,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 1,
@@ -26769,7 +26744,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -28806,7 +28780,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -29813,7 +29786,6 @@
     "alignment": "Evil",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -31546,7 +31518,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 4,
@@ -32144,8 +32115,7 @@
         "artist": "Malcolm McClinton",
         "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/Betrayal/Well+Supplied.jpg"
       }
-    ],
-    "damageType": "Physical"
+    ]
   },
   {
     "name": "Iam Hotelen",
@@ -32463,7 +32433,6 @@
     "class": [
       "Fighter",
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -32798,7 +32767,6 @@
     "alignment": "Good",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -33265,7 +33233,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -35001,7 +34968,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -37530,9 +37496,8 @@
       "Warlord"
     ],
     "alignment": "Evil",
-    "class": [
+ "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -38661,7 +38626,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "level": 1,
@@ -38779,7 +38743,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 1,
@@ -38829,7 +38792,6 @@
     "type": "Action",
     "class": [
       "Cleric",
-      "Rogue",
       "Rogue"
     ],
     "level": 1,
@@ -38883,7 +38845,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "level": 1,
@@ -38910,7 +38871,6 @@
     "type": "Action",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "level": 1,
@@ -39095,7 +39055,6 @@
     "type": "Action",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "level": 2,
@@ -39121,7 +39080,6 @@
     "type": "Action",
     "class": [
       "Cleric",
-      "Rogue",
       "Rogue"
     ],
     "level": 2,
@@ -39147,7 +39105,6 @@
     "type": "Action",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "level": 2,
@@ -39246,7 +39203,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 3,
@@ -39334,7 +39290,6 @@
     "type": "Action",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "level": 3,
@@ -39360,7 +39315,6 @@
     "type": "Action",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "level": 3,
@@ -39492,7 +39446,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 4,
@@ -39951,7 +39904,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 4,
@@ -40350,7 +40302,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -42586,7 +42537,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -43142,7 +43092,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -43318,7 +43267,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -43422,7 +43370,6 @@
     "type": "Item",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "level": 5,
@@ -43544,7 +43491,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "level": 5,
@@ -43570,7 +43516,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Rogue",
       "Rogue"
     ],
     "armorClass": 2,
@@ -43772,7 +43717,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "level": 6,
@@ -44455,7 +44399,6 @@
     "type": "Action",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "level": 5,
@@ -44480,7 +44423,6 @@
     "type": "Action",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "level": 2,
@@ -45761,7 +45703,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -50147,7 +50088,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -51884,7 +51824,8 @@
     "armorClass": 2,
     "level": 9,
     "traits": [
-      "Armor Mail"
+      "Armor",
+      "Mail"
     ],
     "keywords": [
       {
@@ -52628,7 +52569,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 6,
@@ -52657,7 +52597,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 5,
@@ -52761,7 +52700,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 2,
@@ -52819,7 +52757,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -53700,7 +53637,6 @@
     "alignment": "Evil",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -55315,7 +55251,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "attack": [
@@ -57789,7 +57724,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 2,
@@ -57968,7 +57902,6 @@
     "type": "Action",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "level": 5,
@@ -58500,7 +58433,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -59021,7 +58953,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -59113,7 +59044,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "attack": [
@@ -59168,7 +59098,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "armorClass": 3,
@@ -59330,7 +59259,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "armorClass": 2,
@@ -59488,7 +59416,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 3,
@@ -62718,7 +62645,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 3,
@@ -62875,7 +62801,6 @@
     "type": "Action",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "level": 2,
@@ -63103,7 +63028,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 1,
@@ -63344,7 +63268,6 @@
     "class": [
       "Cleric",
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "armorClass": 2,
@@ -63660,7 +63583,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "attack": [
@@ -64123,7 +64045,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -64389,7 +64310,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -64435,7 +64355,6 @@
     "alignment": "Good",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -64517,7 +64436,6 @@
     "alignment": "Good",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -64904,7 +64822,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 6,
@@ -65168,7 +65085,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -66789,7 +66705,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 5,
@@ -67472,7 +67387,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "level": 8,
@@ -67919,7 +67833,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 8,
@@ -68390,7 +68303,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "armorClass": 2,
@@ -72307,7 +72219,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "attack": [
@@ -74663,7 +74574,6 @@
     "alignment": "Good",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -75320,7 +75230,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 5,
@@ -75688,7 +75597,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 5,
@@ -76078,7 +75986,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 2,
@@ -77613,7 +77520,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 1,
@@ -78672,7 +78578,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "armorClass": 2,
@@ -78858,7 +78763,6 @@
     "class": [
       "Cleric",
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "attack": [
@@ -80544,7 +80448,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "armorClass": 2,
@@ -81045,7 +80948,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -81853,7 +81755,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "attack": [
@@ -82716,7 +82617,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 3,
@@ -83169,7 +83069,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -84539,7 +84438,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "attack": [
@@ -85664,7 +85562,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -85749,7 +85646,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -87645,7 +87541,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "armorClass": 2,
@@ -88226,7 +88121,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -88657,7 +88551,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -90740,7 +90633,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "attack": [
@@ -90900,7 +90792,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "armorClass": 2,
@@ -91580,7 +91471,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -92241,7 +92131,6 @@
     "type": "Item",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "level": 6,
@@ -92501,7 +92390,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 5,
@@ -94395,7 +94283,6 @@
     "type": "Action",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "level": 2,
@@ -94420,7 +94307,6 @@
     "type": "Action",
     "class": [
       "Cleric",
-      "Rogue",
       "Rogue"
     ],
     "level": 2,
@@ -94446,7 +94332,6 @@
     "type": "Action",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "level": 2,
@@ -94472,7 +94357,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "level": 2,
@@ -96205,7 +96089,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -96843,7 +96726,6 @@
     "alignment": "Evil",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -98083,7 +97965,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -98168,7 +98049,6 @@
     "alignment": "Evil",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -98719,7 +98599,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -100071,7 +99950,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -100903,7 +100781,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -100984,7 +100861,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -101414,7 +101290,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -101529,7 +101404,6 @@
     "alignment": "Evil",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -101795,7 +101669,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -101874,7 +101747,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -102135,7 +102007,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -102295,7 +102166,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -102578,7 +102448,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -103918,7 +103787,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -104056,7 +103924,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -104413,7 +104280,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "level": 6,
@@ -104442,7 +104308,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Rogue",
       "Rogue"
     ],
     "level": 6,
@@ -104471,7 +104336,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "level": 6,
@@ -105091,7 +104955,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -106411,7 +106274,6 @@
     "alignment": "Evil",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -106461,7 +106323,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -109538,7 +109399,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 6,
@@ -109562,7 +109422,6 @@
     "type": "Action",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "level": 6,
@@ -109826,7 +109685,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -110413,7 +110271,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -110479,7 +110336,6 @@
     "type": "Action",
     "class": [
       "Cleric",
-      "Rogue",
       "Rogue"
     ],
     "level": 10,
@@ -110504,7 +110360,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -110701,7 +110556,6 @@
     "alignment": "Evil",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -112161,7 +112015,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -112944,7 +112797,6 @@
     "alignment": "Evil",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -114452,7 +114304,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -114493,7 +114344,6 @@
     "type": "Action",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "level": 10,
@@ -117466,7 +117316,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -117558,7 +117407,6 @@
     "alignment": "Evil",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -118084,7 +117932,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -121345,7 +121192,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -121920,7 +121766,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -123644,7 +123489,6 @@
     "alignment": "Good",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -124118,7 +123962,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -128126,7 +127969,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -128357,7 +128199,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -129070,7 +128911,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -129661,7 +129501,6 @@
     "alignment": "Good",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -130034,7 +129873,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -131086,7 +130924,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -134783,7 +134620,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "armorClass": 3,
@@ -135223,7 +135059,6 @@
     "alignment": "Good",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -135547,7 +135382,6 @@
     "alignment": "Evil",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -137006,7 +136840,6 @@
     "alignment": "Good",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -137915,7 +137748,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "attack": [
@@ -137986,7 +137818,6 @@
     "class": [
       "Fighter",
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -139716,7 +139547,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -140124,7 +139954,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -140643,11 +140472,10 @@
   },
   {
     "name": "Circlet of Veiled Sight",
-    "text": "Rogue and wizard only.\r\nReact: Before a striike roll, spend Circlet: The strike suffers -3 to the die roll. After the strike, you may move this character forward or backward 1 rank.",
+    "text": "Rogue and wizard only.\r\nReact: Before a strike roll, spend Circlet: The strike suffers -3 to the die roll. After the strike, you may move this character forward or backward 1 rank.",
     "type": "Item",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "attack": [
@@ -140963,7 +140791,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "armorClass": 2,
@@ -141148,7 +140975,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "attack": [
@@ -141245,7 +141071,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -141301,7 +141126,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "armorClass": 1,
@@ -141337,7 +141161,6 @@
       "Cleric",
       "Fighter",
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -141382,7 +141205,6 @@
     "alignment": "Evil",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -141425,7 +141247,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -141648,7 +141469,6 @@
     "alignment": "Good",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -142018,7 +141838,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -142057,7 +141876,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -142992,7 +142810,6 @@
     "type": "Action",
     "class": [
       "Cleric",
-      "Rogue",
       "Rogue"
     ],
     "level": 3,
@@ -143333,7 +143150,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "level": 8,
@@ -143734,7 +143550,6 @@
     "alignment": "Evil",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -144321,7 +144136,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -144394,7 +144208,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -144742,7 +144555,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -145833,7 +145645,6 @@
     "type": "Action",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "level": 3,
@@ -145882,7 +145693,6 @@
     "type": "Action",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "level": 4,
@@ -145964,7 +145774,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -146307,7 +146116,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -146936,7 +146744,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "armorClass": 2,
@@ -146966,7 +146773,6 @@
     "type": "Item",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "armorClass": 2,
@@ -147085,7 +146891,6 @@
     "type": "Item",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "level": 6,
@@ -149237,7 +149042,8 @@
     "class": [
       "Cleric",
       "Fighter",
-      "Rogue"
+      "Rogue",
+      "Wizard"
     ],
     "faction": [
       "Mercenary Guilds"
@@ -150277,7 +150083,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -150661,7 +150466,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -155258,7 +155062,6 @@
     "alignment": "Good",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -155673,7 +155476,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "level": 6,
@@ -158098,7 +157900,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -159428,7 +159229,7 @@
       "Cleric",
       "Fighter",
       "Rogue",
-      "Rogue"
+      "Wizard"
     ],
     "faction": [
       "Dwarven Forges"
@@ -159689,7 +159490,6 @@
     "alignment": "Evil",
     "class": [
       "Cleric",
-      "Wizard",
       "Wizard"
     ],
     "faction": [
@@ -160483,7 +160283,6 @@
     "alignment": "Good",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -161331,7 +161130,6 @@
     "alignment": "Evil",
     "class": [
       "Fighter",
-      "Rogue",
       "Rogue"
     ],
     "faction": [
@@ -161458,7 +161256,6 @@
     "alignment": "Good",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "faction": [
@@ -168364,7 +168161,7 @@
   },
   {
     "name": "Fasolt",
-    "text": "Fasolt may not equip items non-Weapon items with traits.\r\nReact: After Fasolt hits with a melee strike: Target each character in the hit character's rank whose level + 8 is less than the natural die roll. Move each target backward one rank.",
+    "text": "Fasolt may not equip non-Weapon items with traits.\r\nReact: After Fasolt hits with a melee strike: Target each character in the hit character's rank whose level + 8 is less than the natural die roll. Move each target backward one rank.",
     "type": "Character",
     "subtype": [
       "Warlord"
@@ -168934,7 +168731,6 @@
     "type": "Action",
     "class": [
       "Rogue",
-      "Wizard",
       "Wizard"
     ],
     "level": 3,
@@ -169660,7 +169456,6 @@
     "type": "Item",
     "class": [
       "Cleric",
-      "Fighter",
       "Fighter"
     ],
     "attack": [
@@ -176474,7 +176269,7 @@
   {
     "name": "Sand Fiend",
     "type": "Character",
-    "alignment": "Good",
+    "alignment": "Evil",
     "class": [
       "Cleric"
     ],
