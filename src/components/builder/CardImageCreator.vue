@@ -9,31 +9,31 @@
             {{ cardData.name }}
           </div>
           <div v-show="hasTopStats" class="image-atk card-title">
-            {{ cardData.attack | cardFormatter("attack", cardData) }}
+            {{ cardFormatter(cardData.attack, "attack", cardData) }}
           </div>
           <div v-show="hasTopStats" class="image-ac card-title">
-            {{ cardData.armorClass | cardFormatter("armorClass", cardData) }}
+            {{ cardFormatter(cardData.armorClass, "armorClass", cardData) }}
           </div>
           <div class="image-lvl card-title" :class="hasWhiteLevel ? 'text-white' : ''">
-            {{ cardData.level | cardFormatter("level", cardData) }}
+            {{ cardFormatter(cardData.level, "level", cardData) }}
           </div>
           <div v-show="hasBottomStats" class="image-sk card-title text-white">
-            {{ cardData.skill | cardFormatter("skill", cardData) }}
+            {{ cardFormatter(cardData.skill, "skill", cardData) }}
           </div>
           <div v-show="hasBottomStats" class="image-hp card-title text-white">
-            {{ cardData.hitPoints | cardFormatter("hitPoints", cardData) }}
+            {{ cardFormatter(cardData.hitPoints, "hitPoints", cardData) }}
           </div>
           <div v-if="points" class="image-set card-subtitle">
             {{ points }}
           </div>
           <div class="image-text card-text">
             <div ref="imageTextWrapper" class="image-text-wrapper">
-              <div class="image-text-edge float-left"></div>
-              <div class="image-text-edge float-right"></div>
-              <div class="image-text-corner-top float-left"></div>
-              <div class="image-text-corner-top float-right"></div>
-              <div class="image-text-corner-bottom float-left"></div>
-              <div class="image-text-corner-bottom float-right"></div>
+              <div class="image-text-edge float-start"></div>
+              <div class="image-text-edge float-end"></div>
+              <div class="image-text-corner-top float-start"></div>
+              <div class="image-text-corner-top float-end"></div>
+              <div class="image-text-corner-bottom float-start"></div>
+              <div class="image-text-corner-bottom float-end"></div>
               <span ref="imageTextSpan" v-html="formattedCardText"></span>
             </div>
           </div>
@@ -224,6 +224,10 @@ export default {
     },
   },
   methods: {
+    cardFormatter(value, prop, cardData) {
+      return formatCardProperty(prop, value, cardData);
+    },
+
     computeFormattedCardText() {
       let header = this.formattedHeaderText;
       if (this.headerHtml && legalHtml(this.headerHtml)) {
@@ -384,11 +388,11 @@ export default {
             // Safari often fails the first load for some reason
             if (isSafari) result = await domtoimage.toPng(holder);
             if (token.cancel) return;
-            this.$emit("input", result);
+            this.$emit("update:modelValue", result);
           } catch (error) {
             this.renderingError = true;
             this.$nextTick(async () => {
-              this.$emit("input", await domtoimage.toPng(holder));
+              this.$emit("update:modelValue", await domtoimage.toPng(holder));
             })
             throw error;
           }
@@ -532,11 +536,11 @@ export default {
   height: calc(26px + (100% - 148px) / 2);
 }
 
-.image-text-corner-bottom.float-left {
+.image-text-corner-bottom.float-start {
   clear: left;
 }
 
-.image-text-corner-bottom.float-right {
+.image-text-corner-bottom.float-end {
   clear: right;
 }
 

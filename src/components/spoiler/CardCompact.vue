@@ -1,10 +1,16 @@
 <template>
   <div class="card-body d-flex">
     <div style="min-width: 80px">
-      <b-img-lazy v-if="!hideImages" :class="{ 'visible': loaded && !hidden }" :src="defaultImage" @load.native="handleLoad"/>
+      <img
+        v-if="!hideImages && defaultImage"
+        loading="lazy"
+        :class="{ visible: loaded && !hidden }"
+        :src="defaultImage"
+        @load="handleLoad"
+      />
     </div>
     <div class="flex-grow-1">
-      <span class="font-weight-bold">{{ card.name }}</span>
+      <span class="fw-bold">{{ card.name }}</span>
       <br />
       <span>{{ card.text }}</span>
     </div>

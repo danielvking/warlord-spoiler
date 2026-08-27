@@ -13,17 +13,17 @@
         <b-form-group label-cols="6" label="Text:">
           <b-form-input v-model="text" @keypress.enter="onSearch" />
         </b-form-group>
-        <b-form-group label-cols="6" label="Traits:" label-class="my-1">
-          <v-select multiple v-model="traits" :options="traitList" />
+        <b-form-group label-cols="6" label="Traits:" label-for="txtTraits">
+          <option-tags id="txtTraits" v-model="traits" :options="traitList" />
         </b-form-group>
-        <b-form-group label-cols="6" label="Exclude Traits:" label-class="my-1">
-          <v-select multiple v-model="excludeTraits" :options="traitList" />
+        <b-form-group label-cols="6" label="Exclude Traits:" label-for="txtExcludeTraits">
+          <option-tags id="txtExcludeTraits" v-model="excludeTraits" :options="traitList" />
         </b-form-group>
-        <b-form-group label-cols="6" label="Keywords:" label-class="my-1">
-          <v-select multiple v-model="keywords" :options="keywordList" />
+        <b-form-group label-cols="6" label="Keywords:" label-for="txtKeywords">
+          <option-tags id="txtKeywords" v-model="keywords" :options="keywordList" />
         </b-form-group>
-        <b-form-group label-cols="6" label="Exclude Keywords:" label-class="my-1">
-          <v-select multiple v-model="excludeKeywords" :options="keywordList" />
+        <b-form-group label-cols="6" label="Exclude Keywords:" label-for="txtExcludeKeywords">
+          <option-tags id="txtExcludeKeywords" v-model="excludeKeywords" :options="keywordList" />
         </b-form-group>
         <b-form-group label-cols="6" label="Damage Type:">
           <b-form-select v-model="damageType" :options="damageTypeList">
@@ -39,8 +39,8 @@
             </template>
           </b-form-select>
         </b-form-group>
-        <b-form-group label-cols="6" label="Character Type:">
-          <v-select multiple v-model="characterType" :options="characterTypeList" />
+        <b-form-group label-cols="6" label="Character Type:" label-for="txtCharacterType">
+          <option-tags id="txtCharacterType" v-model="characterType" :options="characterTypeList" />
         </b-form-group>
         <b-form-group label-cols="6" label="Alignment:">
           <b-form-select v-model="alignment" :options="alignmentList">
@@ -80,49 +80,37 @@
       <b-col class="my-1" cols="12" md="6">
         <b-form-group label-cols="6" label="LVL:" label-for="txtLvl">
           <b-input-group>
-            <b-input-group-prepend>
               <b-form-select class="font-default radius-right-0" v-model="levelOp" :options="['≥', '=', '≤']" />
-            </b-input-group-prepend>
             <b-form-input id="txtLvl" type="number" v-model.number="level" @keypress.enter="onSearch" />
           </b-input-group>
         </b-form-group>
         <b-form-group label-cols="6" label="Number of Attacks:" label-for="txtNoAtks">
           <b-input-group>
-            <b-input-group-prepend>
               <b-form-select class="font-default radius-right-0" v-model="numAttacksOp" :options="['≥', '=', '≤']" />
-            </b-input-group-prepend>
             <b-form-input id="txtNoAtks" type="number" v-model.number="numAttacks" @keypress.enter="onSearch" />
           </b-input-group>
         </b-form-group>
         <b-form-group label-cols="6" label="ATK (First):" label-for="txtAtk">
           <b-input-group>
-            <b-input-group-prepend>
               <b-form-select class="font-default radius-right-0" v-model="attackOp" :options="['≥', '=', '≤']" />
-            </b-input-group-prepend>
             <b-form-input id="txtAtk" type="number" v-model.number="attack" @keypress.enter="onSearch" />
           </b-input-group>
         </b-form-group>
         <b-form-group label-cols="6" label="AC:" label-for="txtAc">
           <b-input-group>
-            <b-input-group-prepend>
               <b-form-select class="font-default radius-right-0" v-model="armorClassOp" :options="['≥', '=', '≤']" />
-            </b-input-group-prepend>
             <b-form-input id="txtAc" type="number" v-model.number="armorClass" @keypress.enter="onSearch" />
           </b-input-group>
         </b-form-group>
         <b-form-group label-cols="6" label="SK:" label-for="txtSk">
           <b-input-group>
-            <b-input-group-prepend>
               <b-form-select class="font-default radius-right-0" v-model="skillOp" :options="['≥', '=', '≤']" />
-            </b-input-group-prepend>
             <b-form-input id="txtSk" type="number" v-model.number="skill" @keypress.enter="onSearch" />
           </b-input-group>
         </b-form-group>
         <b-form-group label-cols="6" label="HP:" label-for="txtHp">
           <b-input-group>
-            <b-input-group-prepend>
               <b-form-select class="font-default radius-right-0" v-model="hitPointsOp" :options="['≥', '=', '≤']" />
-            </b-input-group-prepend>
             <b-form-input id="txtHp" type="number" v-model.number="hitPoints" @keypress.enter="onSearch" />
           </b-input-group>
         </b-form-group>
@@ -166,18 +154,18 @@
 
       <b-col class="my-1" cols="12" md="6">
         <!-- Feats -->
-        <b-form-row
-          class="form-group"
+        <div class="row row-tight form-group"
+         
           v-for="i in selectedFeats.length + Math.min(1, featList.length)"
           :key="'Feat' + i"
         >
           <template v-if="!selectedFeats[i - 1]">
             <b-col cols="6">
-              <b-select v-model="selectedFeats[i - 1]" :options="featList" @input="featOps[selectedFeats[i - 1]] = '='">
+              <b-form-select :model-value="selectedFeats[i - 1] ?? null" @update:model-value="x => selectFeat(x, i - 1)" :options="featList">
                 <template v-slot:first>
-                  <b-form-select-option :value="undefined">- Select Feat -</b-form-select-option>
+                  <b-form-select-option :value="null">- Select Feat -</b-form-select-option>
                 </template>
-              </b-select>
+              </b-form-select>
             </b-col>
           </template>
           <template v-else>
@@ -187,13 +175,11 @@
             </b-col>
             <b-col cols="6">
               <b-input-group>
-                <b-input-group-prepend>
                   <b-form-select
                     class="font-default radius-right-0"
                     v-model="featOps[selectedFeats[i - 1]]"
                     :options="['≥', '=', '≤']"
                   />
-                </b-input-group-prepend>
                 <b-form-input
                   :id="'txtFeat' + i"
                   placeholder="Any"
@@ -204,21 +190,21 @@
               </b-input-group>
             </b-col>
           </template>
-        </b-form-row>
+        </div>
 
         <!-- Misc -->
-        <b-form-row
-          class="form-group"
+        <div class="row row-tight form-group"
+         
           v-for="i in selectedMisc.length + Math.min(1, miscList.length)"
           :key="'Misc' + i"
         >
           <template v-if="!selectedMisc[i - 1]">
             <b-col cols="6">
-              <b-select v-model="selectedMisc[i - 1]" :options="miscList" @input="miscOps[selectedMisc[i - 1]] = '='">
+              <b-form-select :model-value="selectedMisc[i - 1] ?? null" @update:model-value="x => selectMisc(x, i - 1)" :options="miscList">
                 <template v-slot:first>
-                  <b-form-select-option :value="undefined">- Select Misc -</b-form-select-option>
+                  <b-form-select-option :value="null">- Select Misc -</b-form-select-option>
                 </template>
-              </b-select>
+              </b-form-select>
             </b-col>
           </template>
           <template v-else>
@@ -228,13 +214,11 @@
             </b-col>
             <b-col cols="6">
               <b-input-group>
-                <b-input-group-prepend>
                   <b-form-select
                     class="font-default radius-right-0"
                     v-model="miscOps[selectedMisc[i - 1]]"
                     :options="['≥', '=', '≤']"
                   />
-                </b-input-group-prepend>
                 <b-form-input
                   :id="'txtMisc' + i"
                   placeholder="Any"
@@ -245,7 +229,7 @@
               </b-input-group>
             </b-col>
           </template>
-        </b-form-row>
+        </div>
       </b-col>
     </b-row>
 
@@ -255,6 +239,7 @@
 
 <script>
 import utility from "../../scripts/utility";
+import OptionTags from "../shared/OptionTags.vue";
 
 function initialState() {
   return {
@@ -305,6 +290,7 @@ function initialState() {
 
 export default {
   name: "SearchAdvanced",
+  components: { OptionTags },
   data() {
     return initialState();
   },
@@ -378,9 +364,21 @@ export default {
     clear() {
       Object.assign(this.$data, initialState());
     },
+    // The picker binds null so its placeholder option matches and shows;
+    // writing the choice through here keeps that binding one-way.
+    selectFeat(name, index) {
+      if (name == null) return;
+      this.selectedFeats[index] = name;
+      this.featOps[name] = "=";
+    },
     deselectFeat(index) {
       this.featValues[this.selectedFeats[index]] = null;
       this.selectedFeats.splice(index, 1);
+    },
+    selectMisc(name, index) {
+      if (name == null) return;
+      this.selectedMisc[index] = name;
+      this.miscOps[name] = "=";
     },
     deselectMisc(index) {
       this.miscValues[this.selectedMisc[index]] = null;
@@ -646,5 +644,10 @@ export default {
 .radius-right-0 {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
+  /* .form-select sizes to its content plus arrow padding, which takes more
+     width than the number entry beside it. */
+  flex: 0 0 auto;
+  width: auto;
+  padding-right: 1.75rem;
 }
 </style>

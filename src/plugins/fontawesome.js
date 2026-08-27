@@ -1,5 +1,3 @@
-import Vue from 'vue'
-
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
   faBars,
@@ -36,4 +34,8 @@ library.add(faPrint)
 library.add(faSave)
 library.add(faSignOutAlt)
 
-Vue.component('font-awesome-icon', FontAwesomeIcon)
+export default {
+  install(app) {
+    app.component('font-awesome-icon', FontAwesomeIcon)
+  }
+}

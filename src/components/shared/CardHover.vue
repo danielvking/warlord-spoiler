@@ -1,16 +1,16 @@
 <template>
   <b-popover
     v-if="targetInternal != null"
-    :show="showInternal"
-    custom-class="popover-wide"
+    v-model="showInternal"
+    body-class="popover-wide"
     :target="targetInternal"
     boundary="viewport"
-    triggers="manual"
+    manual
     :placement="placement"
     @shown="handleShown"
     @hidden="handleHidden"
   >
-    <img :src="image.src"
+    <img v-if="image" :src="image.src"
         :style="{ width: width + 'px', height: height + 'px' }"/>
   </b-popover>
 </template>
@@ -23,7 +23,7 @@ export default {
     card: Object,
     placement: {
       type: String,
-      default: 'bottomleft'
+      default: 'bottom-end'
     }
   },
   data() {

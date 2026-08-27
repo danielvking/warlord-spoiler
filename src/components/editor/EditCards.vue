@@ -1,20 +1,20 @@
 <template>
   <div class="d-flex flex-column flex-grow-1 overflow-hidden">
     <div class="px-2 py-1">
-      <div class="float-left">
+      <div class="float-start">
         <a href="#" @click.prevent="clear"><span class="font-default">✘</span> Clear</a>
       </div>
-      <div class="float-right">
-        <a href="#" @click.prevent="newCard" title="New card" class="mr-1">
+      <div class="float-end">
+        <a href="#" @click.prevent="newCard" title="New card" class="me-1">
           <font-awesome-icon icon="plus-square" />
         </a>
-        <a href="#" @click.prevent="importCsv" title="Import cards from CSV" class="mr-1">
+        <a href="#" @click.prevent="importCsv" title="Import cards from CSV" class="me-1">
           <font-awesome-icon icon="file-arrow-up" />
         </a>
-        <a href="#" @click.prevent="exportCsv" title="Export cards as CSV" class="mr-1">
+        <a href="#" @click.prevent="exportCsv" title="Export cards as CSV" class="me-1">
           <font-awesome-icon icon="file-csv" />
         </a>
-        <a href="#" @click.prevent="exportCards" title="Save cards" class="mr-1">
+        <a href="#" @click.prevent="exportCards" title="Save cards" class="me-1">
           <font-awesome-icon icon="save" />
         </a>
         <a href="#" @click.prevent="exitEditing" title="Exit editing">
@@ -32,8 +32,8 @@
           :items="typedCards[type]"
           :fields="[
             { key: 'name', label: type },
-            { key: 'count', label: '', class: 'text-right shrink' },
-            { key: 'buttons', class: 'text-right shrink' },
+            { key: 'count', label: '', class: 'text-end shrink' },
+            { key: 'buttons', label: '', class: 'text-end shrink' },
           ]"
           small
           borderless
@@ -56,7 +56,7 @@
         </b-table>
         <b-table
           class="mb-0"
-          :fields="[{ label: 'Total' }, { key: 'buttons', class: 'text-right shrink' }]"
+          :fields="[{ key: 'total', label: 'Total' }, { key: 'buttons', label: '', class: 'text-end shrink' }]"
           small
           borderless
           striped

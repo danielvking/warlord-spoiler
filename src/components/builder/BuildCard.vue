@@ -6,10 +6,10 @@
       </div>
       <b-row>
         <b-col cols="12">
-          <b-select v-model="selectedRulesetOption" :options="rulesetOptions"></b-select>
+          <b-form-select v-model="selectedRulesetOption" :options="rulesetOptions"></b-form-select>
           <router-link
             v-if="hasGuide"
-            class="float-right m-1"
+            class="float-end m-1"
             :to="{ name: 'rulesetGuide', params: { id: selectedRulesetOption } }"
           >
             <span><font-awesome-icon icon="external-link-alt" /> View Ruleset Guide</span>
@@ -25,22 +25,22 @@
                 :card-data="cardData"
                 :card-image-url="cardUserImageDataUrl"
                 :points="infoCache.pointTotal"
-                @input="(x) => (cardImageDataUrl = x)"
-                :main-html.sync="formatText.main.text"
-                :flavor-html.sync="formatText.flavor.text"
+                @update:model-value="(x) => (cardImageDataUrl = x)"
+                v-model:main-html="formatText.main.text"
+                v-model:flavor-html="formatText.flavor.text"
                 :keyword-regex="keywordRegex"
               />
 
               <!-- Image -->
-              <b-button class="mb-2" variant="outline-primary" block @click="uploadImage">Upload Image</b-button>
+              <b-button class="mb-2 w-100" variant="outline-primary"  @click="uploadImage">Upload Image</b-button>
               <img ref="imageActual" class="card-image" :src="cardImageDataUrl" />
               <div class="w-100 mt-2">
                 <b-row>
                   <b-col cols="6">
-                    <b-button variant="outline-primary" block @click="importCard">Import Card</b-button>
+                    <b-button class="w-100" variant="outline-primary"  @click="importCard">Import Card</b-button>
                   </b-col>
                   <b-col cols="6">
-                    <b-button variant="outline-primary" block @click="exportCard">Export Card</b-button>
+                    <b-button class="w-100" variant="outline-primary"  @click="exportCard">Export Card</b-button>
                   </b-col>
                 </b-row>
                 <!-- Points Desktop -->
@@ -74,7 +74,7 @@
             </div>
 
             <!-- Reset -->
-            <b-btn class="mb-2" block variant="outline-secondary" @click="reset">Reset</b-btn>
+            <b-button class="mb-2 w-100"  variant="outline-secondary" @click="reset">Reset</b-button>
 
             <div class="p-1">
               <!-- Name -->
@@ -82,7 +82,7 @@
                 <div class="card-stat-label"><span>Card Name:</span></div>
                 <div class="card-stat-value">
                   <info-helper :info-cache="infoCache" property="name" @focusout="refreshCache('name')">
-                    <b-form-input v-model="cardTemp.name" @input="refreshCache('name')" />
+                    <b-form-input v-model="cardTemp.name" @update:model-value="refreshCache('name')" />
                   </info-helper>
                 </div>
               </div>
@@ -91,7 +91,7 @@
                 <div class="card-stat-label"><span>Level:</span></div>
                 <div class="card-stat-value">
                   <info-helper :info-cache="infoCache" property="level" @focusout="refreshCache('level')">
-                    <b-form-input v-model="cardTemp.level" @input="refreshCache('level')" />
+                    <b-form-input v-model="cardTemp.level" @update:model-value="refreshCache('level')" />
                   </info-helper>
                 </div>
               </div>
@@ -103,10 +103,10 @@
                     <b-form-select
                       v-model="cardTemp.alignment"
                       :options="alignmentList"
-                      @input="refreshCache('alignment')"
+                      @update:model-value="refreshCache('alignment')"
                     >
                       <template #first>
-                        <b-form-select-option :value="undefined"></b-form-select-option>
+                        <b-form-select-option :value="null"></b-form-select-option>
                       </template>
                     </b-form-select>
                   </info-helper>
@@ -117,7 +117,7 @@
                 <div class="card-stat-label"><span>Type:</span></div>
                 <div class="card-stat-value">
                   <info-helper :info-cache="infoCache" property="type" @focusout="refreshCache('type')">
-                    <b-form-select v-model="cardTemp.type" :options="typeList" @input="refreshCache('type')" />
+                    <b-form-select v-model="cardTemp.type" :options="typeList" @update:model-value="refreshCache('type')" />
                   </info-helper>
                 </div>
               </div>
@@ -126,7 +126,7 @@
                 <div class="card-stat-label"><span>Subtype:</span></div>
                 <div class="card-stat-value">
                   <info-helper :info-cache="infoCache" property="subtype" @focusout="refreshCache('subtype')">
-                    <v-select multiple v-model="cardTemp.subtype" :options="subtypeList" @input="refreshCache('subtype')"/>
+                    <option-tags v-model="cardTemp.subtype" :options="subtypeList" @change="refreshCache('subtype')"/>
                   </info-helper>
                 </div>
               </div>
@@ -135,12 +135,11 @@
                 <div class="card-stat-label"><span>Class:</span></div>
                 <div class="card-stat-value">
                   <info-helper :info-cache="infoCache" property="class" @focusout="refreshCache('class')">
-                    <v-select
-                      multiple
+                    <option-tags
                       v-model="cardTemp.class"
                       :options="classList"
                       placeholder="(Classless)"
-                      @input="refreshCache('class')"
+                      @change="refreshCache('class')"
                     />
                   </info-helper>
                 </div>
@@ -150,7 +149,7 @@
                 <div class="card-stat-label"><span>Attack:</span></div>
                 <div class="card-stat-value">
                   <info-helper :info-cache="infoCache" property="attack" @focusout="refreshCache('attack')">
-                    <b-form-input v-model="cardTemp.attack" @input="refreshCache('attack')" />
+                    <b-form-input v-model="cardTemp.attack" @update:model-value="refreshCache('attack')" />
                   </info-helper>
                 </div>
               </div>
@@ -160,9 +159,9 @@
                 <div class="card-stat-label"><span>Damage Type:</span></div>
                 <div class="card-stat-value">
                   <info-helper :info-cache="infoCache" property="damageType" @focusout="refreshCache('damageType')">
-                    <b-form-select v-model="cardTemp.damageType" :options="damageTypeList" @input="refreshCache('damageType')">
+                    <b-form-select v-model="cardTemp.damageType" :options="damageTypeList" @update:model-value="refreshCache('damageType')">
                       <template #first>
-                        <b-form-select-option :value="undefined"></b-form-select-option>
+                        <b-form-select-option :value="null"></b-form-select-option>
                       </template>
                     </b-form-select>
                   </info-helper>
@@ -174,7 +173,7 @@
                 <div class="card-stat-label"><span>Armor Class:</span></div>
                 <div class="card-stat-value">
                   <info-helper :info-cache="infoCache" property="armorClass" @focusout="refreshCache('armorClass')">
-                    <b-form-input v-model="cardTemp.armorClass" @input="refreshCache('armorClass')" />
+                    <b-form-input v-model="cardTemp.armorClass" @update:model-value="refreshCache('armorClass')" />
                   </info-helper>
                 </div>
               </div>
@@ -183,7 +182,7 @@
                 <div class="card-stat-label"><span>Skill:</span></div>
                 <div class="card-stat-value">
                   <info-helper :info-cache="infoCache" property="skill" @focusout="refreshCache('skill')">
-                    <b-form-input v-model="cardTemp.skill" @input="refreshCache('skill')" />
+                    <b-form-input v-model="cardTemp.skill" @update:model-value="refreshCache('skill')" />
                   </info-helper>
                 </div>
               </div>
@@ -194,7 +193,7 @@
                 </div>
                 <div class="card-stat-value">
                   <info-helper :info-cache="infoCache" property="hitPoints" @focusout="refreshCache('hitPoints')">
-                    <b-form-input v-model="cardTemp.hitPoints" @input="refreshCache('hitPoints')" />
+                    <b-form-input v-model="cardTemp.hitPoints" @update:model-value="refreshCache('hitPoints')" />
                   </info-helper>
                 </div>
               </div>
@@ -203,11 +202,10 @@
                 <div class="card-stat-label"><span>Faction:</span></div>
                 <div class="card-stat-value">
                   <info-helper :info-cache="infoCache" property="faction" @focusout="refreshCache('faction')">
-                    <v-select
-                      multiple
+                    <option-tags
                       v-model="cardTemp.faction"
                       :options="factionList"
-                      @input="refreshCache('faction')"
+                      @change="refreshCache('faction')"
                     />
                   </info-helper>
                 </div>
@@ -217,7 +215,7 @@
                 <div class="card-stat-label"><span>Traits:</span></div>
                 <div class="card-stat-value">
                   <info-helper :info-cache="infoCache" property="traits" @focusout="refreshCache('traits')">
-                    <v-select multiple v-model="cardTemp.traits" :options="traitList" @input="refreshCache('traits')" />
+                    <option-tags v-model="cardTemp.traits" :options="traitList" @change="refreshCache('traits')" />
                   </info-helper>
                 </div>
               </div>
@@ -226,14 +224,14 @@
                 <div class="card-stat-label"><span>Keywords:</span></div>
                 <div class="card-stat-value">
                   <info-helper :info-cache="infoCache" property="keywords" @focusout="refreshCache('keywords')">
-                    <b-form-row v-for="i in cardTemp.keywords.length + Math.min(1, keywordList.length)" :key="'Keyword' + i">
+                    <div class="row row-tight" v-for="i in cardTemp.keywords.length + Math.min(1, keywordList.length)" :key="'Keyword' + i">
                       <template v-if="i - 1 >= cardTemp.keywords.length">
                         <b-col cols="12">
-                          <b-select :options="keywordList" @input="x => selectKeyword(x, i - 1)">
+                          <b-form-select :model-value="null" :options="keywordList" @update:model-value="x => selectKeyword(x, i - 1)">
                             <template v-slot:first>
-                              <b-form-select-option :value="undefined">- Select Keyword -</b-form-select-option>
+                              <b-form-select-option :value="null">- Select Keyword -</b-form-select-option>
                             </template>
-                          </b-select>
+                          </b-form-select>
                         </b-col>
                       </template>
                       <template v-else>
@@ -251,7 +249,7 @@
                           </b-input-group>
                         </b-col>
                       </template>
-                    </b-form-row>
+                    </div>
                   </info-helper>
                 </div>
               </div>
@@ -260,14 +258,14 @@
                 <div class="card-stat-label"><span>Feats:</span></div>
                 <div class="card-stat-value">
                   <info-helper :info-cache="infoCache" property="feats" @focusout="refreshCache('feats')">
-                    <b-form-row v-for="i in cardTemp.feats.length + Math.min(1, featList.length)" :key="'Feat' + i">
+                    <div class="row row-tight" v-for="i in cardTemp.feats.length + Math.min(1, featList.length)" :key="'Feat' + i">
                       <template v-if="cardTemp.feats[i - 1] == null">
                         <b-col cols="12">
-                          <b-select :options="featList" @input="x => selectFeat(x, i - 1)">
+                          <b-form-select :model-value="null" :options="featList" @update:model-value="x => selectFeat(x, i - 1)">
                             <template v-slot:first>
-                              <b-form-select-option :value="undefined">- Select Feat -</b-form-select-option>
+                              <b-form-select-option :value="null">- Select Feat -</b-form-select-option>
                             </template>
-                          </b-select>
+                          </b-form-select>
                         </b-col>
                       </template>
                       <template v-else>
@@ -285,7 +283,7 @@
                           </b-input-group>
                         </b-col>
                       </template>
-                    </b-form-row>
+                    </div>
                   </info-helper>
                 </div>
               </div>
@@ -293,28 +291,22 @@
               <div class="my-3">
                 <info-helper :info-cache="infoCache" property="text" @focusout="refreshCache('text')">
                   <template v-if="restrictText">
-                    <v-select
-                      multiple
+                    <option-tags
                       class="wrapped-select"
                       placeholder="[Card Text]"
                       v-model="abilities"
-                      :get-option-label="getOptionLabel"
                       :options="textOptions"
-                      @input="refreshCache('text')"
-                    >
-                      <template #option="option">
-                        <span style="white-space: normal">{{ getOptionLabel(option) }}</span>
-                      </template>
-                    </v-select>
+                      @change="refreshCache('text')"
+                    />
                   </template>
                   <template v-else>
                     <b-form-textarea
                       rows="4"
                       :value="formatText.main.isAuto ? cardTemp.text : cardTemp.textFormat"
-                      @input="updateTextEditor"
+                      @update:model-value="updateTextEditor"
                       placeholder="[Card Text]"
                     />
-                    <b-checkbox v-model="formatText.main.isAuto">Auto-format</b-checkbox>
+                    <b-form-checkbox v-model="formatText.main.isAuto">Auto-format</b-form-checkbox>
                   </template>
                 </info-helper>
               </div>
@@ -327,10 +319,10 @@
                       :value="
                         formatText.flavor.isAuto ? cardTemp.printInfo.flavorText : cardTemp.printInfo.flavorTextFormat
                       "
-                      @input="updateFlavorTextEditor"
+                      @update:model-value="updateFlavorTextEditor"
                       placeholder="[Flavor Text]"
                     />
-                    <b-checkbox v-if="!restrictText" v-model="formatText.flavor.isAuto">Auto-format</b-checkbox>
+                    <b-form-checkbox v-if="!restrictText" v-model="formatText.flavor.isAuto">Auto-format</b-form-checkbox>
                   </info-helper>
                 </div>
               </template>
@@ -338,10 +330,10 @@
           </b-col>
 
           <b-col cols="12">
-            <b-button class="mb-2" block variant="primary" size="lg" @click="downloadImage"
+            <b-button class="mb-2 w-100"  variant="primary" size="lg" @click="downloadImage"
               >Download Card Image</b-button
             >
-            <b-checkbox class="mb-2" v-model="extendBleed">Format for Printing</b-checkbox>
+            <b-form-checkbox class="mb-2" v-model="extendBleed">Format for Printing</b-form-checkbox>
           </b-col>
         </b-row>
       </template>
@@ -350,7 +342,6 @@
 </template>
 
 <script>
-import Vue from "vue";
 import HeaderFooter from "../shared/HeaderFooter.vue";
 import InfoHelper from "./InfoHelper.vue";
 import utility from "../../scripts/utility";
@@ -358,6 +349,7 @@ import rulesets from "../../scripts/rulesets/cardRules";
 import CardImageCreator from "./CardImageCreator.vue";
 import { createMapper, buildConfig } from "../../scripts/cardMapper";
 import { upgradeCard, currentCardSchema } from "../../scripts/cardUpgrader";
+import OptionTags from "../shared/OptionTags.vue";
 
 const rulesetMap = {};
 rulesets.forEach((x) => {
@@ -438,6 +430,7 @@ function computeSetting(setting) {
 export default {
   name: "BuildCard",
   components: {
+    OptionTags,
     HeaderFooter,
     CardImageCreator,
     InfoHelper,
@@ -547,7 +540,9 @@ export default {
     textOptions() {
       let textOptions = this.selectedRuleset && this.selectedRuleset.text && this.selectedRuleset.text.options;
       if (!textOptions) return [];
-      return textOptions.filter((x) => !this.abilities.map((y) => y.id).includes(x.id));
+      return textOptions
+        .filter((x) => !this.abilities.map((y) => y.id).includes(x.id))
+        .map((x) => ({ ...x, label: this.getOptionLabel(x) }));
     },
     hasGuide: computeSetting("hasGuide"),
     restrictText: computeSetting("restrictText"),
@@ -574,7 +569,7 @@ export default {
       if (newValue) {
         this.formatText.main.text = "";
       }
-      Vue.set(this.cardTemp, "textFormat", this.formatText.main.text);
+      this.cardTemp["textFormat"] = this.formatText.main.text;
     },
     "formatText.main.text"() {
       if (!this.formatText.main.isAuto) {
@@ -585,14 +580,14 @@ export default {
     "cardTemp.text"() {
       if (!this.formatText.main.isAuto) {
         // Coerce
-        Vue.set(this.cardTemp, "text", dehtml(this.cardTemp.textFormat));
+        this.cardTemp["text"] = dehtml(this.cardTemp.textFormat);
       }
       this.mapToAbilities();
     },
     "cardTemp.textFormat"(newValue) {
       if (!this.formatText.main.isAuto) {
         this.formatText.main.text = newValue;
-        Vue.set(this.cardTemp, "text", dehtml(newValue));
+        this.cardTemp["text"] = dehtml(newValue);
       }
     },
     "formatText.flavor.isAuto"(newValue) {
@@ -629,7 +624,7 @@ export default {
         let sameClass = new RegExp(`is(?=.*${newVal.join(")(?=.*")})`, "i");
         let otherClass = new RegExp(`(${this.classList.join("|")})`, "i");
         if (match[0].match(otherClass) || !match[0].match(sameClass)) {
-          Vue.set(this.cardTemp, "text", this.cardTemp.text.replace(this.multiclassRegex, ""));
+          this.cardTemp["text"] = this.cardTemp.text.replace(this.multiclassRegex, "");
           match = null;
         }
       }
@@ -645,7 +640,7 @@ export default {
               return x.toLowerCase();
             })
             .join(" ");
-          Vue.set(this.cardTemp, "text", "This character is a " + ending + ".\r\n" + (this.cardTemp.text || ""));
+          this.cardTemp["text"] = "This character is a " + ending + ".\r\n" + (this.cardTemp.text || "");
         }
       }
     },
@@ -687,32 +682,32 @@ export default {
       this.mapper.sync();
     },
     selectKeyword(val, index) {
-      Vue.set(this.cardTemp.keywords, index, { name: val });
+      this.cardTemp.keywords[index] = { name: val };
     },
     deselectKeyword(index) {
-      Vue.delete(this.cardTemp.keywords, index);
+      this.cardTemp.keywords.splice(index, 1);
     },
     selectFeat(val, index) {
-      Vue.set(this.cardTemp.feats, index, { name: val });
+      this.cardTemp.feats[index] = { name: val };
     },
     deselectFeat(index) {
-      Vue.delete(this.cardTemp.feats, index);
+      this.cardTemp.feats.splice(index, 1);
     },
     updateTextEditor(newValue) {
       if (this.formatText.main.isAuto) {
-        this.$set(this.cardTemp, "text", newValue);
-        this.$set(this.cardTemp, "textFormat", "");
+        this.cardTemp["text"] = newValue;
+        this.cardTemp["textFormat"] = "";
       } else {
-        this.$set(this.cardTemp, "textFormat", newValue);
+        this.cardTemp["textFormat"] = newValue;
       }
       this.refreshCache("text");
     },
     updateFlavorTextEditor(newValue) {
       if (this.formatText.flavor.isAuto) {
-        this.$set(this.cardTemp.printInfo, "flavorText", newValue);
-        this.$set(this.cardTemp.printInfo, "flavorTextFormat", "");
+        this.cardTemp.printInfo["flavorText"] = newValue;
+        this.cardTemp.printInfo["flavorTextFormat"] = "";
       } else {
-        this.$set(this.cardTemp.printInfo, "flavorTextFormat", newValue);
+        this.cardTemp.printInfo["flavorTextFormat"] = newValue;
       }
       this.refreshCache("flavorText", this.cardTemp.printInfo.flavorText);
     },
@@ -727,7 +722,9 @@ export default {
         let config = this.selectedRuleset && this.selectedRuleset[prop];
         let init = config && config.initialValue;
         if (init != null) {
-          this.$set(this.cardData, prop, init);
+          // Rulesets are deep-frozen, so copy rather than share the reference;
+          // the card data has to stay mutable.
+          this.cardData[prop] = Array.isArray(init) ? [...init] : init;
         }
       }
     },
@@ -759,19 +756,19 @@ export default {
             propConfig.validate(val || this.cardData[prop], this.cardData, this.referenceLists);
           if (!suppressValidation || this.infoCache.touched[prop]) {
             this.infoCache.touched[prop] = true;
-            Vue.set(this.infoCache.validationText, prop, validationText);
-            Vue.set(this.infoCache.validationState, prop, validationText ? false : null);
+            this.infoCache.validationText[prop] = validationText;
+            this.infoCache.validationState[prop] = validationText ? false : null;
           }
           if (!validationText) {
             let computePoints = propConfig && propConfig.computePoints;
             this.infoCache.hasPoints |= !!computePoints;
             let points = computePoints && computePoints(val || this.cardData[prop], this.cardData, this.referenceLists);
             let pointInfo = propConfig && propConfig.pointInfo;
-            Vue.set(this.infoCache.points, prop, points);
-            Vue.set(this.infoCache.pointInfo, prop, pointInfo);
+            this.infoCache.points[prop] = points;
+            this.infoCache.pointInfo[prop] = pointInfo;
           } else {
-            Vue.set(this.infoCache.points, prop, null);
-            Vue.set(this.infoCache.pointInfo, prop, null);
+            this.infoCache.points[prop] = null;
+            this.infoCache.pointInfo[prop] = null;
           }
           this.infoCache.pointTotal = Object.values(this.infoCache.points).reduce((x, y) => x + (y || 0), 0);
           this.infoCache.pointMaximum = this.pointMaximum;
@@ -815,7 +812,7 @@ export default {
     },
     mapFromAbilities() {
       if (this.restrictText) {
-        Vue.set(this.cardTemp, "text", this.selectedRuleset.text.mapTo(this.abilities, this.cardData));
+        this.cardTemp["text"] = this.selectedRuleset.text.mapTo(this.abilities, this.cardData);
       }
     },
 

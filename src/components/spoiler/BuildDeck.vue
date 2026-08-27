@@ -1,18 +1,18 @@
 <template>
   <div class="d-flex flex-column flex-grow-1 overflow-hidden">
     <div class="px-2 py-1">
-      <div class="float-left">
+      <div class="float-start">
         <a href="#" @click.prevent="clear"><span class="font-default">✘</span> Clear</a>
       </div>
-      <div class="float-right">
-        <a href="#" @click.prevent="importCards" title="Load deck" class="mr-1">
+      <div class="float-end">
+        <a href="#" @click.prevent="importCards" title="Load deck" class="me-1">
           <font-awesome-icon icon="folder-open" />
         </a>
-        <a href="#" @click.prevent="exportCards" title="Save deck" class="mr-1">
+        <a href="#" @click.prevent="exportCards" title="Save deck" class="me-1">
           <font-awesome-icon icon="save" />
         </a>
 
-        <a href="#" title="Format Validator" class="mr-1" v-on:click="showFormatValidator = !showFormatValidator">
+        <a href="#" title="Format Validator" class="me-1" v-on:click="showFormatValidator = !showFormatValidator">
           <font-awesome-icon icon="check" />
         </a>
 
@@ -42,8 +42,8 @@
           :fields="[
             { key: 'card', label: type },
             { key: 'editionCheck', label: '' },
-            { key: 'count', label: '', class: 'text-right shrink' },
-            { key: 'buttons', class: 'text-right shrink' },
+            { key: 'count', label: '', class: 'text-end shrink' },
+            { key: 'buttons', label: '', class: 'text-end shrink' },
           ]"
           small
           borderless
@@ -51,12 +51,14 @@
           hover
           @row-hovered="handleRowHovered"
         >
-          <template v-if="showFormatValidator" #head(editionCheck)>
-            <span>Legal</span>
+          <!-- b-table resolves slots once when it is created, so a v-if on
+               the template is never re-checked. It goes inside instead. -->
+          <template #head(editionCheck)>
+            <span v-if="showFormatValidator">Legal</span>
           </template>
 
-          <template v-if="showFormatValidator && edition" #cell(editionCheck)="{ item }">
-            <span>
+          <template #cell(editionCheck)="{ item }">
+            <span v-if="showFormatValidator && edition">
               {{ item.card.editions.some((cardEdition) => cardEdition === edition) ? "Yes" : "No" }}
             </span>
           </template>
@@ -67,7 +69,7 @@
 
           <template v-slot:cell(buttons)="data">
             <div class="d-flex">
-              <a href="#" @click.prevent="decrementCardToDeck(data.item.card.index)" title="Minus one" class="mr-1">
+              <a href="#" @click.prevent="decrementCardToDeck(data.item.card.index)" title="Minus one" class="me-1">
                 <font-awesome-icon icon="minus-square" />
               </a>
               <a href="#" @click.prevent="incrementCardToDeck(data.item.card.index)" title="Plus one">
@@ -87,7 +89,7 @@
         </b-table>
         <b-table
           class="mb-0"
-          :fields="[{ label: 'Total' }, { key: 'buttons', class: 'text-right shrink' }]"
+          :fields="[{ key: 'total', label: 'Total' }, { key: 'buttons', label: '', class: 'text-end shrink' }]"
           small
           borderless
           striped
@@ -239,20 +241,20 @@ export default {
     incrementCardToDeck(cardString) {
       this.$store.commit("incrementCardToDeck", cardString);
     },
-    handleRowHovered: utility.debounce(function (item, index, e) {
+    handleRowHovered: utility.debounce(function ({ item, index, event }) {
       if (!this.$store.state.hasHover) return;
-      if (e.target.matches(':hover')) {
+      if (event.target.matches(':hover')) {
         this.cardHover.show = true;
         this.cardHover.target = this.$refs['card_' + item.card.type + '_' + index][0];
         this.cardHover.card = item.card;
 
         let handleRowUnhovered = () => {
-          e.target.removeEventListener('mouseleave', handleRowUnhovered);
+          event.target.removeEventListener('mouseleave', handleRowUnhovered);
           this.cardHover.show = false;
           this.cardHover.target = null;
           this.cardHover.card = null;
         }
-        e.target.addEventListener('mouseleave', handleRowUnhovered);
+        event.target.addEventListener('mouseleave', handleRowUnhovered);
       }
     }, 500),
   },

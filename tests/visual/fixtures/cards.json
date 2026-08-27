@@ -1,0 +1,965 @@
+[
+  {
+    "name": "'Mad' Pat Carrik",
+    "text": "'Mad' Pat Carrik inflicts an additional wound with melee strikes.",
+    "type": "Character",
+    "alignment": "Evil",
+    "class": [
+      "Fighter"
+    ],
+    "faction": [
+      "Nothrog Legions"
+    ],
+    "attack": [
+      3
+    ],
+    "damageType": "Physical",
+    "armorClass": 10,
+    "skill": 2,
+    "hitPoints": 1,
+    "level": 2,
+    "traits": [
+      "Giant",
+      "Monster",
+      "Orc",
+      "Ranger"
+    ],
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Saga"
+    ],
+    "printInfos": [
+      {
+        "set": "Into the Accordlands (ITA)",
+        "setNumber": "144",
+        "rarity": "Common",
+        "flavorText": "\"What he lacks in wits, he makes up for with enthusiasm.\" - Doo'run",
+        "artist": "Llyn Hunter",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/IntotheAccordlands/144+-+ITA+-+_Mad_+Pat+Carrik.png"
+      },
+      {
+        "set": "Campaign Edition (CE)",
+        "setNumber": "321",
+        "rarity": "Common",
+        "flavorText": "\"Uh, sir? He's in the line of fire.\"\r\n\"You heard Hellbringer. Keep firing. Maybe a load of shot will clear his head.\"",
+        "artist": "Llyn Hunter",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/CampaignEdition/_Mad_+Pat+Carrik.jpg"
+      },
+      {
+        "set": "Tooth and Claw (TaC)",
+        "setNumber": "61",
+        "rarity": "Common",
+        "flavorText": "\"I've never met a Hill Giant that wasn't completely raving mad. Must be something they eat. Like slow Nothrog.\" - Jack Casey",
+        "artist": "Llyn Hunter",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/ToothAndClaw/_Mad_+Pat+Carrik.jpg"
+      }
+    ]
+  },
+  {
+    "name": "13th Edition Spellbook",
+    "text": "This character has +2 levels for casting spells.\r\nAfter casting a spell, this character succeed with a magic save (DC 15 + level of spell) or suffer a wound.",
+    "type": "Item",
+    "class": [
+      "Wizard"
+    ],
+    "level": 6,
+    "keywords": [
+      {
+        "name": "Cursed"
+      }
+    ],
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Campaign",
+      "Epic"
+    ],
+    "printInfos": [
+      {
+        "set": "Nodwick (NOD)",
+        "rarity": "Promo",
+        "flavorText": "Now bundled with crystal ball media player and future event browsing.",
+        "artist": "Aaron Williams",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/Promo/13th+Edition+Spellbook.jpg",
+        "setNumber": "1"
+      }
+    ]
+  },
+  {
+    "name": "2-Handed Sword",
+    "type": "Item",
+    "class": [
+      "Fighter"
+    ],
+    "attack": [
+      4
+    ],
+    "level": 5,
+    "traits": [
+      "Weapon",
+      "Shield",
+      "Treasure"
+    ],
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Campaign",
+      "Pre-Campaign"
+    ],
+    "printInfos": [
+      {
+        "set": "4th Edition (4E)",
+        "rarity": "Promo",
+        "flavorText": "\"Kul call it a toof pick, and you can't even lift it? Get out'a mah sight!\"\r\n- Grudurk",
+        "artist": "Cris Dornaus",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/Promo/2-Handed+Sword+(Treasure).jpg"
+      },
+      {
+        "set": "Campaign Edition (CE)",
+        "setNumber": "490",
+        "rarity": "Common",
+        "flavorText": "\"Stand your ground!\" Lord Gahid shouted as the arrows rained down. \"We are Deverenians, and no mere elf can ever defeat us!\"",
+        "artist": "Cris Dornaus",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/CampaignEdition/2-Handed+Sword.jpg"
+      },
+      {
+        "set": "Black Knives (BK)",
+        "setNumber": "248",
+        "rarity": "Common",
+        "flavorText": "\"They shall pay,\" Gahid said bitterly, \"for the destruction of a Deverenian city. No dwarf shall escape us. Let the mountain rats crawl back beneath their rocks, else they shall die skewered upon our blades.\"",
+        "artist": "Cris Dornaus",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/BlackKnives/2-Handed+Sword.jpg"
+      },
+      {
+        "set": "Good and Evil (GE)",
+        "setNumber": "161",
+        "rarity": "Common",
+        "flavorText": "\"They shall pay,\" Gahid said bitterly, \"for the destruction of a Deverenian city. No dwarf shall escape us. Let the mountain rats crawl back beneath their rocks, else they shall die skewered upon our blades.\"",
+        "artist": "Cris Dornaus",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/GoodAndEvil/2-Handed+Sword.jpg"
+      }
+    ]
+  },
+  {
+    "name": "A Common Purpose",
+    "text": "React: Before rolling initiative: You may target teammates' characters this turn as if they were in your army.",
+    "type": "Action",
+    "class": [
+      "Classless"
+    ],
+    "level": 1,
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Campaign"
+    ],
+    "printInfos": [
+      {
+        "set": "Hero's Gambit (HG)",
+        "rarity": "Promo",
+        "flavorText": "\"We're being used. Fighting each other only serves our enemy.\" - Squire Orban",
+        "artist": "Malcolm McClinton",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/Promo/A+Common+Purpose.jpg",
+        "setNumber": "P1"
+      }
+    ]
+  },
+  {
+    "name": "A Fool and His Money",
+    "text": "Order: If this rogue is in your first rank, discard all cards in play with the Treasure trait.",
+    "type": "Action",
+    "class": [
+      "Rogue"
+    ],
+    "level": 1,
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Pre-Campaign"
+    ],
+    "printInfos": [
+      {
+        "set": "Call to Arms (CTA)",
+        "setNumber": "69",
+        "rarity": "Common",
+        "flavorText": "\"...are always welcome at my inn.\"",
+        "artist": "Storn Cook",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/CallToArms/A+Fool+and+His+Money.jpg"
+      }
+    ]
+  },
+  {
+    "name": "A Grave Error",
+    "text": "May only be played by a stunned character.\r\nReact: After this character is targeted by a melee strike, before that strike resolves make a melee strike targeting the character performing the strike.",
+    "type": "Action",
+    "class": [
+      "Classless"
+    ],
+    "level": 1,
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Pre-Campaign"
+    ],
+    "printInfos": [
+      {
+        "set": "Dominance (DOM)",
+        "setNumber": "12",
+        "rarity": "Common",
+        "flavorText": "\"To earn their name, the Medusan Lords slaughtered the true Medusans to the last.\" - Sorcha",
+        "artist": "Malcolm McClinton",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/Dominance/A+Grave+Error.jpg"
+      }
+    ]
+  },
+  {
+    "name": "A Hero's Fall",
+    "text": "React: After one of your characters dies: All of your characters have and ATK and AC bonus equal to the level of the dead character while in the rank the character was in.",
+    "type": "Action",
+    "class": [
+      "Cleric"
+    ],
+    "level": 3,
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Campaign"
+    ],
+    "printInfos": [
+      {
+        "set": "Counter Attack (CA)",
+        "setNumber": "9",
+        "rarity": "Rare",
+        "flavorText": "\"I do not mourn my death. Why would I mourn my son's?\" - Yedraw",
+        "artist": "Thomas Denmark",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/CounterAttack/A+Hero_s+Fall.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Abd al-Hakiim",
+    "text": "Spend Order: Target an item in an adjacent rank and perform a Stealth check (DC = 15 + level of the item). If successful, discard the item.",
+    "type": "Character",
+    "alignment": "Evil",
+    "class": [
+      "Rogue"
+    ],
+    "faction": [
+      "Deverenian Empire"
+    ],
+    "attack": [
+      1
+    ],
+    "damageType": "Physical",
+    "armorClass": 1,
+    "skill": 1,
+    "hitPoints": 1,
+    "level": 1,
+    "traits": [
+      "Human"
+    ],
+    "keywords": [
+      {
+        "name": "Planar"
+      }
+    ],
+    "feats": [
+      {
+        "name": "Stealth",
+        "value": 3
+      }
+    ],
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Campaign",
+      "Pre-Campaign"
+    ],
+    "printInfos": [
+      {
+        "set": "Southern Kingdoms (SK)",
+        "setNumber": "56",
+        "rarity": "Common",
+        "artist": "Llyn Hunter",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/SouthernKingdoms/Abd+al-Hakiim.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Abd al-Jalaar",
+    "text": "React: After Abd al-Jalaar enters play, kill one of your characters of a level equal to or greater than Abd al-Jalaar's: Move Abd al-Jalaar to your front rank.",
+    "type": "Character",
+    "alignment": "Evil",
+    "class": [
+      "Classless"
+    ],
+    "faction": [
+      "Deverenian Empire"
+    ],
+    "attack": [
+      2,
+      2
+    ],
+    "damageType": "Physical",
+    "armorClass": 14,
+    "skill": 4,
+    "hitPoints": 2,
+    "level": 3,
+    "traits": [
+      "Monk",
+      "Human"
+    ],
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Campaign"
+    ],
+    "printInfos": [
+      {
+        "set": "Southern Kingdoms (SK)",
+        "rarity": "Promo",
+        "artist": "John Donahue",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/Promo/Abd+al-Jalaar.jpg",
+        "setNumber": "P2"
+      }
+    ]
+  },
+  {
+    "name": "Abd al-Rahiim",
+    "text": "Spend React: After a strike or action targets a Deverenian Empire character in this rank: Redirect the strike or action to a character adjacent to the original target.",
+    "type": "Character",
+    "alignment": "Evil",
+    "class": [
+      "Wizard"
+    ],
+    "faction": [
+      "Deverenian Empire"
+    ],
+    "attack": [
+      1
+    ],
+    "damageType": "Physical",
+    "armorClass": 9,
+    "skill": 4,
+    "hitPoints": 2,
+    "level": 3,
+    "traits": [
+      "Human",
+      "Illusionist"
+    ],
+    "keywords": [
+      {
+        "name": "Planar"
+      }
+    ],
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Campaign",
+      "Epic",
+      "Pre-Campaign",
+      "Saga"
+    ],
+    "printInfos": [
+      {
+        "set": "Into the Accordlands (ITA)",
+        "setNumber": "1",
+        "rarity": "Common",
+        "artist": "Drew Baker",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/IntotheAccordlands/001+-+ITA+-+Abd+al-Rahiim.png",
+        "flavorText": "Not the most devout, but he certainly knows how to impress the commoners."
+      },
+      {
+        "set": "Epic Edition (EE)",
+        "setNumber": "112",
+        "rarity": "Common",
+        "artist": "Drew Baker",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/EpicEdition/Abd+al-Rahiim.jpg"
+      },
+      {
+        "set": "Southern Kingdoms (SK)",
+        "setNumber": "50",
+        "rarity": "Common",
+        "artist": "Drew Baker",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/SouthernKingdoms/Abd+al-Rahiim.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Ablung the Maker",
+    "text": "Limited Order: Ablung permanently gains +4 ATK, +4 AC, +6 skill, +1 HP, +1 level, or any feat with a +1 bonus.",
+    "type": "Character",
+    "subtype": [
+      "Warlord"
+    ],
+    "alignment": "Evil",
+    "class": [
+      "Cleric",
+      "Fighter",
+      "Rogue"
+    ],
+    "faction": [
+      "Mercenary Guilds"
+    ],
+    "attack": [
+      1,
+      1
+    ],
+    "damageType": "Physical",
+    "armorClass": 11,
+    "skill": 5,
+    "hitPoints": 2,
+    "level": 2,
+    "traits": [
+      "Siege"
+    ],
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Campaign",
+      "Epic"
+    ],
+    "printInfos": [
+      {
+        "set": "Box of Greed (BoG)",
+        "setNumber": "40",
+        "rarity": "Promo",
+        "artist": "Drew Baker",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/BoxofGreed/040_-_BOG_-_Ablung_the_Maker_-_EA.png",
+        "flavorText": "\"He will forge a new world from the wreckage of the old.\" -Lilah"
+      },
+      {
+        "set": "Epic Edition (EE)",
+        "setNumber": "215",
+        "rarity": "Rare",
+        "artist": "Drew Baker",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/EpicEdition/Ablung+the+Maker.jpg"
+      },
+      {
+        "set": "Death's Bargain (DB)",
+        "setNumber": "91",
+        "rarity": "Rare",
+        "flavorText": "\"He will forge a new world from the wreckage of the old.\" -Lilah",
+        "artist": "David Hudnut",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/DeathsBargain/Ablung+the+Maker.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Ablung's Hammer",
+    "text": "While you have the same number of characters in this rank as you do ranks on your army, Ablung's Hammer gives an additional +5 ATK (+7 ATK total) and this fighter inflicts an additional wound when he hits with a melee strike.",
+    "type": "Item",
+    "class": [
+      "Fighter"
+    ],
+    "attack": [
+      2
+    ],
+    "level": 5,
+    "traits": [
+      "Weapon"
+    ],
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Campaign"
+    ],
+    "printInfos": [
+      {
+        "set": "Hero's Gambit (HG)",
+        "setNumber": "132",
+        "rarity": "Uncommon",
+        "artist": "Heather Kreiter",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/HerosGambit/Ablung_s+Hammer.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Ablung's Plate",
+    "text": "Mercenaries gain +1 level for equipping Ablung's Plate.\r\nReact: After this fighter is targeted by a ranged strike, spend and stun an equipped Armor, Gauntlet, or Shield: The strike is a Critical Failure.",
+    "type": "Item",
+    "class": [
+      "Fighter"
+    ],
+    "armorClass": 4,
+    "level": 7,
+    "traits": [
+      "Armor"
+    ],
+    "editions": [
+      "4th Edition",
+      "Alliance",
+      "Ancients"
+    ],
+    "printInfos": [
+      {
+        "set": "20th Anniversary (W20)",
+        "setNumber": "14",
+        "rarity": "Promo",
+        "flavorText": "\"Strength born of madness.\"",
+        "artist": "Francisco Rico Torres",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/20thAnniversary/Ablung_s+Plate.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Absinthe",
+    "text": "Order: Once per turn: Absinthe makes a skill check (DC 12). If successful, search your deck for a spell that Absinthe may cast, show it to the other players, and add it to your hand. If unsuccessful, Absinthe suffers one wound.",
+    "type": "Character",
+    "alignment": "Evil",
+    "class": [
+      "Cleric"
+    ],
+    "faction": [
+      "Elven Branches"
+    ],
+    "attack": [
+      0
+    ],
+    "damageType": "Physical",
+    "armorClass": 11,
+    "skill": 0,
+    "hitPoints": 1,
+    "level": 1,
+    "traits": [
+      "Elf"
+    ],
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Campaign",
+      "Pre-Campaign"
+    ],
+    "printInfos": [
+      {
+        "set": "Campaign Edition (CE)",
+        "setNumber": "204",
+        "rarity": "Common",
+        "flavorText": "\"Hmm. The brother is such a tempting morsel. Such spirit.\"",
+        "artist": "Malcolm McClinton",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/CampaignEdition/Absinthe.jpg"
+      },
+      {
+        "set": "Saga of the Storm (SS)",
+        "setNumber": "53",
+        "rarity": "Common",
+        "flavorText": "They serve, that they might live... and one day, my beloved, you will join my beautiful pets...",
+        "artist": "Malcolm McClinton",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/SagaOfTheStorm/Absinthe.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Abyssal Larvae",
+    "text": "React: Once per turn, after one of your Abyssals uses an attached action card: Ready Abyssal Larvae.",
+    "type": "Character",
+    "alignment": "Evil",
+    "class": [
+      "Fighter"
+    ],
+    "faction": [
+      "Mercenary Guilds"
+    ],
+    "attack": [
+      2
+    ],
+    "damageType": "Physical",
+    "armorClass": 3,
+    "skill": 0,
+    "hitPoints": 1,
+    "level": 1,
+    "traits": [
+      "Abyssal",
+      "Monster"
+    ],
+    "keywords": [
+      {
+        "name": "Planar"
+      }
+    ],
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Campaign",
+      "Epic"
+    ],
+    "printInfos": [
+      {
+        "set": "Dragon's Fury (DF)",
+        "setNumber": "115",
+        "rarity": "Common",
+        "flavorText": "\"Lies. All Lies.\" - Antaelus",
+        "artist": "Anthony Francisco",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/DragonsFury/Abyssal+Larvae.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Abyssal Vermin",
+    "text": "React: After an opposing character casts a spell: Gain the Astral trait until the end of the turn.",
+    "type": "Character",
+    "alignment": "Evil",
+    "class": [
+      "Rogue"
+    ],
+    "faction": [
+      "Mercenary Guilds"
+    ],
+    "attack": [
+      1
+    ],
+    "damageType": "Physical",
+    "armorClass": 11,
+    "skill": 1,
+    "hitPoints": 1,
+    "level": 1,
+    "traits": [
+      "Monster",
+      "Abyssal"
+    ],
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Campaign"
+    ],
+    "printInfos": [
+      {
+        "set": "Counter Attack (CA)",
+        "setNumber": "100",
+        "rarity": "Common",
+        "flavorText": "\"Warned you.\" - Barricade",
+        "artist": "Steve Ellis",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/CounterAttack/Abyssal+Vermin.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Animal",
+    "type": "Token",
+    "alignment": "Good",
+    "class": [
+      "Classless"
+    ],
+    "damageType": "Lightning",
+    "armorClass": 8,
+    "skill": 0,
+    "hitPoints": 1,
+    "level": 2,
+    "traits": [
+      "Beast"
+    ],
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Saga"
+    ],
+    "printInfos": [
+      {
+        "set": "Into the Accordlands (ITA)",
+        "setNumber": "T01",
+        "rarity": "Fixed",
+        "artist": "Jason Engle",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/IntotheAccordlands/T01+-+ITA+-+Animal+Token.png"
+      }
+    ]
+  },
+  {
+    "name": "Baraxton's Graveyard",
+    "text": "After Initiative is rolled, until end of turn, Warlords gain the ability \"Order: Once per turn: Put a character into play from your discard pile.\"",
+    "type": "Dungeon",
+    "keywords": [
+      {
+        "name": "Challenge Rating",
+        "value": 4
+      }
+    ],
+    "editions": [
+      "Alliance",
+      "Epic"
+    ],
+    "errata": "Rulings:\r\n-The ability is granted after any initiative roll, and persists even if Baraxton's Graveyard is defeated or otherwise annuled. Thus, multiple uses of the Order may be granted, each one usable once per turn.",
+    "printInfos": [
+      {
+        "set": "Temple of Lore (ToL)",
+        "setNumber": "110",
+        "rarity": "Uncommon",
+        "flavorText": "\"Why do all these empty graves say Jonah?\" - Muddflek",
+        "artist": "Stephanie Pui-Mun Law",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/TempleOfLore/Baraxton_s+Graveyard.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Blackiron Mine",
+    "text": "Warlords have the text: \"At the end of each turn, all characters in the last rank of this army fall forward one rank if possible. If no character falls in this way, remove Blackiron Mine from the game.\"",
+    "type": "Dungeon",
+    "keywords": [
+      {
+        "name": "Challenge Rating",
+        "value": 7
+      }
+    ],
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Epic"
+    ],
+    "errata": "Rulings:\r\n-If either Warlord cannot fall forward any characters (Due to them all being in rank one, or otherwise) then the Black Iron Mine is removed from the game.",
+    "printInfos": [
+      {
+        "set": "Temple of Lore (ToL)",
+        "setNumber": "105",
+        "rarity": "Common",
+        "flavorText": "Deverenian mines hold many treasures, but they are unsafe even for those used to such small tunnels.",
+        "artist": "David Horne",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/TempleOfLore/Blackiron+Mine.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Blackthorne's Quarters",
+    "text": "When Blackthorne's Quarters has no Charges, remove it from the game.\r\nRogues have the ability \"Spend Order: Succeed with a precetion check (DC 15) or suffer a wound. If you succeed, search your deck for an item with Level equal to or less than twice this rogue's Level, put it in your hand and remove a Charge from Blackthorne's Quarters.",
+    "type": "Dungeon",
+    "keywords": [
+      {
+        "name": "Challenge Rating",
+        "value": 10
+      },
+      {
+        "name": "Charges",
+        "value": 3
+      }
+    ],
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Epic"
+    ],
+    "errata": "Rulings:\r\n-You only remove a charge if you succeed with the check.",
+    "printInfos": [
+      {
+        "set": "Temple of Lore (ToL)",
+        "setNumber": "111",
+        "rarity": "Rare",
+        "artist": "Slawomir Maniak",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/TempleOfLore/Blackthorne_s+Quarters.jpg"
+      }
+    ]
+  },
+  {
+    "name": "Castle Lorath",
+    "text": "You must spend 12 Levels of Paladins to put Castle Loranth into play.\r\nCastle Loranth has +1 Challenge Rating for each Paladin in play.\r\nYour Paladins have a bonus to ATK, AC, and Skill equal to their Level.",
+    "type": "Dungeon",
+    "keywords": [
+      {
+        "name": "Challenge Rating",
+        "value": 10
+      }
+    ],
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Epic"
+    ],
+    "printInfos": [
+      {
+        "set": "Plane of Secrets (PS)",
+        "rarity": "Promo",
+        "artist": "Iordanis Lazaridis",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/Promo/Castle+Lorath.jpg",
+        "setNumber": "P4"
+      }
+    ]
+  },
+  {
+    "name": "Destiny of Ancient Oaths",
+    "text": "Destiny of Sir James Reed.\r\nYou may have up to 7 Cohorts in your deck.\r\nOpposing characters lose the Astral trait.\r\nIf there is a Cohort in play, reduce to 0 all wounds inflicted on Sir James Reed.\r\nSir James has an additional strike (Base +4) when he attacks.\r\nReact: After one of your characters rolls a Critical Failure: Change the roll to a Critical Success.",
+    "type": "Epic Class",
+    "attack": [
+      10
+    ],
+    "armorClass": 8,
+    "skill": 10,
+    "hitPoints": 5,
+    "level": 7,
+    "editions": [
+      "Pre-Campaign"
+    ],
+    "exclusivePromo": true,
+    "printInfos": [
+      {
+        "set": "Destiny (SDP)",
+        "rarity": "Promo",
+        "artist": "Patrick McEvoy",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/Promo/Destiny+of+Ancient+Oaths.jpg",
+        "setNumber": "P8"
+      }
+    ]
+  },
+  {
+    "name": "Destiny of History's Tears",
+    "text": "Destiny of Lestan Drac.\r\nYou may have up to 7 Cohorts in your deck.\r\nLestan Drac has two additional strikes (Base +6) when he attacks.\r\nReact: After a melee or ranged strike targets one of your characters, move Lestan Drac adjacent to that character: Redirect the strike to Lestan Drac even if he isn't a legal target.",
+    "type": "Epic Class",
+    "attack": [
+      11
+    ],
+    "armorClass": 11,
+    "skill": 6,
+    "hitPoints": 4,
+    "level": 7,
+    "editions": [
+      "Pre-Campaign"
+    ],
+    "exclusivePromo": true,
+    "printInfos": [
+      {
+        "set": "Destiny (SDP)",
+        "rarity": "Promo",
+        "artist": "Michael Komarck",
+        "setNumber": "P9"
+      }
+    ]
+  },
+  {
+    "name": "Destiny of Noble Blood",
+    "text": "Destiny of Bis.\r\nYou may have up to 7 Cohorts in your deck.\r\nOpposing characters may not perform actions if their Level is less than the number of cards in their owner's hand.\r\nAfter an opposing player passes, they must discard a card.\r\nReact: After you put a character or item into play: Return an opposing non-Warlord character or item to its owner's hand.",
+    "type": "Epic Class",
+    "attack": [
+      13
+    ],
+    "armorClass": 12,
+    "skill": 12,
+    "hitPoints": 5,
+    "level": 7,
+    "editions": [
+      "Pre-Campaign"
+    ],
+    "exclusivePromo": true,
+    "printInfos": [
+      {
+        "set": "Destiny (SDP)",
+        "rarity": "Promo",
+        "artist": "Drew Baker",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/Promo/Destiny+of+Noble+Blood.jpg",
+        "setNumber": "P10"
+      }
+    ]
+  },
+  {
+    "name": "Destiny of Robert's Savior",
+    "text": "Destiny of Jiyacin Fret.\r\nYou may have up to 7 Cohorts in your deck.\r\nJiyacin Fret has two additional strikes (Base +1) when she attacks.\r\nOrder: Once per turn: Put all of your cards removed from the game in your hand.\r\nOrder: Once per turn: Remove the top 3 cards of each player's deck from the game.",
+    "type": "Epic Class",
+    "attack": [
+      15
+    ],
+    "armorClass": 13,
+    "skill": 12,
+    "hitPoints": 6,
+    "level": 9,
+    "editions": [
+      "Pre-Campaign"
+    ],
+    "exclusivePromo": true,
+    "printInfos": [
+      {
+        "set": "Destiny (SDP)",
+        "rarity": "Promo",
+        "artist": "Anthony Grabski",
+        "setNumber": "P11"
+      }
+    ]
+  },
+  {
+    "name": "Insect Swarm",
+    "text": "Insect Swarm's melee strikes do not inflict wounds. If it hits with a melee strike, the target becomes spent or, of already spent, stunned.",
+    "type": "Token",
+    "alignment": "Evil",
+    "class": [
+      "Classless"
+    ],
+    "faction": [
+      "Nothrog Legions"
+    ],
+    "attack": [
+      3
+    ],
+    "damageType": "Physical",
+    "armorClass": 10,
+    "skill": 1,
+    "hitPoints": 1,
+    "level": 1,
+    "errata": "Rulings:\r\n-This is a token and can not be included in your deck.",
+    "printInfos": [
+      {
+        "set": "4th Edition (4E)",
+        "rarity": "Promo",
+        "artist": "Jonny Klein",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/Promo/Insect+Swarm.jpg",
+        "setNumber": "P57"
+      }
+    ]
+  },
+  {
+    "name": "Kraken Cave",
+    "text": "May only start in play when Queen-Mother Nyssara is your Warlord.\r\nAt end of turn, all non-Aquatic characters must succeed with a stamina save (DC 18) or suffer a wound. Stunned characters suffer an additional wound.",
+    "type": "Battlefield",
+    "editions": [
+      "Pre-Campaign"
+    ],
+    "exclusivePromo": true,
+    "printInfos": [
+      {
+        "set": "Medusan (ML)",
+        "rarity": "Promo",
+        "artist": "Steve Argyle",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/Promo/Kraken+Cave.jpg",
+        "setNumber": "P61"
+      }
+    ]
+  },
+  {
+    "name": "Leveled Up",
+    "type": "Token",
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Saga"
+    ],
+    "printInfos": [
+      {
+        "set": "Into the Accordlands (ITA)",
+        "setNumber": "T05",
+        "rarity": "Fixed",
+        "artist": "Drew Baker",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/IntotheAccordlands/T05+-+ITA+-+Leveled+Up+Reminder.png"
+      }
+    ]
+  },
+  {
+    "name": "Simple Shield",
+    "text": "Destroy React: Before this character suffers wounds: Reduce the wounds by one.",
+    "type": "Token",
+    "class": [
+      "Classless"
+    ],
+    "level": 1,
+    "traits": [
+      "Shield"
+    ],
+    "editions": [
+      "Alliance",
+      "Ancients",
+      "Saga"
+    ],
+    "printInfos": [
+      {
+        "set": "Into the Accordlands (ITA)",
+        "setNumber": "T03",
+        "rarity": "Fixed",
+        "artist": "Ray Greaves",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/IntotheAccordlands/T03+-+ITA+-+Simple+Shield+Token.png"
+      }
+    ]
+  }
+]

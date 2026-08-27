@@ -21,7 +21,7 @@
           <span>Need to find some information on Warlord cards? You've come to the right place:</span>
         </div>
 
-        <b-radio-group v-model="searchType" :options="['Simple', 'Advanced']" class="my-2 w-100" buttons />
+        <b-form-radio-group v-model="searchType" :options="['Simple', 'Advanced']" class="my-2 w-100" buttons />
 
         <search-simple
           v-show="searchType === 'Simple'"
@@ -71,7 +71,7 @@
                     :total-rows="searchResults.length"
                     :per-page="perPage"
                     size="sm"
-                    align="right"
+                    align="end"
                   />
                 </b-col>
               </b-row>
@@ -87,6 +87,7 @@
                   :per-page="perPage"
                   :current-page="currentPage"
                   @row-hovered="handleRowHovered"
+                  @row-unhovered="handleRowUnhovered"
                 >
                   <template v-slot:cell(buttons)="data">
                     <a href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
@@ -126,6 +127,7 @@
                   :per-page="perPage"
                   :current-page="currentPage"
                   @row-hovered="handleRowHovered"
+                  @row-unhovered="handleRowUnhovered"
                 >
                   <template v-slot:cell(buttons)="data">
                     <a href="#" @click.prevent="addCard(data.item.index)" :title="addCardText">
@@ -169,7 +171,7 @@
                     :total-rows="searchResults.length"
                     :per-page="perPage"
                     size="sm"
-                    align="right"
+                    align="end"
                   />
                 </b-col>
               </b-row>
@@ -194,6 +196,7 @@ import CardHover from "../shared/CardHover.vue";
 import CardLink from "../shared/CardLink.vue";
 import HeaderFooter from "../shared/HeaderFooter.vue";
 import SideMenu from "../shared/SideMenu.vue";
+import { useToast } from "bootstrap-vue-next";
 import BuildDeck from "./BuildDeck.vue";
 import EditCards from "../editor/EditCards.vue";
 import SearchSimple from "./SearchSimple.vue";
@@ -202,10 +205,13 @@ import CardCompact from "./CardCompact.vue";
 import utility from "../../scripts/utility";
 import addRemoveCardMixin from "../../mixins/addRemoveCardMixin";
 
-let toastIdCounter = 0;
+let activeToast = null;
 
 export default {
   name: "CardSpoiler",
+  setup() {
+    return { toast: useToast() };
+  },
   components: {
     CardHover,
     CardLink,
@@ -308,36 +314,33 @@ export default {
         this.sideMenuOpen = true;
       }
       if (!this.sideMenuOpen) {
-        let toastIdPrefix = "cardSpoilerCardAddedToast_";
-        this.$bvToast.hide(toastIdPrefix + toastIdCounter);
-        let toastOptions = {
-          appendToast: true,
-          autoHideDelay: 1500,
-          id: toastIdPrefix + ++toastIdCounter,
+        // Replace any toast still on screen, so rapid adds do not stack up.
+        if (activeToast) activeToast.hide();
+        // modelValue is the auto-hide delay in ms.
+        activeToast = this.toast.create({
+          body: "+1 " + cardString,
+          modelValue: 1500,
           noCloseButton: true,
           noHoverPause: true,
-          toaster: "b-toaster-bottom-center"
-        };
-        this.$bvToast.toast("+1 " + cardString, toastOptions);
+          noProgress: true,
+          position: "bottom-center"
+        });
       }
     },
-    handleRowHovered: utility.debounce(function (item, index, e) {
-      if (this.scrolling) return this.handleRowHovered(...arguments); // Try again later
+    handleRowHovered: utility.debounce(function ({ item, index, event }) {
+      if (this.scrolling) return this.handleRowHovered({ item, index, event }); // Try again later
       if (!this.$store.state.hasHover) return;
-      if (e.target.matches(':hover')) {
+      if (event.target.matches(":hover")) {
         this.cardHover.show = true;
-        this.cardHover.target = this.$refs['card_' + index];
+        this.cardHover.target = this.$refs["card_" + index];
         this.cardHover.card = item;
-
-        let handleRowUnhovered = () => {
-          e.target.removeEventListener('mouseleave', handleRowUnhovered);
-          this.cardHover.show = false;
-          this.cardHover.target = null;
-          this.cardHover.card = null;
-        }
-        e.target.addEventListener('mouseleave', handleRowUnhovered);
       }
     }, 500),
+    handleRowUnhovered() {
+      this.cardHover.show = false;
+      this.cardHover.target = null;
+      this.cardHover.card = null;
+    },
     handleSideMenuUpdate() {
       this.sideMenuOpen = true;
     },

@@ -1,12 +1,12 @@
 <template>
   <b-container fluid @focusout="saveChanges">
     <div class="clearfix py-1">
-      <div class="float-left">
+      <div class="float-start">
         <router-link :to="{ name: 'searchPage' }"
           ><span class="font-default">&larr;</span> Return to search</router-link
         >
       </div>
-      <div class="float-right">
+      <div class="float-end">
         <a href="#" @click.prevent="removeCard(card)" aria-label="Cancel changes"
           ><font-awesome-icon icon="minus-square" /> Cancel changes</a
         >
@@ -20,22 +20,22 @@
             class="card-view d-flex flex-column pb-2"
             :class="viewOption === 'JSON' ? 'bound-height' : 'align-items-center'"
           >
-            <b-radio-group v-model="viewOption" :options="['Art', 'JSON']" class="mb-2 w-100 view-switch" buttons />
+            <b-form-radio-group v-model="viewOption" :options="['Art', 'JSON']" class="mb-2 w-100 view-switch" buttons />
             <!-- Image -->
             <template v-if="viewOption === 'Art'">
               <img v-if="imageUrl" :src="imageUrlOverride || imageUrl" class="card-image" />
             </template>
             <!-- JSON -->
             <template v-if="viewOption === 'JSON'">
-              <b-textarea
-                :class="'text-monospace flex-fill' + (cardJsonWrapped ? ' editor-wrap' : ' editor')"
+              <b-form-textarea
+                :class="'font-monospace flex-fill' + (cardJsonWrapped ? ' editor-wrap' : ' editor')"
                 v-model="cardJson"
                 rows="10"
                 size="sm"
                 @focus="cardJsonSelected = true"
                 @blur="cardJsonSelected = false"
-              ></b-textarea>
-              <b-checkbox v-model="cardJsonWrapped">Wrap Text</b-checkbox>
+              ></b-form-textarea>
+              <b-form-checkbox v-model="cardJsonWrapped">Wrap Text</b-form-checkbox>
             </template>
           </div>
         </b-col>
@@ -62,7 +62,7 @@
               <div class="card-stat-value">
                 <b-form-select v-model="cardTemp.alignment" :options="alignmentList">
                   <template #first>
-                    <b-form-select-option :value="undefined"></b-form-select-option>
+                    <b-form-select-option :value="null"></b-form-select-option>
                   </template>
                 </b-form-select>
               </div>
@@ -78,14 +78,14 @@
             <div class="clearfix">
               <div class="card-stat-label"><span>Subtype:</span></div>
               <div class="card-stat-value">
-                <v-select multiple v-model="cardTemp.subtype" :options="subtypeList" />
+                <option-tags v-model="cardTemp.subtype" :options="subtypeList" />
               </div>
             </div>
             <!-- Class -->
             <div class="clearfix">
               <div class="card-stat-label"><span>Class:</span></div>
               <div class="card-stat-value">
-                <v-select multiple v-model="cardTemp.class" :options="classList" />
+                <option-tags v-model="cardTemp.class" :options="classList" />
               </div>
             </div>
             <!-- Attack -->
@@ -101,7 +101,7 @@
               <div class="card-stat-value">
                 <b-form-select v-model="cardTemp.damageType" :options="damageTypeList">
                   <template #first>
-                    <b-form-select-option :value="undefined"></b-form-select-option>
+                    <b-form-select-option :value="null"></b-form-select-option>
                   </template>
                 </b-form-select>
               </div>
@@ -133,28 +133,28 @@
             <div class="clearfix">
               <div class="card-stat-label"><span>Faction:</span></div>
               <div class="card-stat-value">
-                <v-select multiple v-model="cardTemp.faction" :options="factionList" />
+                <option-tags v-model="cardTemp.faction" :options="factionList" />
               </div>
             </div>
             <!-- Traits -->
             <div class="clearfix">
               <div class="card-stat-label"><span>Traits:</span></div>
               <div class="card-stat-value">
-                <v-select multiple v-model="cardTemp.traits" :options="traitList" />
+                <option-tags v-model="cardTemp.traits" :options="traitList" />
               </div>
             </div>
             <!-- Keywords -->
             <div class="clearfix">
               <div class="card-stat-label"><span>Keywords:</span></div>
               <div class="card-stat-value">
-                <b-form-row v-for="i in cardTemp.keywords.length + Math.min(1, keywordList.length)" :key="'Keyword' + i">
+                <div class="row row-tight" v-for="i in cardTemp.keywords.length + Math.min(1, keywordList.length)" :key="'Keyword' + i">
                   <template v-if="i - 1 >= cardTemp.keywords.length">
                     <b-col cols="12">
-                      <b-select :options="keywordList" @input="x => selectKeyword(x, i - 1)">
+                      <b-form-select :model-value="null" :options="keywordList" @update:model-value="x => selectKeyword(x, i - 1)">
                         <template v-slot:first>
-                          <b-form-select-option :value="undefined">- Select Keyword -</b-form-select-option>
+                          <b-form-select-option :value="null">- Select Keyword -</b-form-select-option>
                         </template>
-                      </b-select>
+                      </b-form-select>
                     </b-col>
                   </template>
                   <template v-else>
@@ -172,21 +172,21 @@
                       </b-input-group>
                     </b-col>
                   </template>
-                </b-form-row>
+                </div>
               </div>
             </div>
             <!-- Feats -->
             <div class="clearfix">
               <div class="card-stat-label"><span>Feats:</span></div>
               <div class="card-stat-value">
-                <b-form-row v-for="i in cardTemp.feats.length + Math.min(1, featList.length)" :key="'Feat' + i">
+                <div class="row row-tight" v-for="i in cardTemp.feats.length + Math.min(1, featList.length)" :key="'Feat' + i">
                   <template v-if="i - 1 >= cardTemp.feats.length">
                     <b-col cols="12">
-                      <b-select :options="featList" @input="x => selectFeat(x, i - 1)">
+                      <b-form-select :model-value="null" :options="featList" @update:model-value="x => selectFeat(x, i - 1)">
                         <template v-slot:first>
-                          <b-form-select-option :value="undefined">- Select Feat -</b-form-select-option>
+                          <b-form-select-option :value="null">- Select Feat -</b-form-select-option>
                         </template>
-                      </b-select>
+                      </b-form-select>
                     </b-col>
                   </template>
                   <template v-else>
@@ -204,21 +204,21 @@
                       </b-input-group>
                     </b-col>
                   </template>
-                </b-form-row>
+                </div>
               </div>
             </div>
             <!-- Editions -->
             <div class="clearfix my-2">
               <div class="card-stat-label"><span>Formats:</span></div>
               <div class="card-stat-value">
-                <v-select multiple v-model="cardTemp.editions" :options="editionList" />
+                <option-tags v-model="cardTemp.editions" :options="editionList" />
               </div>
             </div>
             <!-- Exclusive Promo -->
             <div class="clearfix">
               <div class="card-stat-label"></div>
               <div class="card-stat-value">
-                <b-checkbox v-model="cardTemp.exclusivePromo">Is Exclusive Promo</b-checkbox>
+                <b-form-checkbox v-model="cardTemp.exclusivePromo">Is Exclusive Promo</b-form-checkbox>
               </div>
             </div>
             <!-- Text -->
@@ -227,7 +227,7 @@
             </div>
             <!-- Print Infos -->
             <div class="clearfix py-1">
-              <div class="float-right">
+              <div class="float-end">
                 <a href="#" @click.prevent="addPrintInfo" aria-label="Add print info">
                   <font-awesome-icon icon="plus-square" /> Add print info</a
                 >
@@ -238,21 +238,21 @@
               <div class="clearfix">
                 <div class="card-stat-label"><span>Set:</span></div>
                 <div class="card-stat-value">
-                  <b-form-row>
+                  <div class="row row-tight">
                     <b-col cols="1">
                       <a href="#" @click.prevent="removePrintInfo(i)"><span class="font-default">✘</span></a>
                     </b-col>
                     <b-col cols="11">
                       <b-form-select v-model="printInfo.set" :options="setList" />
                     </b-col>
-                  </b-form-row>
+                  </div>
                 </div>
               </div>
               <!-- Set Number -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Set Number:</span></div>
                 <div class="card-stat-value">
-                  <b-input v-model="printInfo.setNumber" />
+                  <b-form-input v-model="printInfo.setNumber" />
                 </div>
               </div>
               <!-- Rarity -->
@@ -261,7 +261,7 @@
                 <div class="card-stat-value">
                   <b-form-select v-model="printInfo.rarity" :options="rarityList">
                     <template #first>
-                      <b-form-select-option :value="undefined"></b-form-select-option>
+                      <b-form-select-option :value="null"></b-form-select-option>
                     </template>
                   </b-form-select>
                 </div>
@@ -270,21 +270,21 @@
               <div class="clearfix">
                 <div class="card-stat-label"><span>Artist:</span></div>
                 <div class="card-stat-value">
-                  <b-input v-model="printInfo.artist" />
+                  <b-form-input v-model="printInfo.artist" />
                 </div>
               </div>
               <!-- Image URL -->
               <div class="clearfix">
                 <div class="card-stat-label"><span>Image URL:</span></div>
                 <div class="card-stat-value">
-                  <b-form-row>
+                  <div class="row row-tight">
                     <b-col cols="1" class="d-flex align-items-center">
                       <a href="#" @click.prevent="setImage(printInfo.imageUrl)"><font-awesome-icon icon="eye" /></a>
                     </b-col>
                     <b-col cols="11">
-                      <b-input v-model="printInfo.imageUrl" />
+                      <b-form-input v-model="printInfo.imageUrl" />
                     </b-col>
-                  </b-form-row>
+                  </div>
                 </div>
               </div>
               <!-- Flavor Text -->
@@ -297,7 +297,7 @@
       </b-row>
       <!-- Errata -->
       <div class="my-3">
-        <div class="font-weight-bold"><span>Rulings:</span></div>
+        <div class="fw-bold"><span>Rulings:</span></div>
         <div>
           <b-form-textarea rows="4" v-model="cardTemp.errata" />
         </div>
@@ -307,12 +307,13 @@
 </template>
 
 <script>
-import Vue from "vue";
 import addRemoveCardMixin from "../../mixins/addRemoveCardMixin";
 import { createMapper } from "../../scripts/cardMapper";
+import OptionTags from "../shared/OptionTags.vue";
 
 export default {
   name: "CardDetailEdit",
+  components: { OptionTags },
   mixins: [addRemoveCardMixin],
   props: {
     card: String,
@@ -472,16 +473,16 @@ export default {
       this.mapper.sync();
     },
     selectKeyword(val, index) {
-      Vue.set(this.cardTemp.keywords, index, { name: val });
+      this.cardTemp.keywords[index] = { name: val };
     },
     deselectKeyword(index) {
-      Vue.delete(this.cardTemp.keywords, index);
+      this.cardTemp.keywords.splice(index, 1);
     },
     selectFeat(val, index) {
-      Vue.set(this.cardTemp.feats, index, { name: val });
+      this.cardTemp.feats[index] = { name: val };
     },
     deselectFeat(index) {
-      Vue.delete(this.cardTemp.feats, index);
+      this.cardTemp.feats.splice(index, 1);
     },
     addPrintInfo() {
       this.cardTemp.printInfos.splice(0, 0, { });

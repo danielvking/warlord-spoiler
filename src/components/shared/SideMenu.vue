@@ -1,25 +1,33 @@
 <template>
   <div>
-    <div v-if="value && showSideMenus" class="side-menu-container-outer">
+    <div v-if="modelValue && showSideMenus" class="side-menu-container-outer">
       <div class="side-menu-container-middle">
         <div class="side-menu-container-inner content-region">
           <div class="site-subheader d-flex align-items-center">
             <h3>{{ title }}</h3>
-            <b-button-close text-variant="light" class="px-1" @click="$emit('input', false)"/>
+            <b-close-button @click="$emit('update:modelValue', false)"/>
           </div>
           <slot/>
         </div>
       </div>
     </div>
-    <b-sidebar :visible="value && !showSideMenus" @change="x => $emit('input', x)" bg-variant="transparent" backdrop lazy no-header width="250px">
+    <b-offcanvas
+      :model-value="modelValue && !showSideMenus"
+      @update:model-value="x => $emit('update:modelValue', x)"
+      class="bg-transparent"
+      width="250px"
+      backdrop
+      lazy
+      no-header
+    >
       <div class="side-menu-container-inner h-100 content-region">
         <div class="site-subheader d-flex align-items-center">
           <h3>{{ title }}</h3>
-          <b-button-close text-variant="light" class="px-1" @click="$emit('input', false)"/>
+          <b-close-button @click="$emit('update:modelValue', false)"/>
         </div>
           <slot/>
       </div>
-    </b-sidebar>
+    </b-offcanvas>
   </div>
 </template>
 
@@ -27,19 +35,15 @@
 export default {
   name: "SideMenu",
   props: {
-    value: Boolean,
+    modelValue: Boolean,
     title: String
   },
+  emits: ["update:modelValue"],
   computed: {
     showSideMenus() {
       return this.$store.getters.showSideMenus;
     },
   },
-  watch: {
-    value(newVal) {
-        this.$emit("input", newVal);
-    }
-  }
 };
 </script>
 

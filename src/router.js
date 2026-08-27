@@ -1,5 +1,4 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 const Show404 = () => import('./components/Show404.vue')
 const PrintDeck = () => import('./components/spoiler/PrintDeck.vue')
@@ -10,10 +9,10 @@ const EnableEdit = () => import('./components/editor/EnableEdit.vue')
 const BuildCard = () => import('./components/builder/BuildCard.vue')
 const RulesetGuide = () => import('./components/builder/RulesetGuide.vue')
 
-Vue.use(Router)
+let searchScrollTop = 0
 
-export default new Router({
-  mode: 'history',
+const router = createRouter({
+  history: createWebHistory(),
   routes: [
     {
       path: '/print-deck',
@@ -35,7 +34,7 @@ export default new Router({
       props: true
     },
     {
-      path: '*',
+      path: '/:pathMatch(.*)*',
       component: Show404
     },
     {
@@ -57,24 +56,44 @@ export default new Router({
     {
       // This is here for the benefit of SEO
       // To be honest, IDK if it will work
+      //
+      // vue-router 4 serialises a query the form-urlencoded way, so spaces in a
+      // card name come out as "+" where vue-router 3 emitted "%20". Both forms
+      // resolve, so links indexed under the old shape still work, but the
+      // canonical URL this route advertises changed for most of the catalogue.
       path: '/card-list',
       name: 'cardList',
       component: FullCardList,
     }
   ],
-  scrollBehavior(to) {
+  scrollBehavior(to, _from, savedPosition) {
     if (to.hash) {
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve({
-            selector: to.hash,
-            offset: { x: 0, y: 63 }, // Probably a more elegant solution to this
+            el: to.hash,
+            top: 63, // Probably a more elegant solution to this
             behavior: "smooth"
           })
         }, 300)
       });
-    } else {
-      return { x: 0, y: 0 }
     }
+    // Only the browser back button gets a savedPosition. The "Return to
+    // search" link is a forward push, so it falls back to what we captured.
+    if (to.name === 'searchPage') {
+      let top = savedPosition ? savedPosition.top : searchScrollTop
+      return { left: 0, top: top || 0, behavior: "instant" }
+    }
+    return { left: 0, top: 0, behavior: "instant" }
   }
 })
+
+// Where the search results were when you last left them. scrollBehavior runs
+// after the DOM has updated, too late to read it there.
+router.beforeEach((to, from) => {
+  if (from.name === 'searchPage' && to.name !== 'searchPage') {
+    searchScrollTop = window.scrollY
+  }
+})
+
+export default router

@@ -1,40 +1,41 @@
 <template>
-  <div id="app">
-    <!-- Background -->
-    <div ref="backgroundAnchor" id="backgroundAnchor"></div>
+  <b-app>
 
-    <!-- Sidebar -->
-    <b-sidebar v-model="showSidebar" id="sidebar" text-variant="light" bg-variant="dark" backdrop lazy>
-      <template #title>
-        <img class="site-logo pr-3" src="/images/TheAccordlands_Text_2.svg" aria-label="The Accordlands"/>
-      </template>
-      <div>
-        <template v-for="(link, i) in computedLinks">
-          <template v-if="link.isHeader">
-            <hr class="m-2 border-light" :key="i + '_hr'"/>
-            <h3 class="mx-3 my-0" :key="i">{{ link.display }}</h3>
-          </template>
-          <b-button
-            v-else
-            :key="i"
-            class="text-left border-0 rounded-0 my-1 px-4 py-1"
-            block
-            variant="outline-light"
-            :to="link.to"
-            :href="link.href"
-            @click="showSidebar = false"
-            >{{ link.display }}</b-button
-          >
+    <div id="app">
+      <!-- Background -->
+      <div ref="backgroundAnchor" id="backgroundAnchor"></div>
+
+      <!-- Sidebar -->
+      <b-offcanvas v-model="showSidebar" id="sidebar" class="text-bg-dark" backdrop lazy>
+        <template #title>
+          <img class="site-logo pe-3" src="/images/TheAccordlands_Text_2.svg" aria-label="The Accordlands"/>
         </template>
-      </div>
-    </b-sidebar>
+        <div>
+          <template v-for="(link, i) in computedLinks" :key="i">
+            <template v-if="link.isHeader">
+              <hr class="m-2 border-light"/>
+              <h3 class="mx-3 my-0">{{ link.display }}</h3>
+            </template>
+            <b-button
+              v-else
+              class="text-start border-0 rounded-0 my-1 px-4 py-1 w-100"
+              variant="outline-light"
+              :to="link.to"
+              :href="link.href"
+              @click="showSidebar = false"
+              >{{ link.display }}</b-button
+            >
+          </template>
+        </div>
+      </b-offcanvas>
     
-    <!-- 404 -->
-    <page-not-found v-if="show404"/>
+      <!-- 404 -->
+      <page-not-found v-if="show404"/>
 
-    <!-- View -->
-    <router-view v-else/>
-  </div>
+      <!-- View -->
+      <router-view v-else/>
+    </div>
+  </b-app>
 </template>
 
 <script>
@@ -200,5 +201,12 @@ h6 {
 .site-logo {
   max-width: 100%;
   max-height: 100%;
+}
+
+/* The SVG has no intrinsic height, so in a flex header with no height of its
+   own it grows to fill and drags the header taller with it. Cap it to the
+   close button's height so the header sizes to its controls. */
+.offcanvas-header .site-logo {
+  max-height: 1.5rem;
 }
 </style>

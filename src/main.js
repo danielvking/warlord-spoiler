@@ -1,24 +1,17 @@
-import Vue from 'vue'
-import './plugins/bootstrap-vue'
-import './plugins/fontawesome'
-import './plugins/vue-select'
+import { createApp } from 'vue'
+import bootstrapVueNext from './plugins/bootstrap-vue'
+import fontawesome from './plugins/fontawesome'
 import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import { formatCardProperty } from './scripts/cardFormatter'
+const app = createApp(App)
 
-Vue.config.productionTip = false
+app.use(router)
+app.use(store)
+app.use(bootstrapVueNext)
+app.use(fontawesome)
 
-// Register card filters
-Vue.filter('cardFormatter', function(value, prop, cardData) {
-  return formatCardProperty(prop, value, cardData)
-})
+store.commit('initialize')
 
-
-new Vue({
-  router,
-  render: h => h(App),
-  store: store,
-  beforeCreate() { this.$store.commit('initialize'); }
-}).$mount('#app')
+app.mount('#app')

@@ -1,4 +1,9 @@
-// Variable overrides
+// ---------------------------------------------------------------------------
+// Site design
+// ---------------------------------------------------------------------------
+// These are deliberate choices about how the site looks, independent of which
+// Bootstrap major version is underneath.
+
 $primary: rgb(61, 105, 153);
 $light: rgb(255, 255, 255);
 $dark: rgb(25, 25, 25);
@@ -8,20 +13,226 @@ $line-height-base: 1.1;
 
 $input-btn-padding-y: 0.1rem;
 
+
+// ---------------------------------------------------------------------------
+// Bootstrap 4 compatibility
+// ---------------------------------------------------------------------------
+// Bootstrap 5 changed these defaults. They are pinned to the Bootstrap 4 values
+// so the migration did not visibly change the site. Everything in this section
+// can be deleted to adopt the Bootstrap 5 look; nothing else depends on it.
+
+// Responsive font sizing scales headings down below the xxl breakpoint: h1
+// drops 44px -> 31px at narrow widths.
+$enable-rfs: false;
+
+// scroll-behavior: smooth on <html> animates every browser-initiated scroll,
+// not just anchor jumps, so revealing a focused element slides the page instead
+// of moving it. The router asks for smooth explicitly on a hash route.
+$enable-smooth-scroll: false;
+
+// The 1.5rem default resolves smaller here, because $font-size-base is 1.1rem.
+$grid-gutter-width: 30px;
+
+// Spelled out rather than referencing $gray-700/$gray-600, which Bootstrap
+// does not define until the import below.
+$input-color: #495057;
+$body-secondary-color: #6c757d;
+$hr-color: #808080;
+$hr-opacity: 1;
+
+// The 1em default is 17.6px against this site's 1.1rem base. Bootstrap derives
+// the label offset by adding .5em to this, which will not add to a rem, so pin
+// that as well.
+$form-check-input-width: 1rem;
+$form-check-padding-start: 1.5rem;
+
+// .form-check spaces each row by .125rem. Two pixels is invisible alone, but
+// the advanced search stacks five or six and everything below drifts down.
+$form-check-margin-bottom: 0;
+
+// .form-label's default 0.5rem margin is looser than this dense UI expects.
+$form-label-margin-bottom: 0.15rem;
+
+// Ours, not Bootstrap's: Bootstrap 5 dropped the variable and the .form-group
+// class, and BootstrapVueNext ships no spacing rule for .b-form-group. The
+// rules section below applies it.
 $form-group-margin-bottom: 0.4rem;
 
-// Bootstrap defaults
+// .2rem resolves to 3.2px here, against a flat .25rem default.
+$focus-ring-width: 0.2rem;
+$input-btn-focus-width: 0.2rem;
+
+$link-decoration: none;
+$link-hover-decoration: underline;
+
+$input-border-color: #ced4da;
+$input-focus-border-color: #89aacf;
+
+// The contrast colour outline-light buttons in the dark header pick up on
+// hover. Pure black by default.
+$color-contrast-dark: #212529;
+
+$popover-body-padding-y: 0.5rem;
+$popover-body-padding-x: 0.75rem;
+
+// An opaque $table-bg hides the map background this site shows through its
+// tables.
+$table-bg: transparent;
+$table-striped-bg-factor: 0.075;
+
+$table-color: #212529;
+$table-cell-padding-y: 0.75rem;
+$table-cell-padding-x: 0.75rem;
+$table-cell-padding-y-sm: 0.3rem;
+$table-cell-padding-x-sm: 0.3rem;
+
+$link-shade-percentage: 36%;
+$btn-hover-bg-shade-amount: 18%;
+$btn-hover-border-shade-amount: 24%;
+$btn-active-bg-shade-amount: 24%;
+$btn-active-border-shade-amount: 30%;
+
+// darken() works in HSL and shade-color() in RGB, so one percentage cannot
+// reproduce Bootstrap 4 across the whole palette. These are solved for
+// $primary, the site colour. $secondary is corrected after the import, where
+// Bootstrap has already emitted its button variants.
+
+
 @import "bootstrap/scss/bootstrap";
+
+
+// ---------------------------------------------------------------------------
+// Site rules
+// ---------------------------------------------------------------------------
 
 .font-default {
     font-family: $font-family-sans-serif;
 }
 
-.v-select {
-    background-color: $input-bg;
-    border-radius: $input-border-radius;
+// A badge carries a value the reader has to read, not an annotation on one, so
+// Bootstrap's 0.75em is too small for the site's display serif. The negative
+// margin keeps a row of badges the height of the field they sit in.
+.badge {
+    margin: -1px;
+    padding: 3px 7px;
+    font-weight: 400;
+    font-size: 0.9rem;
 }
 
-.popover.popover-wide {
+// body-class lands on the popover body, so widen from the body outwards.
+// Card images are 286px and would otherwise scroll the 276px default.
+.popover-body.popover-wide {
     max-width: 2 * $popover-max-width;
+}
+
+// The body is nested in an .overflow-auto sizing wrapper, so the width has to
+// reach the popover root or that wrapper scrolls instead.
+.popover:has(.popover-wide) {
+    max-width: 2 * $popover-max-width;
+
+    .b-floating-size {
+        overflow: visible;
+    }
+}
+
+
+// ---------------------------------------------------------------------------
+// Bootstrap 4 compatibility (rules)
+// ---------------------------------------------------------------------------
+// As above: deleting this section adopts Bootstrap 5 spacing.
+
+// .b-form-group is what BootstrapVueNext marks form groups with; some
+// templates still apply .form-group directly.
+.form-group,
+.b-form-group {
+    margin-bottom: $form-group-margin-bottom;
+}
+
+// A .row with tighter gutters, standing in for Bootstrap 4's .form-row.
+// BootstrapVue 2 laid a horizontal form group out with .form-row, which
+// Bootstrap 5 deleted, so the group's own row falls back to the 30px grid
+// gutter and every field on the page loses 10px a side.
+.row-tight,
+.b-form-group > .row {
+    --bs-gutter-x: 10px;
+}
+
+// .col is flex: 1 0 0 with min-width: auto, so it never shrinks below its
+// content's min-content width. A tag row reports ~197px, wider than the half
+// column a label-cols="6" group leaves it below about 992px, so the column
+// drops to its own line instead of shrinking.
+.col:has(> .option-tags) {
+    min-width: 0;
+    flex-shrink: 1;
+}
+
+// There is no variable for this one, and $line-height-base would otherwise
+// pull large buttons down to 1.1 with the rest.
+.btn-lg {
+    --bs-btn-line-height: 1.5;
+}
+
+// .offcanvas-body's full $spacer pushed the deck panel 16px down from the top
+// of the screen and off the bottom. These panels draw their own chrome, so
+// drop it, and with it the row gutter the padding had been masking.
+.offcanvas-body:has(> .side-menu-container-inner) {
+    padding: 0;
+
+    > .side-menu-container-inner {
+        margin-left: 0;
+    }
+}
+
+// Bootstrap 5 draws the close glyph as a black SVG recoloured by a filter, and
+// Chrome's auto-dark skips a filtered element, so on a phone forcing the site
+// dark this is the one thing that stays black on a now-light panel. Bootstrap 4
+// drew it as text, which auto-dark recolours like any other text. Draw a
+// character so it inverts with the rest of the page.
+.btn-close {
+    --bs-btn-close-filter: none;
+    // Bootstrap colours the glyph from this; inherit the panel's colour instead.
+    --bs-btn-close-color: inherit;
+    background-image: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+
+    &::before {
+        content: "×";
+        font-size: 1.5em;
+        // The site face is a display serif; the multiplication sign only looks
+        // like a close button in the UI face.
+        font-family: $font-family-sans-serif;
+    }
+}
+
+// Bootstrap pulls the offcanvas close button into the header's padding with a
+// negative margin, which lands it against the title and leaves an uneven gap.
+// Cancel the pull so the header's padding is the gap on all four sides.
+.offcanvas-header {
+    padding: 8px;
+
+    .btn-close {
+        margin: 0 0 0 auto;
+    }
+}
+
+// An input group ends in a rounded corner, but the multiselect's dropdown is a
+// later sibling inside the group, so Bootstrap stops treating the caret button
+// as the last child and squares it off whenever the list is open. The caret is
+// the end of that control either way. The :not() chain is here to match the
+// specificity of the Bootstrap rule it corrects.
+.input-group:not(.has-validation) > .option-tags-caret:not(.dropdown-toggle):not(.dropdown-menu):not(.form-floating):not(:disabled) {
+    border-top-right-radius: var(--bs-border-radius);
+    border-bottom-right-radius: var(--bs-border-radius);
+}
+
+// The shade percentages above are solved for $primary. These are the
+// Bootstrap 4 darken() results for $secondary, which the button toggles use.
+.btn-secondary {
+    --bs-btn-hover-bg: #5a6268;
+    --bs-btn-hover-border-color: #545b62;
+    --bs-btn-active-bg: #545b62;
+    --bs-btn-active-border-color: #4e555b;
 }

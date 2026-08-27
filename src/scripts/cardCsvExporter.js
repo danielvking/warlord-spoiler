@@ -43,9 +43,13 @@ function fromNameValue(value) {
 
 function toNameValue(value) {
   if (!value) return value
+  // Split only when the leading token is actually a number. Splitting on any
+  // space eats the first word of a valueless multi-word keyword, turning
+  // "True Strike" into { name: "Strike", value: NaN }.
   let splitIndex = value.indexOf(" ")
-  if (splitIndex >= 0) {
-    return { name: value.slice(splitIndex + 1), value: Number(value.slice(0, splitIndex)) }
+  let leading = splitIndex >= 0 ? Number(value.slice(0, splitIndex)) : NaN
+  if (splitIndex >= 0 && !Number.isNaN(leading)) {
+    return { name: value.slice(splitIndex + 1), value: leading }
   }
   return { name: value }
 }
@@ -138,6 +142,7 @@ function csvTextToArrays(text) {
     let literalValue = match.value[3]
     arr.push(escapedValue != null ? unescape(escapedValue) : literalValue)
   }
+  if (arr != null && !(arr.length === 1 && arr[0] === "")) arrays.push(arr)
 
   return arrays
 }

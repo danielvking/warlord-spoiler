@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-form-row>
+    <div class="row row-tight">
       <b-col cols="12" md="10" class="my-1">
         <b-form-input
           v-model="searchText"
@@ -13,8 +13,8 @@
       <b-col cols="12" md="2" class="my-1">
         <b-button variant="primary" class="w-100" :disabled="!canSearch" @click.prevent="onSearch">Search</b-button>
       </b-col>
-    </b-form-row>
-    <b-form-row class="mb-4">
+    </div>
+    <div class="row row-tight mb-4">
       <!-- Name/Text -->
       <b-col cols="12" md="6">
         <b-form-group class="text-center my-2" label="Search by:">
@@ -33,7 +33,7 @@
           </b-form-select>
         </b-form-group>
       </b-col>
-    </b-form-row>
+    </div>
   </div>
 </template>
 

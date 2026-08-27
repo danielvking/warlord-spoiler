@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite'
 import { splitVendorChunkPlugin } from 'vite'
-import { createVuePlugin } from 'vite-plugin-vue2'
+import vue from '@vitejs/plugin-vue'
+import Components from 'unplugin-vue-components/vite'
+import { BootstrapVueNextResolver } from 'bootstrap-vue-next/resolvers'
 
 const resourcesReg = /\/resources\/[^\/\.]*\.[^\/\.]+$/i;
 const pluginsReg = /\/plugins\/([^\/\.]*)\.[^\/\.]+$/i;
@@ -8,7 +10,8 @@ const pluginsReg = /\/plugins\/([^\/\.]*)\.[^\/\.]+$/i;
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    createVuePlugin(),
+    vue(),
+    Components({ resolvers: [BootstrapVueNextResolver()] }),
     splitVendorChunkPlugin()
   ],
   build: {

@@ -1,0 +1,9 @@
+# Normalize to LF in the repo; check out native line endings per platform.
+* text=auto
+
+# Binary assets - never touch
+*.ttf binary
+*.ico binary
+*.jpg binary
+*.png binary
+*.svg text

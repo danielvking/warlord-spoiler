@@ -1,12 +1,12 @@
 <template>
   <b-container fluid>
     <div class="clearfix py-1">
-      <div class="float-left">
+      <div class="float-start">
         <router-link :to="{ name: 'searchPage' }"
           ><span class="font-default">&larr;</span> Return to search</router-link
         >
       </div>
-      <div class="float-right">
+      <div class="float-end">
         <a href="#" @click.prevent="addCard(card)" :aria-label="addCardText"
           ><font-awesome-icon icon="plus-square" /> {{ addCardText }}</a
         >
@@ -33,7 +33,7 @@
             <div v-if="cardData.level" class="clearfix">
               <div class="card-stat-label"><span>Level:</span></div>
               <div class="card-stat-value">
-                <span>{{ cardData.level | cardFormatter("level", cardData) }}</span>
+                <span>{{ cardFormatter(cardData.level, "level", cardData) }}</span>
               </div>
             </div>
             <!-- Alignment -->
@@ -54,21 +54,21 @@
             <div v-if="cardData.subtype" class="clearfix">
               <div class="card-stat-label"><span>{{ cardData.type != null ? `${cardData.type} Type` : "Subtype" }}:</span></div>
               <div class="card-stat-value">
-                <span>{{ cardData.subtype | arrayToMaybeBreak }}</span>
+                <span>{{ arrayToMaybeBreak(cardData.subtype) }}</span>
               </div>
             </div>
             <!-- Class -->
             <div v-if="cardData.class" class="clearfix">
               <div class="card-stat-label"><span>Class:</span></div>
               <div class="card-stat-value">
-                <span>{{ cardData.class | arrayToMaybeBreak }}</span>
+                <span>{{ arrayToMaybeBreak(cardData.class) }}</span>
               </div>
             </div>
             <!-- Attack -->
             <div v-if="cardData.attack" class="clearfix">
               <div class="card-stat-label"><span>Attack:</span></div>
               <div class="card-stat-value">
-                <span>{{ cardData.attack | cardFormatter("attack", cardData) }}</span>
+                <span>{{ cardFormatter(cardData.attack, "attack", cardData) }}</span>
               </div>
             </div>
             <!-- Damage Type -->
@@ -82,14 +82,14 @@
             <div v-if="cardData.armorClass" class="clearfix">
               <div class="card-stat-label"><span>Armor Class:</span></div>
               <div class="card-stat-value">
-                <span>{{ cardData.armorClass | cardFormatter("armorClass", cardData) }}</span>
+                <span>{{ cardFormatter(cardData.armorClass, "armorClass", cardData) }}</span>
               </div>
             </div>
             <!-- Skill -->
             <div v-if="cardData.skill" class="clearfix">
               <div class="card-stat-label"><span>Skill:</span></div>
               <div class="card-stat-value">
-                <span>{{ cardData.skill | cardFormatter("skill", cardData) }}</span>
+                <span>{{ cardFormatter(cardData.skill, "skill", cardData) }}</span>
               </div>
             </div>
             <!-- Hit Points -->
@@ -98,35 +98,35 @@
                 <span>Hit Points:</span>
               </div>
               <div class="card-stat-value">
-                <span>{{ cardData.hitPoints | cardFormatter("hitPoints", cardData) }}</span>
+                <span>{{ cardFormatter(cardData.hitPoints, "hitPoints", cardData) }}</span>
               </div>
             </div>
             <!-- Faction -->
             <div v-if="cardData.faction" class="clearfix">
               <div class="card-stat-label"><span>Faction:</span></div>
               <div class="card-stat-value">
-                <span>{{ cardData.faction | arrayToMaybeBreak }}</span>
+                <span>{{ arrayToMaybeBreak(cardData.faction) }}</span>
               </div>
             </div>
             <!-- Traits -->
             <div v-if="cardData.traits" class="clearfix">
               <div class="card-stat-label"><span>Traits:</span></div>
               <div class="card-stat-value">
-                <span>{{ cardData.traits | arrayToLineBreak }}</span>
+                <span>{{ arrayToLineBreak(cardData.traits) }}</span>
               </div>
             </div>
             <!-- Keywords -->
             <div v-if="cardData.keywords" class="clearfix">
               <div class="card-stat-label"><span>Keywords:</span></div>
               <div class="card-stat-value">
-                <div v-for="keyword in cardData.keywords" :key="keyword.name">{{ keyword | cardFormatter("keyword", cardData) }}</div>
+                <div v-for="keyword in cardData.keywords" :key="keyword.name">{{ cardFormatter(keyword, "keyword", cardData) }}</div>
               </div>
             </div>
             <!-- Feats -->
             <div v-if="cardData.feats" class="clearfix">
               <div class="card-stat-label"><span>Feats:</span></div>
               <div class="card-stat-value">
-                <div v-for="feat in cardData.feats" :key="feat">{{ feat | cardFormatter("feat", cardData) }}</div>
+                <div v-for="feat in cardData.feats" :key="feat">{{ cardFormatter(feat, "feat", cardData) }}</div>
               </div>
             </div>
             <!-- Editions -->
@@ -143,7 +143,7 @@
             <div v-for="(printInfo, i) in cardData.printInfos" :key="i">
               <!-- Image Link (Set, Set Number) -->
               <div class="card-print-link" @click="setImage(printInfo.imageUrl)">
-                <span>{{ printInfo | formatSetName(cardData) }}</span>
+                <span>{{ formatSetName(printInfo, cardData) }}</span>
               </div>
               <div class="mx-2">
                 <!-- Rarity -->
@@ -171,7 +171,7 @@
       </b-row>
       <!-- Errata -->
       <div v-if="cardData.errata" class="my-3">
-        <div class="font-weight-bold"><span>Rulings:</span></div>
+        <div class="fw-bold"><span>Rulings:</span></div>
         <div class="card-errata">
           <span>{{ cardData.errata }}</span>
         </div>
@@ -219,21 +219,6 @@ export default {
       return value;
     }
   },
-  filters: {
-    arrayToLineBreak(value) {
-      if (!Array.isArray(value)) return value;
-      return value.join("\r\n");
-    },
-    arrayToMaybeBreak(value) {
-      if (!Array.isArray(value)) return value;
-      return value.join("/\u200B");
-    },
-    formatSetName(value, cardData) {
-      let display = value.set;
-      if (value.setNumber != null) display += ` (${formatCardProperty("setNumber", value.setNumber, cardData)})`;
-      return display;
-    },
-  },
   watch: {
     card() {
       this.imageUrlOverride = null;
@@ -247,6 +232,23 @@ export default {
     });
   },
   methods: {
+    arrayToLineBreak(value) {
+      if (!Array.isArray(value)) return value;
+      return value.join("\r\n");
+    },
+    arrayToMaybeBreak(value) {
+      if (!Array.isArray(value)) return value;
+      return value.join("/\u200B");
+    },
+    formatSetName(value, cardData) {
+      let display = value.set;
+      if (value.setNumber != null) display += ` (${formatCardProperty("setNumber", value.setNumber, cardData)})`;
+      return display;
+    },
+    cardFormatter(value, prop, cardData) {
+      return formatCardProperty(prop, value, cardData);
+    },
+
     setImage(imageUrl) {
       if (!imageUrl) return;
       this.imageUrlOverride = imageUrl;

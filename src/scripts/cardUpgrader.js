@@ -74,16 +74,16 @@ function upgradeV1ToV2(cardData) {
   // Map to subtype
   let subtype = undefined
   if (traits.includes("Warlord")) {
-    newData.subtype = "Warlord"
+    subtype = "Warlord"
   }
   if (traits.includes("Overlord")) {
-    newData.subtype = "Overlord"
+    subtype = "Overlord"
   }
   if (traits.includes("Dragon Lord")) {
-    newData.subtype = "Dragon Lord"
+    subtype = "Dragon Lord"
   }
   if (traits.includes("Medusan Lord")) {
-    newData.subtype = "Medusan Lord"
+    subtype = "Medusan Lord"
   }
 
   // There are a lot of trait and flavor trait changes, but we are just going to ignore most of them
@@ -97,7 +97,7 @@ function upgradeV1ToV2(cardData) {
   newData.subtype = subtype
   newData.alignment = cardData.alignment
   newData.class = split(cardData.class)
-  newData.faction = faction
+  newData.faction = factions
   newData.attack = cardData.attack && split(cardData.attack).map(x => parseStat(x))
   newData.damageType = cardData.Type === "Character" ? "Physical" : undefined
   newData.armorClass = parseStat(cardData.armorClass)

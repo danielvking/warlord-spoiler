@@ -1,4 +1,3 @@
-import Vue from "vue";
 import utility from "./utility";
 
 
@@ -53,12 +52,19 @@ const keyOrder = [
 function setProp(obj, key, value) {
   // Value is undefined: delete it, stop
   if (value === undefined) {
-    Vue.delete(obj, key);
+    // A plain delete leaves a hole, so removing the middle of
+    // ["Wizard","Cleric","Mage"] gives ["Wizard",null,"Mage"], and the null
+    // then fails validation as an undefined class.
+    if (Array.isArray(obj)) {
+      obj.splice(key, 1);
+    } else {
+      delete obj[key];
+    }
     return;
   }
   // Key is undefined: add it in an ordered manner
   if (obj[key] === undefined) {
-    utility.insertKeyOrdered(obj, key, keyOrder, Vue.set, Vue.delete);
+    utility.insertKeyOrdered(obj, key, keyOrder);
   }
   if (typeof (value) === 'object' && value !== null) {
     if (typeof (obj[key]) === 'object' && obj[key] !== null) {
@@ -70,9 +76,9 @@ function setProp(obj, key, value) {
   // If the properties are not equal: set destination from source
   if (obj[key] !== value) {
     if (typeof (value) === 'object' && value !== null) {
-      Vue.set(obj, key, deepCopy(value));
+      obj[key] = deepCopy(value);
     } else {
-      Vue.set(obj, key, value);
+      obj[key] = value;
     }
   }
 }

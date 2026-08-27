@@ -24,3 +24,11 @@ yarn-error.log*
 
 # test images
 /public/images/test
+
+# Playwright
+/test-results
+/playwright-report
+
+# Scratch scripts from the per-screen regression audits
+tests/visual/_audit_*
+tests/visual/_tmp-*

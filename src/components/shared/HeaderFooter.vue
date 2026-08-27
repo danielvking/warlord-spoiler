@@ -1,6 +1,6 @@
 <template>
   <b-container class="site-container">
-    <b-row class="site-header d-flex" :class="$store.state.localRoutes[0] ? 'position-sticky' : ''">
+    <div class="site-header d-flex" :class="$store.state.localRoutes[0] ? 'position-sticky' : ''">
       <div class="site-header-margin">
         <div class="p-2 h-100">
           <b-button variant="outline-light" class="h-100 border-0 px-2" v-b-toggle.sidebar>
@@ -18,15 +18,15 @@
           <slot name="fixedToolbar"/>
         </div>
       </div>
-    </b-row>
-    <b-row class="flex-grow-1 content-region">
+    </div>
+    <div class="flex-grow-1 content-region">
       <div class="w-100">
         <slot />
       </div>
-    </b-row>
-    <b-row class="site-footer d-block">
+    </div>
+    <div class="site-footer d-block">
       <div class="my-1 text-muted text-center">© Kingswood Games {{ new Date().getFullYear() }}</div>
-    </b-row>
+    </div>
   </b-container>
 </template>
 
@@ -41,6 +41,17 @@
 .site-footer,
 .site-subheader {
   background-color: #191919;
+}
+
+/* These span the full container width, cancelling its horizontal padding.
+   Scoped to this component's own children, because .content-region is also
+   used by panels that sit outside the container and have no padding to
+   cancel. */
+.site-container > .site-header,
+.site-container > .site-footer,
+.site-container > .content-region {
+  margin-left: -15px;
+  margin-right: -15px;
 }
 
 .site-header,
@@ -83,5 +94,11 @@
   width: 100%;
   margin: 0;
   text-align: center;
+}
+
+/* The close button reads as centred only when its gap is equal on all four
+   sides, so the header pads it rather than the button padding itself. */
+.site-subheader {
+  padding-right: 5px;
 }
 </style>

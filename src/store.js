@@ -1,13 +1,10 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { createStore } from 'vuex';
 import CustomEvent from "./scripts/customEvent";
 import utility from "./scripts/utility";
 import axios from "axios";
 
 import cardsUrl from './resources/cards.json?url';
 import referenceListsUrl from './resources/referenceLists.json?url';
-
-Vue.use(Vuex)
 
 function constructCardIndex(cards) {
   let cardIndex = {}
@@ -66,7 +63,7 @@ function createKeywordRegex(additionalKeywords) {
   }
 }
 
-export default new Vuex.Store({
+export default createStore({
   state: {
     show404: false,
     hasHover: false,
@@ -146,7 +143,7 @@ export default new Vuex.Store({
     },
     incrementCardToDeck(state, cardString) {
       if (typeof state.deck[cardString] !== 'number') {
-        Vue.set(state.deck, cardString, 1);
+        state.deck[cardString] = 1;
       } else {
         state.deck[cardString]++;
       }
@@ -156,7 +153,7 @@ export default new Vuex.Store({
     decrementCardToDeck(state, cardString) {
       if (typeof state.deck[cardString] === 'number') {
         if (state.deck[cardString] === 1) {
-          Vue.delete(state.deck, cardString, 1);
+          delete state.deck[cardString];
         } else {
           state.deck[cardString]--;
         }
@@ -171,16 +168,16 @@ export default new Vuex.Store({
       if (!state.editedCards[cardString]) {
         let existing = state.cardIndex[cardString];
         if (existing) {
-          Vue.set(state.editedCards, cardString, JSON.parse(JSON.stringify(existing)));
+          state.editedCards[cardString] = JSON.parse(JSON.stringify(existing));
         } else {
-          Vue.set(state.editedCards, cardString, { name: "New Card", index: cardString });
+          state.editedCards[cardString] = { name: "New Card", index: cardString };
         }
         state.events.cardAdded.raiseEvent(cardString);
         localStorage.setItem("editedCards", JSON.stringify(state.editedCards));
       }
     },
     cancelEditCard(state, cardString) {
-      Vue.delete(state.editedCards, cardString);
+      delete state.editedCards[cardString];
     },
     saveEditedCards(state) {
       localStorage.setItem("editedCards", JSON.stringify(state.editedCards))
@@ -245,7 +242,7 @@ export default new Vuex.Store({
     },
     saveSettings(state, settings) {
       Object.keys(settings).forEach(key => {
-        Vue.set(state.settings, key, settings[key]);
+        state.settings[key] = settings[key];
       });
       localStorage.setItem("settings", JSON.stringify(state.settings));
     }
