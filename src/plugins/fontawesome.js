@@ -16,7 +16,8 @@ import {
   faPlusSquare,
   faPrint,
   faSave,
-  faSignOutAlt
+  faSignOutAlt,
+  faShare
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -35,5 +36,6 @@ library.add(faPlusSquare)
 library.add(faPrint)
 library.add(faSave)
 library.add(faSignOutAlt)
+library.add(faShare)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
