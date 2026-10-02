@@ -30529,8 +30529,7 @@
     "level": 5,
     "traits": [
       "Undead",
-      "Necromancer",
-      "Elf"
+      "Necromancer"
     ],
     "keywords": [
       {
@@ -37496,7 +37495,7 @@
       "Warlord"
     ],
     "alignment": "Evil",
- "class": [
+    "class": [
       "Rogue",
       "Wizard"
     ],
@@ -37825,7 +37824,7 @@
     "hitPoints": 1,
     "level": 3,
     "traits": [
-      "Miner"
+      "Orc"
     ],
     "editions": [
       "Alliance",
@@ -56346,7 +56345,7 @@
     "hitPoints": 1,
     "level": 2,
     "traits": [
-      "Miner"
+      "Human"
     ],
     "editions": [
       "Alliance",
