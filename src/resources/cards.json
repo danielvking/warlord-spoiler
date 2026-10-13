@@ -179027,5 +179027,130 @@
         "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/DL/011+-+DL+-+Dreq+Qor-Teth+(EA).png"
       }
     ]
+  },
+  {
+    "name": "Bar-kahl, Evil Unleashed",
+    "text": "Your evil characters gain the abyssal trait and their critical failures are critical successes.\r\nAfter this card transforms, attach a fighter or wizard action from your collection to Bar-kahl. While attached, it may play the action once per turn as if from hand.",
+    "type": "Character",
+    "subtype": [
+      "Medusan Lord"
+    ],
+    "alignment": "Evil",
+    "class": [
+      "Fighter",
+      "Wizard"
+    ],
+    "faction": [
+      "No Faction"
+    ],
+    "attack": [
+      11,
+      9
+    ],
+    "damageType": "Necrotic",
+    "armorClass": 18,
+    "skill": 11,
+    "hitPoints": 5,
+    "level": 13,
+    "traits": [
+      "Abyssal",
+      "Barbarian"
+    ],
+    "keywords": [
+      {
+        "name": "Planar"
+      },
+      {
+        "name": "Infinity Wield"
+      }
+    ],
+    "editions": [
+      "Alliance"
+    ],
+    "exclusivePromo": true,
+    "printInfos": [
+      {
+        "set": "Medusan (ML)",
+        "setNumber": "121",
+        "rarity": "Promo",
+        "artist": "Chris Seaman",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/MedusanLord/121b+-+ML+-+Bar-kahl%2C+Evil+Unleashed.png"
+      }
+    ]
+  },
+  {
+    "name": "Bar-kahl, Evil Unveiled",
+    "text": "Your evil characters gain the Abyssal trait and their critical failures are critical successes.\r\nIf Bar-kahl would be killed, remove all wounds and transform them instead.\r\nOrder: Kill an Abyssal:Move forward one rank or perform a melee strike.",
+    "type": "Character",
+    "subtype": [
+      "Medusan Lord"
+    ],
+    "alignment": "Evil",
+    "class": [
+      "Fighter"
+    ],
+    "faction": [
+      "No Faction"
+    ],
+    "attack": [
+      11,
+      9
+    ],
+    "damageType": "Necrotic",
+    "armorClass": 21,
+    "skill": 11,
+    "hitPoints": 5,
+    "level": 13,
+    "traits": [
+      "Abyssal",
+      "Barbarian"
+    ],
+    "keywords": [
+      {
+        "name": "Infinity Wield"
+      }
+    ],
+    "editions": [
+      "Alliance"
+    ],
+    "exclusivePromo": true,
+    "printInfos": [
+      {
+        "set": "Medusan (ML)",
+        "setNumber": "121",
+        "rarity": "Promo",
+        "artist": "Chris Seaman",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/MedusanLord/121a+-+ML+-+Bar-kahl%2C+Evil+Unveiled.png"
+      }
+    ]
+  },
+  {
+    "name": "The Queen's Lament",
+    "text": "This character's melee strikes ignore Planar and inflict an additional wound, and they gain an additional melee strike (base +0) while attacking.\r\nLimited Kill React: Put target character from an opponent's discard pile into play under your control spent adjacent to this character. The target permanently gains the Abyssal trait.",
+    "type": "Item",
+    "class": [
+      "Fighter"
+    ],
+    "attack": [
+      6
+    ],
+    "damageType": "Necrotic",
+    "level": 13,
+    "traits": [
+      "Weapon"
+    ],
+    "editions": [
+      "Alliance"
+    ],
+    "exclusivePromo": true,
+    "printInfos": [
+      {
+        "set": "Medusan (ML)",
+        "setNumber": "122",
+        "rarity": "Promo",
+        "artist": "Chris Seaman",
+        "imageUrl": "https://images.theaccordlands.com/file/WarlordCards/Warlord+Card+Images/MedusanLord/122+-+ML+-+The+Queen's+Lament.png"
+      }
+    ]
   }
 ]
