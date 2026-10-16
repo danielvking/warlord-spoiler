@@ -44902,7 +44902,7 @@
   },
   {
     "name": "Acrobatic Strike",
-    "text": "Order: Make a Dexterity check (DC 16); if successful, this character may make a melee strike. If unsuccessful, stun this character.",
+    "text": "Order: Make a Dexterity check (DC 16): if successful, this character may make a melee strike. If unsuccessful, stun this character.",
     "type": "Action",
     "class": [
       "Rogue"
@@ -134336,7 +134336,7 @@
   },
   {
     "name": "Eternity Gate",
-    "text": "Spend Order; Spend and destroy (stun if this wizard is a Summoner) Eternity Gate: Return a character you control to his owner's hand.",
+    "text": "Spend Order: Spend and destroy (stun if this wizard is a Summoner) Eternity Gate: Return a character you control to his owner's hand.",
     "type": "Item",
     "class": [
       "Wizard"
@@ -173607,7 +173607,7 @@
     ],
     "keywords": [
       {
-        "name": "Wield",
+        "name": "Dual Wield",
         "value": null
       }
     ],
